@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ifafu/util/converter.dart';
 
 part 'model.freezed.dart';
 
@@ -14,7 +15,7 @@ class Banner with _$Banner {
   factory Banner.fromJson(Map<String, Object?> json) => _$BannerFromJson(json);
 }
 
-@freezed
+@unfreezed
 class User with _$User {
   factory User({
     required int id,
@@ -22,12 +23,12 @@ class User with _$User {
     required String avatarUrl,
     required List<String> permissions,
     required List<String> auths,
-    required String? username,
-    required int? qq,
-    required String? guildUserId,
-    required String? phone,
-    required String? gender,
-    required String? area,
+    String? username,
+    int? qq,
+    String? guildUserId,
+    String? phone,
+    String? gender,
+    String? area,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -39,14 +40,13 @@ class Post with _$Post {
     required int id,
     required String area,
     required String content,
-    required List<String> images,
-    required List<Comment> comments,
-    required String createTime,
+    required List<String>? images,
+    required List<Comment>? comments,
+    @DateTimeConverter() required DateTime createTime,
     required UserSmall createBy,
-    String? contact,
-    String? contactType,
-    int? viewCount,
-    String? updateTime,
+    required String? contact,
+    required String? contactType,
+    required int? viewCount,
   }) = _Post;
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
@@ -58,7 +58,7 @@ class Comment with _$Comment {
     required int id,
     required String content,
     required UserSmall createBy,
-    required String createTime,
+    @DateTimeConverter() required DateTime createTime,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>
@@ -70,8 +70,8 @@ class UserSmall with _$UserSmall {
   factory UserSmall({
     required int id,
     required String nickname,
-    required String avatarUrl,
-    String? gender,
+    required String? avatarUrl,
+    required String? gender,
   }) = _UserSmall;
 
   factory UserSmall.fromJson(Map<String, dynamic> json) =>

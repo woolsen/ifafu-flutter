@@ -23,9 +23,9 @@ class Api {
     );
     dio = Dio(options)
       ..interceptors.add(PrettyDioLogger(
-          requestHeader: false,
+          requestHeader: true,
           requestBody: false,
-          responseBody: false,
+          responseBody: true,
           responseHeader: false,
           error: true,
           maxWidth: 90))
@@ -45,7 +45,8 @@ class Api {
   }
 
   Future<User> login(String phone, String code) async {
-    var response = await dio.post('/api/auth/login/sms', data: {'phone': phone, 'code': code});
+    var response = await dio
+        .post('/api/auth/login/sms', data: {'phone': phone, 'code': code});
     String token = response.data['token'];
     _tokenInterceptor.token = token;
     SPUtil.setString('TOKEN', token);
@@ -60,6 +61,38 @@ class Api {
 
   Future<User> getUserInfo() async {
     var response = await dio.get('/api/user');
+    return User.fromJson(response.data);
+  }
+
+  Future<List<Post>> getPosts(int page, int size, String area) async {
+    var response = await dio.get(
+      '/api/post',
+      queryParameters: {
+        'page': page,
+        'size': size,
+        'area': area,
+      },
+    );
+    return (response.data['content'] as List)
+        .map((e) => Post.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<Post>> getMyPosts(int page, int size) async {
+    var response = await dio.get(
+      '/api/post/me',
+      queryParameters: {
+        'page': page,
+        'size': size,
+      },
+    );
+    return (response.data['content'] as List)
+        .map((e) => Post.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<User> editProfile(User user) async {
+    var response = await dio.put('/api/users/center', data: user.toJson());
     return User.fromJson(response.data);
   }
 }

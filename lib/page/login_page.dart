@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/provider/user_provider.dart';
-import 'package:ifafu/util/sp.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -123,12 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _login,
                   child: _loging
                       ? const CircularProgressIndicator()
-                      : const Text(
-                          '登录',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                      : const Text('登录'),
                 ),
               ),
             ),

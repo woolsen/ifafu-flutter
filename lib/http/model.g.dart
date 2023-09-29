@@ -53,16 +53,16 @@ _$PostImpl _$$PostImplFromJson(Map<String, dynamic> json) => _$PostImpl(
       area: json['area'] as String,
       content: json['content'] as String,
       images:
-          (json['images'] as List<dynamic>).map((e) => e as String).toList(),
-      comments: (json['comments'] as List<dynamic>)
-          .map((e) => Comment.fromJson(e as Map<String, dynamic>))
+          (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      comments: (json['comments'] as List<dynamic>?)
+          ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      createTime: json['createTime'] as String,
+      createTime:
+          const DateTimeConverter().fromJson(json['createTime'] as String),
       createBy: UserSmall.fromJson(json['createBy'] as Map<String, dynamic>),
       contact: json['contact'] as String?,
       contactType: json['contactType'] as String?,
       viewCount: json['viewCount'] as int?,
-      updateTime: json['updateTime'] as String?,
     );
 
 Map<String, dynamic> _$$PostImplToJson(_$PostImpl instance) =>
@@ -72,12 +72,11 @@ Map<String, dynamic> _$$PostImplToJson(_$PostImpl instance) =>
       'content': instance.content,
       'images': instance.images,
       'comments': instance.comments,
-      'createTime': instance.createTime,
+      'createTime': const DateTimeConverter().toJson(instance.createTime),
       'createBy': instance.createBy,
       'contact': instance.contact,
       'contactType': instance.contactType,
       'viewCount': instance.viewCount,
-      'updateTime': instance.updateTime,
     };
 
 _$CommentImpl _$$CommentImplFromJson(Map<String, dynamic> json) =>
@@ -85,7 +84,8 @@ _$CommentImpl _$$CommentImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       content: json['content'] as String,
       createBy: UserSmall.fromJson(json['createBy'] as Map<String, dynamic>),
-      createTime: json['createTime'] as String,
+      createTime:
+          const DateTimeConverter().fromJson(json['createTime'] as String),
     );
 
 Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
@@ -93,14 +93,14 @@ Map<String, dynamic> _$$CommentImplToJson(_$CommentImpl instance) =>
       'id': instance.id,
       'content': instance.content,
       'createBy': instance.createBy,
-      'createTime': instance.createTime,
+      'createTime': const DateTimeConverter().toJson(instance.createTime),
     };
 
 _$UserSmallImpl _$$UserSmallImplFromJson(Map<String, dynamic> json) =>
     _$UserSmallImpl(
       id: json['id'] as int,
       nickname: json['nickname'] as String,
-      avatarUrl: json['avatarUrl'] as String,
+      avatarUrl: json['avatarUrl'] as String?,
       gender: json['gender'] as String?,
     );
 

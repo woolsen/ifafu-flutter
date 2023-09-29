@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ifafu/http/model.dart';
+import 'package:ifafu/page/tab_main.dart';
+import 'package:ifafu/page/tab_user.dart';
 import 'package:ifafu/provider/user_provider.dart';
-
-import 'main_tabs.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,7 +14,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
-
   User? _user;
   int _currentIndex = 0;
 
@@ -36,8 +34,7 @@ class _MainPageState extends State<MainPage>
         body: IndexedStack(
           index: _currentIndex,
           children: [
-            const MainTab(),
-            const TimetableTab(),
+            const MainTab(), // const TimetableTab(),
             UserTab(
               user: _user,
               logout: () {
@@ -54,10 +51,10 @@ class _MainPageState extends State<MainPage>
               icon: Icon(Icons.home),
               label: '首页',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month),
-              label: '课程表',
-            ),
+            // const BottomNavigationBarItem(
+            //   icon: Icon(Icons.calendar_month),
+            //   label: '课程表',
+            // ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person),
               label: _user == null ? '登录' : '我的',
@@ -71,7 +68,7 @@ class _MainPageState extends State<MainPage>
 
   void _handleTabChange(int index) {
     // 在这里执行你的自定义逻辑，例如拦截Tab切换
-    if (index == 2 && _user == null) {
+    if (index == 1 && _user == null) {
       Navigator.of(context).pushNamed('/login');
     } else {
       // 允许切换到其他选项卡

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ifafu/util/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,14 +41,15 @@ class TokenInterceptor extends Interceptor {
   void initialize() async {
     final sp = await SharedPreferences.getInstance();
     token = sp.getString('TOKEN');
+    if (kDebugMode) {
+      print('Get token: $token');
+    }
   }
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (token != null) {
-      options.headers['Access-Token'] = token;
-    } else {
-      initialize();
+      options.headers['Authorization'] = token;
     }
     super.onRequest(options, handler);
   }
