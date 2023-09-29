@@ -4,6 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ifafu/http/api.dart';
+import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/sp.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,18 +29,30 @@ class _LoginPageState extends State<LoginPage> {
 
   final _phoneRegex = RegExp(r'^1\d{10}$');
 
+  bool _loging = false;
+
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: Container(
-        margin: EdgeInsets.only(top: top),
         alignment: Alignment.topLeft,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const SizedBox(height: 80),
+            const SizedBox(height: 48),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 50),
               child: Column(
@@ -57,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       controller: _phoneController,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(_phoneRegex),
                         LengthLimitingTextInputFormatter(11),
                       ],
                       decoration: const InputDecoration(
@@ -73,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
                   //验证码输入框
                   TextField(
                     controller: _codeController,
-                    obscureText: true,
                     decoration: InputDecoration(
                       hintText: '验证码',
                       prefixIcon: const Icon(
@@ -85,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                         margin: const EdgeInsets.only(right: 10),
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: _getVerificationCode,
+                          onTap: _getSmsCode,
                           child: Text(
                             _codeHint,
                             style: _isCodeClickable
@@ -106,8 +120,15 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('登录'),
+                  onPressed: _login,
+                  child: _loging
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          '登录',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -118,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _getVerificationCode() async {
+  _getSmsCode() async {
     var phone = _phoneController.text;
     if (phone.isEmpty) {
       _showToast('请输入手机号');
@@ -135,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
     _codeHint = '60s后重新获取';
     setState(() {});
     try {
-      //TODO 发送验证码
+      await Api.instance.getSmsCode(phone);
       _showToast('验证码已发送');
     } catch (e) {
       if (kDebugMode) {
@@ -173,15 +194,21 @@ class _LoginPageState extends State<LoginPage> {
       _showToast('请输入验证码');
       return;
     }
-    try {
-      //TODO 登录
-    } catch (e) {
+    _loging = true;
+    setState(() {});
+    Api.instance.login(phone, code).then((user) {
+      context.read<UserProvider>().update(user);
+      _showToast('登录成功');
+      Navigator.of(context).pop();
+    }).catchError((e) {
       if (kDebugMode) {
         print(e);
       }
       _showToast('登录失败');
-      return;
-    }
+    }).whenComplete(() {
+      _loging = false;
+      setState(() {});
+    });
   }
 
   void _showToast(String msg) {

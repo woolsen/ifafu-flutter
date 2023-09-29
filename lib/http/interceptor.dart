@@ -39,7 +39,7 @@ class TokenInterceptor extends Interceptor {
 
   void initialize() async {
     final sp = await SharedPreferences.getInstance();
-    token = sp.getString('token');
+    token = sp.getString('TOKEN');
   }
 
   @override

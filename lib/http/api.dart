@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/http/interceptor.dart';
+import 'package:ifafu/util/sp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
   static final Api instance = Api._internal();
@@ -10,6 +12,8 @@ class Api {
   static late Dio dio;
 
   static const String baseUrl = 'https://api2.ifafu.cn';
+
+  final _tokenInterceptor = TokenInterceptor();
 
   Api._internal() {
     var options = BaseOptions(
@@ -26,7 +30,7 @@ class Api {
           error: true,
           maxWidth: 90))
       ..interceptors.add(DioInterceptor())
-      ..interceptors.add(TokenInterceptor());
+      ..interceptors.add(_tokenInterceptor);
   }
 
   Future<List<Banner>> getBanners() async {
@@ -38,5 +42,24 @@ class Api {
 
   Future<void> getSmsCode(String phone) async {
     await dio.get('/api/auth/code/sms', queryParameters: {'phone': phone});
+  }
+
+  Future<User> login(String phone, String code) async {
+    var response = await dio.post('/api/auth/login/sms', data: {'phone': phone, 'code': code});
+    String token = response.data['token'];
+    _tokenInterceptor.token = token;
+    SPUtil.setString('TOKEN', token);
+    return User.fromJson(response.data['user']);
+  }
+
+  Future<void> logout() async {
+    await dio.post('/api/auth/logout');
+    _tokenInterceptor.token = null;
+    SPUtil.remove('TOKEN');
+  }
+
+  Future<User> getUserInfo() async {
+    var response = await dio.get('/api/user');
+    return User.fromJson(response.data);
   }
 }
