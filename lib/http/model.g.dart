@@ -111,3 +111,22 @@ Map<String, dynamic> _$$UserSmallImplToJson(_$UserSmallImpl instance) =>
       'avatarUrl': instance.avatarUrl,
       'gender': instance.gender,
     };
+
+_$PostCreateImpl _$$PostCreateImplFromJson(Map<String, dynamic> json) =>
+    _$PostCreateImpl(
+      area: json['area'] as String,
+      content: json['content'] as String,
+      images:
+          (json['images'] as List<dynamic>).map((e) => e as String).toList(),
+      contact: json['contact'] as String,
+      contactType: json['contactType'] as String?,
+    );
+
+Map<String, dynamic> _$$PostCreateImplToJson(_$PostCreateImpl instance) =>
+    <String, dynamic>{
+      'area': instance.area,
+      'content': instance.content,
+      'images': instance.images,
+      'contact': instance.contact,
+      'contactType': instance.contactType,
+    };

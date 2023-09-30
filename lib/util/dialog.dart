@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-Future<String?> showSimpleDialog(BuildContext context, List<String> list) async {
+Future<String?> showSimpleDialog(BuildContext context, List<String> list, {String? title}) async {
   return await showDialog(
     context: context,
     builder: (context) {
       return SimpleDialog(
-        title: const Text('请选择'),
+        title: Text(title ?? '请选择'),
         children: list.map((e) {
           return SimpleDialogOption(
             onPressed: () {

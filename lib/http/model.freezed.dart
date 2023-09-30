@@ -507,16 +507,27 @@ Post _$PostFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Post {
   int get id => throw _privateConstructorUsedError;
+  set id(int value) => throw _privateConstructorUsedError;
   String get area => throw _privateConstructorUsedError;
+  set area(String value) => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  set content(String value) => throw _privateConstructorUsedError;
   List<String>? get images => throw _privateConstructorUsedError;
+  set images(List<String>? value) => throw _privateConstructorUsedError;
   List<Comment>? get comments => throw _privateConstructorUsedError;
+  set comments(List<Comment>? value) => throw _privateConstructorUsedError;
   @DateTimeConverter()
   DateTime get createTime => throw _privateConstructorUsedError;
+  @DateTimeConverter()
+  set createTime(DateTime value) => throw _privateConstructorUsedError;
   UserSmall get createBy => throw _privateConstructorUsedError;
+  set createBy(UserSmall value) => throw _privateConstructorUsedError;
   String? get contact => throw _privateConstructorUsedError;
+  set contact(String? value) => throw _privateConstructorUsedError;
   String? get contactType => throw _privateConstructorUsedError;
+  set contactType(String? value) => throw _privateConstructorUsedError;
   int? get viewCount => throw _privateConstructorUsedError;
+  set viewCount(int? value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -678,11 +689,11 @@ class __$$PostImplCopyWithImpl<$Res>
           : content // ignore: cast_nullable_to_non_nullable
               as String,
       images: freezed == images
-          ? _value._images
+          ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       comments: freezed == comments
-          ? _value._comments
+          ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<Comment>?,
       createTime: null == createTime
@@ -716,97 +727,43 @@ class _$PostImpl implements _Post {
       {required this.id,
       required this.area,
       required this.content,
-      required final List<String>? images,
-      required final List<Comment>? comments,
+      required this.images,
+      required this.comments,
       @DateTimeConverter() required this.createTime,
       required this.createBy,
       required this.contact,
       required this.contactType,
-      required this.viewCount})
-      : _images = images,
-        _comments = comments;
+      required this.viewCount});
 
   factory _$PostImpl.fromJson(Map<String, dynamic> json) =>
       _$$PostImplFromJson(json);
 
   @override
-  final int id;
+  int id;
   @override
-  final String area;
+  String area;
   @override
-  final String content;
-  final List<String>? _images;
+  String content;
   @override
-  List<String>? get images {
-    final value = _images;
-    if (value == null) return null;
-    if (_images is EqualUnmodifiableListView) return _images;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<Comment>? _comments;
+  List<String>? images;
   @override
-  List<Comment>? get comments {
-    final value = _comments;
-    if (value == null) return null;
-    if (_comments is EqualUnmodifiableListView) return _comments;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  List<Comment>? comments;
   @override
   @DateTimeConverter()
-  final DateTime createTime;
+  DateTime createTime;
   @override
-  final UserSmall createBy;
+  UserSmall createBy;
   @override
-  final String? contact;
+  String? contact;
   @override
-  final String? contactType;
+  String? contactType;
   @override
-  final int? viewCount;
+  int? viewCount;
 
   @override
   String toString() {
     return 'Post(id: $id, area: $area, content: $content, images: $images, comments: $comments, createTime: $createTime, createBy: $createBy, contact: $contact, contactType: $contactType, viewCount: $viewCount)';
   }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PostImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.area, area) || other.area == area) &&
-            (identical(other.content, content) || other.content == content) &&
-            const DeepCollectionEquality().equals(other._images, _images) &&
-            const DeepCollectionEquality().equals(other._comments, _comments) &&
-            (identical(other.createTime, createTime) ||
-                other.createTime == createTime) &&
-            (identical(other.createBy, createBy) ||
-                other.createBy == createBy) &&
-            (identical(other.contact, contact) || other.contact == contact) &&
-            (identical(other.contactType, contactType) ||
-                other.contactType == contactType) &&
-            (identical(other.viewCount, viewCount) ||
-                other.viewCount == viewCount));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      area,
-      content,
-      const DeepCollectionEquality().hash(_images),
-      const DeepCollectionEquality().hash(_comments),
-      createTime,
-      createBy,
-      contact,
-      contactType,
-      viewCount);
 
   @JsonKey(ignore: true)
   @override
@@ -824,40 +781,51 @@ class _$PostImpl implements _Post {
 
 abstract class _Post implements Post {
   factory _Post(
-      {required final int id,
-      required final String area,
-      required final String content,
-      required final List<String>? images,
-      required final List<Comment>? comments,
-      @DateTimeConverter() required final DateTime createTime,
-      required final UserSmall createBy,
-      required final String? contact,
-      required final String? contactType,
-      required final int? viewCount}) = _$PostImpl;
+      {required int id,
+      required String area,
+      required String content,
+      required List<String>? images,
+      required List<Comment>? comments,
+      @DateTimeConverter() required DateTime createTime,
+      required UserSmall createBy,
+      required String? contact,
+      required String? contactType,
+      required int? viewCount}) = _$PostImpl;
 
   factory _Post.fromJson(Map<String, dynamic> json) = _$PostImpl.fromJson;
 
   @override
   int get id;
+  set id(int value);
   @override
   String get area;
+  set area(String value);
   @override
   String get content;
+  set content(String value);
   @override
   List<String>? get images;
+  set images(List<String>? value);
   @override
   List<Comment>? get comments;
+  set comments(List<Comment>? value);
   @override
   @DateTimeConverter()
   DateTime get createTime;
+  @DateTimeConverter()
+  set createTime(DateTime value);
   @override
   UserSmall get createBy;
+  set createBy(UserSmall value);
   @override
   String? get contact;
+  set contact(String? value);
   @override
   String? get contactType;
+  set contactType(String? value);
   @override
   int? get viewCount;
+  set viewCount(int? value);
   @override
   @JsonKey(ignore: true)
   _$$PostImplCopyWith<_$PostImpl> get copyWith =>
@@ -1269,5 +1237,234 @@ abstract class _UserSmall implements UserSmall {
   @override
   @JsonKey(ignore: true)
   _$$UserSmallImplCopyWith<_$UserSmallImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PostCreate _$PostCreateFromJson(Map<String, dynamic> json) {
+  return _PostCreate.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PostCreate {
+  String get area => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  List<String> get images => throw _privateConstructorUsedError;
+  String get contact => throw _privateConstructorUsedError;
+  String? get contactType => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PostCreateCopyWith<PostCreate> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PostCreateCopyWith<$Res> {
+  factory $PostCreateCopyWith(
+          PostCreate value, $Res Function(PostCreate) then) =
+      _$PostCreateCopyWithImpl<$Res, PostCreate>;
+  @useResult
+  $Res call(
+      {String area,
+      String content,
+      List<String> images,
+      String contact,
+      String? contactType});
+}
+
+/// @nodoc
+class _$PostCreateCopyWithImpl<$Res, $Val extends PostCreate>
+    implements $PostCreateCopyWith<$Res> {
+  _$PostCreateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? area = null,
+    Object? content = null,
+    Object? images = null,
+    Object? contact = null,
+    Object? contactType = freezed,
+  }) {
+    return _then(_value.copyWith(
+      area: null == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      contact: null == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactType: freezed == contactType
+          ? _value.contactType
+          : contactType // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PostCreateImplCopyWith<$Res>
+    implements $PostCreateCopyWith<$Res> {
+  factory _$$PostCreateImplCopyWith(
+          _$PostCreateImpl value, $Res Function(_$PostCreateImpl) then) =
+      __$$PostCreateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String area,
+      String content,
+      List<String> images,
+      String contact,
+      String? contactType});
+}
+
+/// @nodoc
+class __$$PostCreateImplCopyWithImpl<$Res>
+    extends _$PostCreateCopyWithImpl<$Res, _$PostCreateImpl>
+    implements _$$PostCreateImplCopyWith<$Res> {
+  __$$PostCreateImplCopyWithImpl(
+      _$PostCreateImpl _value, $Res Function(_$PostCreateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? area = null,
+    Object? content = null,
+    Object? images = null,
+    Object? contact = null,
+    Object? contactType = freezed,
+  }) {
+    return _then(_$PostCreateImpl(
+      area: null == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      contact: null == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactType: freezed == contactType
+          ? _value.contactType
+          : contactType // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PostCreateImpl implements _PostCreate {
+  _$PostCreateImpl(
+      {required this.area,
+      required this.content,
+      required final List<String> images,
+      required this.contact,
+      required this.contactType})
+      : _images = images;
+
+  factory _$PostCreateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PostCreateImplFromJson(json);
+
+  @override
+  final String area;
+  @override
+  final String content;
+  final List<String> _images;
+  @override
+  List<String> get images {
+    if (_images is EqualUnmodifiableListView) return _images;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_images);
+  }
+
+  @override
+  final String contact;
+  @override
+  final String? contactType;
+
+  @override
+  String toString() {
+    return 'PostCreate(area: $area, content: $content, images: $images, contact: $contact, contactType: $contactType)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PostCreateImpl &&
+            (identical(other.area, area) || other.area == area) &&
+            (identical(other.content, content) || other.content == content) &&
+            const DeepCollectionEquality().equals(other._images, _images) &&
+            (identical(other.contact, contact) || other.contact == contact) &&
+            (identical(other.contactType, contactType) ||
+                other.contactType == contactType));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, area, content,
+      const DeepCollectionEquality().hash(_images), contact, contactType);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PostCreateImplCopyWith<_$PostCreateImpl> get copyWith =>
+      __$$PostCreateImplCopyWithImpl<_$PostCreateImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PostCreateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PostCreate implements PostCreate {
+  factory _PostCreate(
+      {required final String area,
+      required final String content,
+      required final List<String> images,
+      required final String contact,
+      required final String? contactType}) = _$PostCreateImpl;
+
+  factory _PostCreate.fromJson(Map<String, dynamic> json) =
+      _$PostCreateImpl.fromJson;
+
+  @override
+  String get area;
+  @override
+  String get content;
+  @override
+  List<String> get images;
+  @override
+  String get contact;
+  @override
+  String? get contactType;
+  @override
+  @JsonKey(ignore: true)
+  _$$PostCreateImplCopyWith<_$PostCreateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

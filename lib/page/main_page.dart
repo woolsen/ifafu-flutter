@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/page/tab_main.dart';
 import 'package:ifafu/page/tab_user.dart';
@@ -13,9 +14,37 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   User? _user;
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // 注册WidgetsBindingObserver以监听应用程序生命周期状态
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    // 移除WidgetsBindingObserver以避免内存泄漏
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+
+
+  // 应用程序生命周期状态变化时调用
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      Api.instance.getUserInfo().then((user) {
+        context.read<UserProvider>().update(user);
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

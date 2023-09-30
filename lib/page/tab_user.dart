@@ -35,7 +35,11 @@ class _UserTabState extends State<UserTab> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: 32, bottom: 8, left: 16, right: 16),
+                top: 64,
+                bottom: 24,
+                left: 16,
+                right: 16,
+              ),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -74,15 +78,15 @@ class _UserTabState extends State<UserTab> {
                 ],
               ),
             ),
-            const Divider(thickness: 0.5, height: 0.5),
+            const Divider(thickness: 0.5, height: 4),
             ListTile(
               leading: const Icon(Icons.favorite),
               title: const Text('我的帖子'),
               onTap: () {
-                Navigator.of(context).pushNamed('/user/posts');
+                Navigator.of(context).pushNamed('/post/my');
               },
             ),
-            const Divider(thickness: 0.5, height: 0.5),
+            const Divider(thickness: 0.5, height: 4),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('退出登录'),

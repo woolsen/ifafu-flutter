@@ -5,6 +5,7 @@ import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/dialog.dart';
+import 'package:ifafu/util/extensions.dart';
 import 'package:ifafu/util/toast.dart'; // 导入自定义的Avatar组件
 
 class EditProfilePage extends StatefulWidget {
@@ -98,7 +99,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ],
                   ),
                 ),
-                const Divider(thickness: 0.5),
+                const Divider(thickness: 0.5, height: 4),
                 buildFormItem(
                   '昵称',
                   child: TextFormField(
@@ -114,7 +115,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                 ),
-                const Divider(thickness: 0.5),
+                const Divider(thickness: 0.5, height: 4),
                 buildFormItem(
                   '性别',
                   child: Row(
@@ -135,7 +136,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     showGenderDialog(user);
                   },
                 ),
-                const Divider(thickness: 0.5),
+                const Divider(thickness: 0.5, height: 4),
                 buildFormItem(
                   '校区',
                   child: Row(
@@ -155,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _showAreaDialog(user);
                   },
                 ),
-                const Divider(thickness: 0.5),
+                const Divider(thickness: 0.5, height: 4),
                 buildFormItem(
                   '手机号',
                   child: Row(
@@ -182,7 +183,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     clickPhone(user);
                   },
                 ),
-                const Divider(thickness: 0.5),
+                const Divider(thickness: 0.5, height: 4),
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(16.0),
@@ -251,7 +252,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> showGenderDialog(User user) async {
-    final selectedValue = await showSimpleDialog(context, genders);
+    final selectedValue =
+        await showSimpleDialog(context, genders, title: '选择性别');
     if (selectedValue != null) {
       user.gender = selectedValue;
       userNotifier.value = user;
@@ -259,7 +261,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _showAreaDialog(User user) async {
-    final selectedValue = await showSimpleDialog(context, areas);
+    final selectedValue = await showSimpleDialog(context, areas, title: '选择校区');
     if (selectedValue != null) {
       user.area = selectedValue;
       userNotifier.value = user;
@@ -337,12 +339,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void save(User user) {
+    if (user.nickname.isBlank) {
+      ToastUtil.show('昵称不能为空');
+      return;
+    }
     Api.instance.editProfile(user).then((user) {
       context.read<UserProvider>().update(user);
-      Toast.show('保存成功');
+      ToastUtil.show('保存成功');
       Navigator.of(context).pop();
     }).catchError((err) {
-      Toast.show('保存失败');
+      ToastUtil.show('保存失败');
       if (kDebugMode) {
         print(err);
       }
