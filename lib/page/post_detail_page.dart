@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ifafu/http/api.dart';
@@ -11,14 +10,18 @@ import 'package:ifafu/util/toast.dart';
 import 'package:ifafu/widget/post.dart';
 
 class PostDetailPage extends StatefulWidget {
-  const PostDetailPage({Key? key}) : super(key: key);
+  final model.Post? post;
+  final void Function(model.Post)? updated;
+  final void Function()? deleted;
+
+  const PostDetailPage({Key? key, this.post, this.updated, this.deleted})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PostDetailPageState();
 }
 
 class _PostDetailPageState extends State<PostDetailPage> {
-  late model.Post _post;
   late model.User? _user;
 
   final commentController = TextEditingController();
@@ -41,10 +44,14 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _post = arguments['post'] as model.Post;
-
+    var post = widget.post;
+    if (post == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('帖子不存在'),
+        ),
+      );
+    }
     return GestureDetector(
       onTap: () {
         commentFocus.unfocus();
@@ -56,20 +63,20 @@ class _PostDetailPageState extends State<PostDetailPage> {
         backgroundColor: const Color(0xFFF5F5F5),
         body: Column(
           children: [
-            Expanded(child: Scrollable(
-              viewportBuilder: (context, position) {
-                return Column(
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
                     Post(
-                      post: _post,
+                      post: post,
                       currentUser: _user,
                       detailMode: true,
                       deleted: () {
+                        widget.deleted?.call();
                         Navigator.of(context).pop();
                       },
                     ),
-                    if (_post.comments != null &&
-                        _post.comments!.isNotEmpty) ...[
+                    if (post.comments != null && post.comments!.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -87,71 +94,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
                       ),
                       const SizedBox(height: 1),
-                      ..._buildComments(_post.comments!)
+                      ..._buildComments(post.comments!),
                     ]
                   ],
-                );
-              },
-            )),
-            //评论输入框
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.white,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // 若用户不存在则头像框中显示未登录
-                  _user == null
-                      ? const CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              AssetImage('assets/image/defaultAvatar.png'),
-                          child: Text('未登录'),
-                        )
-                      : _getAvatar(_user?.avatarUrl, size: 20),
-                  const SizedBox(width: 4.0),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      constraints: const BoxConstraints(
-                        minHeight: 40.0,
-                      ),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Theme.of(context).splashColor,
-                        ),
-                      ),
-                      // color: Theme.of(context).splashColor,
-                      child: TextField(
-                        focusNode: commentFocus,
-                        controller: commentController,
-                        // expands: true,
-                        minLines: null,
-                        maxLines: null,
-                        decoration: const InputDecoration.collapsed(
-                          hintText: '说点什么吧...',
-                          hintStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey,
-                          ),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  FilledButton.tonal(
-                    onPressed: comment,
-                    style: ButtonStyle(
-                        fixedSize:
-                            MaterialStateProperty.all(const Size(64, 40))),
-                    child: const Icon(Icons.send),
-                  ),
-                ],
+                ),
               ),
             ),
+            _buildCommentInput()
           ],
         ),
       ),
@@ -208,11 +157,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
                       ),
                       //删除按钮
-                      if ((_user != null && (_user!.id == _post.createBy.id) ||
+                      if ((_user != null &&
+                              (_user!.id == comment.createBy.id) ||
                           _user!.hasPermission('post:del')))
                         GestureDetector(
                           onTap: () {
-                            _showCommentDeleteDialog(context);
+                            _showCommentDeleteDialog(context, comment.id);
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
@@ -237,6 +187,65 @@ class _PostDetailPageState extends State<PostDetailPage> {
     });
   }
 
+  Widget _buildCommentInput() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      color: Colors.white,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 若用户不存在则头像框中显示未登录
+          _user == null
+              ? const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('assets/image/defaultAvatar.png'),
+                  child: Text('未登录'),
+                )
+              : _getAvatar(_user?.avatarUrl, size: 20),
+          const SizedBox(width: 4.0),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              constraints: const BoxConstraints(
+                minHeight: 40.0,
+              ),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(
+                  color: Theme.of(context).splashColor,
+                ),
+              ),
+              // color: Theme.of(context).splashColor,
+              child: TextField(
+                focusNode: commentFocus,
+                controller: commentController,
+                // expands: true,
+                minLines: null,
+                maxLines: null,
+                decoration: const InputDecoration.collapsed(
+                  hintText: '说点什么吧...',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4.0),
+          IconButton.filledTonal(
+            onPressed: () {
+              comment(widget.post!.id);
+            },
+            icon: const Icon(Icons.send),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _getAvatar(String? avatarUrl, {double size = 22}) {
     if (avatarUrl == null) {
       return CircleAvatar(
@@ -251,16 +260,19 @@ class _PostDetailPageState extends State<PostDetailPage> {
             : avatarUrl));
   }
 
-  void comment() {
+  void comment(int postId) {
     final comment = commentController.text.trim();
     if (comment.isEmpty) {
       ToastUtil.show('评论不能为空');
       return;
     }
-    Api.instance.commentPost(_post.id, comment).then((value) {
+    Api.instance.commentPost(postId, comment).then((value) {
       ToastUtil.show('评论成功');
-      _post = value;
-      setState(() {});
+      commentFocus.unfocus();
+      setState(() {
+        widget.post!.comments = value.comments;
+      });
+      widget.updated?.call(widget.post!);
     }).catchError((err) {
       if (err is DioException && err.message != null) {
         ToastUtil.show(err.message!);
@@ -270,7 +282,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     });
   }
 
-  void _showCommentDeleteDialog(BuildContext context) {
+  void _showCommentDeleteDialog(BuildContext context, int commentId) {
     showDialog(
       context: context,
       builder: (context) {
@@ -286,7 +298,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
             ),
             TextButton(
               onPressed: () {
-                deleteComment(_post.id);
+                deleteComment(commentId);
                 Navigator.of(context).pop();
               },
               child: const Text('确定'),
@@ -300,8 +312,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
   void deleteComment(int id) {
     Api.instance.deleteComment(id).then((value) {
       ToastUtil.show('删除成功');
-      _post.comments!.removeWhere((element) => element.id == id);
+      widget.post!.comments!.removeWhere((element) => element.id == id);
       setState(() {});
+      widget.updated?.call(widget.post!);
     }).catchError((err) {
       if (err is DioException && err.message != null) {
         ToastUtil.show(err.message!);
