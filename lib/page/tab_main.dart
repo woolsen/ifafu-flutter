@@ -38,7 +38,7 @@ class _MainTabState extends State<MainTab> {
         builder: (context, user) {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(48),
+              preferredSize: const Size.fromHeight(48),
               child: ColoredBox(
                 color: const Color(0xFFF5F5F5),
                 child: SafeArea(
@@ -64,12 +64,14 @@ class _MainTabState extends State<MainTab> {
                         ),
                         const Expanded(
                           child: Center(
-                            child: Text('iFAFU',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'DingTalk',
-                                  fontWeight: FontWeight.bold,
-                                )),
+                            child: Text(
+                              'iFAFU',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'DingTalk',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(

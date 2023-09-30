@@ -35,7 +35,7 @@ class User with _$User {
 
 }
 
-@freezed
+@unfreezed
 class Post with _$Post {
   factory Post({
     required int id,

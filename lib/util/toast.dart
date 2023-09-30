@@ -7,6 +7,7 @@ class ToastUtil {
     Fluttertoast.showToast(
       msg: message,
       textColor: Colors.white,
+      gravity: ToastGravity.CENTER,
       backgroundColor: const Color(0xEE333333),
     );
   }

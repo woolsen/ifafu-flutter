@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart' as model;
+import 'package:ifafu/page/post_detail_page.dart';
 import 'package:ifafu/util/date.dart';
 import 'package:ifafu/util/extensions.dart';
-import 'package:ifafu/util/snackbar.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/widget/comment_input.dart';
 import 'package:ifafu/widget/image_album.dart';
 
 class Post extends StatefulWidget {
@@ -15,7 +16,7 @@ class Post extends StatefulWidget {
   final bool showArea;
 
   //删除回调
-  final Function? deleted;
+  final void Function()? deleted;
 
   const Post({
     super.key,
@@ -37,16 +38,26 @@ class _PostState extends State<Post> {
       return buildBody();
     } else {
       return GestureDetector(
-          onTap: () {
-            if (widget.detailMode) {
-              return;
-            }
-            Navigator.of(context).pushNamed('/post/detail', arguments: {
-              'id': widget.post.id,
-              'post': widget.post,
-            });
-          },
-          child: buildBody()
+        onTap: () {
+          if (widget.detailMode) {
+            return;
+          }
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PostDetailPage(
+                post: widget.post,
+                updated: (post) {
+                  widget.post.comments = post.comments;
+                  setState(() {});
+                },
+                deleted: () {
+                  widget.deleted?.call();
+                },
+              ),
+            ),
+          );
+        },
+        child: buildBody(),
       );
     }
   }
@@ -55,7 +66,7 @@ class _PostState extends State<Post> {
     var comments = widget.post.comments;
     var images = widget.post.images;
     var contactType = widget.post.contactType;
-    return  Container(
+    return Container(
       padding: const EdgeInsets.only(
         left: 12.0,
         right: 12.0,
@@ -169,8 +180,8 @@ class _PostState extends State<Post> {
                         ),
                         //删除按钮
                         if ((widget.currentUser != null &&
-                            (widget.currentUser!.id ==
-                                widget.post.createBy.id) ||
+                                (widget.currentUser!.id ==
+                                    widget.post.createBy.id) ||
                             widget.currentUser!.hasPermission('post:del')))
                           GestureDetector(
                             onTap: () {
@@ -191,9 +202,7 @@ class _PostState extends State<Post> {
                         const Spacer(),
                         if (!widget.detailMode)
                           GestureDetector(
-                            onTap: () {
-                              // Handle comment click
-                            },
+                            onTap: _onCommentClick,
                             child: const Icon(Icons.comment, size: 24.0),
                           ),
                         const SizedBox(width: 8),
@@ -273,7 +282,7 @@ class _PostState extends State<Post> {
                 Api.instance.deletePost(widget.post.id).then((value) {
                   widget.deleted?.call();
                   Navigator.of(context).pop();
-                  SnackBarUtil.show(context, '删除成功');
+                  ToastUtil.show('删除成功');
                 }).catchError((err) {
                   if (err is DioException && err.message != null) {
                     ToastUtil.show(err.message!);
@@ -285,6 +294,26 @@ class _PostState extends State<Post> {
               child: const Text('确定'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _onCommentClick() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // 可以滚动的底部面板
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: CommentInput(
+            postId: widget.post.id,
+            user: widget.currentUser,
+            onCommented: (post) {
+              Navigator.of(context).pop();
+              widget.post.comments = post.comments;
+              setState(() {});
+            },
+          ),
         );
       },
     );

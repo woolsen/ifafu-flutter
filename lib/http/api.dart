@@ -121,14 +121,13 @@ class Api {
     return Post.fromJson(response.data);
   }
 
-  Future<Post> deleteComment(int commentId) async {
-    var response = await dio.delete(
+  Future<void> deleteComment(int commentId) async {
+    await dio.delete(
       '/api/post/comment',
       queryParameters: {
         'id': commentId,
       },
     );
-    return Post.fromJson(response.data);
   }
 
   Future<void> deletePost(int postId) async {
