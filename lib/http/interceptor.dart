@@ -6,25 +6,35 @@ import 'package:ifafu/util/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioInterceptor extends Interceptor {
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    super.onRequest(options, handler);
+    if (options.headers['Content-Type'] == null) {
+      options.headers['Content-Type'] = 'application/json';
+    }
+  }
+
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     switch (err.type) {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.receiveTimeout:
-        Toast.show('网络超时');
+        ToastUtil.show('网络超时');
         handler.reject(err);
-        break;
-      case DioExceptionType.unknown:
+        return;
       case DioExceptionType.badResponse:
+        final data = err.response?.data;
+        handler.reject(err.copyWith(message: data['message'] ?? '网络异常，请检查网络连接'));
+        return;
       case DioExceptionType.badCertificate:
       case DioExceptionType.connectionError:
-        Toast.show('网络异常，请检查网络连接');
+        ToastUtil.show('网络异常，请检查网络连接');
         handler.reject(err);
-        break;
+        return;
+      case DioExceptionType.unknown:
       case DioExceptionType.cancel:
-        Toast.show('请求取消');
-        handler.reject(err);
         break;
     }
     super.onError(err, handler);

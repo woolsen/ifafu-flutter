@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart' as sp;
 
 class SPUtil {
-  static SPUtil instance = SPUtil._internal();
+  static SPUtil _instance = SPUtil._internal();
   static sp.SharedPreferences? _preferences;
 
   // 私有构造函数，确保单例模式
@@ -9,11 +9,11 @@ class SPUtil {
 
   // 获取SharedPreferencesUtil单例
   factory SPUtil() {
-    return instance;
+    return _instance;
   }
 
   // 初始化SharedPreferences
-  Future<void> ensureInitialized() async {
+  static Future<void> ensureInitialized() async {
     if (_preferences != null) return;
     _preferences = await sp.SharedPreferences.getInstance();
   }

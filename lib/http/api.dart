@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:ifafu/http/model.dart';
 import 'package:ifafu/http/interceptor.dart';
+import 'package:ifafu/http/model.dart';
 import 'package:ifafu/util/sp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
   static final Api instance = Api._internal();
@@ -25,7 +24,7 @@ class Api {
       ..interceptors.add(PrettyDioLogger(
           requestHeader: true,
           requestBody: false,
-          responseBody: true,
+          responseBody: false,
           responseHeader: false,
           error: true,
           maxWidth: 90))
@@ -33,8 +32,15 @@ class Api {
       ..interceptors.add(_tokenInterceptor);
   }
 
-  Future<List<Banner>> getBanners() async {
-    var response = await dio.get('/api/banner');
+  Future<List<Banner>> getBanners([String? area]) async {
+    final queryParameters = <String, String>{};
+    if (area != null) {
+      queryParameters['area'] = area;
+    }
+    var response = await dio.get(
+      '/api/banner',
+      queryParameters: queryParameters,
+    );
     return (response.data as List)
         .map((e) => Banner.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -60,7 +66,12 @@ class Api {
   }
 
   Future<User> getUserInfo() async {
-    var response = await dio.get('/api/user');
+    var response = await dio.get('/api/auth/info');
+    return User.fromJson(response.data);
+  }
+
+  Future<User> editProfile(User user) async {
+    var response = await dio.put('/api/users/center', data: user.toJson());
     return User.fromJson(response.data);
   }
 
@@ -91,8 +102,52 @@ class Api {
         .toList();
   }
 
-  Future<User> editProfile(User user) async {
-    var response = await dio.put('/api/users/center', data: user.toJson());
-    return User.fromJson(response.data);
+  Future<Post> createPost(PostCreate post) async {
+    var response = await dio.post(
+      '/api/post',
+      data: post.toJson(),
+    );
+    return Post.fromJson(response.data);
+  }
+
+  Future<Post> commentPost(int postId, String content) async {
+    var response = await dio.post(
+      '/api/post/comment',
+      data: {
+        'postId': postId,
+        'content': content,
+      },
+    );
+    return Post.fromJson(response.data);
+  }
+
+  Future<Post> deleteComment(int commentId) async {
+    var response = await dio.delete(
+      '/api/post/comment',
+      queryParameters: {
+        'id': commentId,
+      },
+    );
+    return Post.fromJson(response.data);
+  }
+
+  Future<void> deletePost(int postId) async {
+    await dio.delete(
+      '/api/post',
+      queryParameters: {
+        'id': postId,
+      },
+    );
+  }
+
+  //上传图片
+  Future<String> uploadPostImage(MultipartFile image) async {
+    var response = await dio.post(
+      '/api/post/picture',
+      data: FormData.fromMap({
+        'file': image,
+      }),
+    );
+    return response.data;
   }
 }

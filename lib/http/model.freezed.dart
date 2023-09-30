@@ -193,6 +193,8 @@ mixin _$User {
   set gender(String? value) => throw _privateConstructorUsedError;
   String? get area => throw _privateConstructorUsedError;
   set area(String? value) => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
+  set isAdmin(bool value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -215,7 +217,8 @@ abstract class $UserCopyWith<$Res> {
       String? guildUserId,
       String? phone,
       String? gender,
-      String? area});
+      String? area,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -242,6 +245,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? phone = freezed,
     Object? gender = freezed,
     Object? area = freezed,
+    Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -288,6 +292,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.area
           : area // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -310,7 +318,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? guildUserId,
       String? phone,
       String? gender,
-      String? area});
+      String? area,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -334,6 +343,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? phone = freezed,
     Object? gender = freezed,
     Object? area = freezed,
+    Object? isAdmin = null,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -380,6 +390,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.area
           : area // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -398,7 +412,8 @@ class _$UserImpl implements _User {
       this.guildUserId,
       this.phone,
       this.gender,
-      this.area});
+      this.area,
+      this.isAdmin = false});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -425,10 +440,13 @@ class _$UserImpl implements _User {
   String? gender;
   @override
   String? area;
+  @override
+  @JsonKey()
+  bool isAdmin;
 
   @override
   String toString() {
-    return 'User(id: $id, nickname: $nickname, avatarUrl: $avatarUrl, permissions: $permissions, auths: $auths, username: $username, qq: $qq, guildUserId: $guildUserId, phone: $phone, gender: $gender, area: $area)';
+    return 'User(id: $id, nickname: $nickname, avatarUrl: $avatarUrl, permissions: $permissions, auths: $auths, username: $username, qq: $qq, guildUserId: $guildUserId, phone: $phone, gender: $gender, area: $area, isAdmin: $isAdmin)';
   }
 
   @JsonKey(ignore: true)
@@ -457,7 +475,8 @@ abstract class _User implements User {
       String? guildUserId,
       String? phone,
       String? gender,
-      String? area}) = _$UserImpl;
+      String? area,
+      bool isAdmin}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -494,6 +513,9 @@ abstract class _User implements User {
   @override
   String? get area;
   set area(String? value);
+  @override
+  bool get isAdmin;
+  set isAdmin(bool value);
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
@@ -1269,5 +1291,234 @@ abstract class _UserSmall implements UserSmall {
   @override
   @JsonKey(ignore: true)
   _$$UserSmallImplCopyWith<_$UserSmallImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PostCreate _$PostCreateFromJson(Map<String, dynamic> json) {
+  return _PostCreate.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PostCreate {
+  String get area => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  List<String> get images => throw _privateConstructorUsedError;
+  String get contact => throw _privateConstructorUsedError;
+  String? get contactType => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PostCreateCopyWith<PostCreate> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PostCreateCopyWith<$Res> {
+  factory $PostCreateCopyWith(
+          PostCreate value, $Res Function(PostCreate) then) =
+      _$PostCreateCopyWithImpl<$Res, PostCreate>;
+  @useResult
+  $Res call(
+      {String area,
+      String content,
+      List<String> images,
+      String contact,
+      String? contactType});
+}
+
+/// @nodoc
+class _$PostCreateCopyWithImpl<$Res, $Val extends PostCreate>
+    implements $PostCreateCopyWith<$Res> {
+  _$PostCreateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? area = null,
+    Object? content = null,
+    Object? images = null,
+    Object? contact = null,
+    Object? contactType = freezed,
+  }) {
+    return _then(_value.copyWith(
+      area: null == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      contact: null == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactType: freezed == contactType
+          ? _value.contactType
+          : contactType // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PostCreateImplCopyWith<$Res>
+    implements $PostCreateCopyWith<$Res> {
+  factory _$$PostCreateImplCopyWith(
+          _$PostCreateImpl value, $Res Function(_$PostCreateImpl) then) =
+      __$$PostCreateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String area,
+      String content,
+      List<String> images,
+      String contact,
+      String? contactType});
+}
+
+/// @nodoc
+class __$$PostCreateImplCopyWithImpl<$Res>
+    extends _$PostCreateCopyWithImpl<$Res, _$PostCreateImpl>
+    implements _$$PostCreateImplCopyWith<$Res> {
+  __$$PostCreateImplCopyWithImpl(
+      _$PostCreateImpl _value, $Res Function(_$PostCreateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? area = null,
+    Object? content = null,
+    Object? images = null,
+    Object? contact = null,
+    Object? contactType = freezed,
+  }) {
+    return _then(_$PostCreateImpl(
+      area: null == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      contact: null == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactType: freezed == contactType
+          ? _value.contactType
+          : contactType // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PostCreateImpl implements _PostCreate {
+  _$PostCreateImpl(
+      {required this.area,
+      required this.content,
+      required final List<String> images,
+      required this.contact,
+      required this.contactType})
+      : _images = images;
+
+  factory _$PostCreateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PostCreateImplFromJson(json);
+
+  @override
+  final String area;
+  @override
+  final String content;
+  final List<String> _images;
+  @override
+  List<String> get images {
+    if (_images is EqualUnmodifiableListView) return _images;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_images);
+  }
+
+  @override
+  final String contact;
+  @override
+  final String? contactType;
+
+  @override
+  String toString() {
+    return 'PostCreate(area: $area, content: $content, images: $images, contact: $contact, contactType: $contactType)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PostCreateImpl &&
+            (identical(other.area, area) || other.area == area) &&
+            (identical(other.content, content) || other.content == content) &&
+            const DeepCollectionEquality().equals(other._images, _images) &&
+            (identical(other.contact, contact) || other.contact == contact) &&
+            (identical(other.contactType, contactType) ||
+                other.contactType == contactType));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, area, content,
+      const DeepCollectionEquality().hash(_images), contact, contactType);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PostCreateImplCopyWith<_$PostCreateImpl> get copyWith =>
+      __$$PostCreateImplCopyWithImpl<_$PostCreateImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PostCreateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PostCreate implements PostCreate {
+  factory _PostCreate(
+      {required final String area,
+      required final String content,
+      required final List<String> images,
+      required final String contact,
+      required final String? contactType}) = _$PostCreateImpl;
+
+  factory _PostCreate.fromJson(Map<String, dynamic> json) =
+      _$PostCreateImpl.fromJson;
+
+  @override
+  String get area;
+  @override
+  String get content;
+  @override
+  List<String> get images;
+  @override
+  String get contact;
+  @override
+  String? get contactType;
+  @override
+  @JsonKey(ignore: true)
+  _$$PostCreateImplCopyWith<_$PostCreateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

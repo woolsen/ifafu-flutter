@@ -32,6 +32,7 @@ class User with _$User {
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
 }
 
 @freezed
@@ -76,4 +77,17 @@ class UserSmall with _$UserSmall {
 
   factory UserSmall.fromJson(Map<String, dynamic> json) =>
       _$UserSmallFromJson(json);
+}
+
+@freezed
+class PostCreate with _$PostCreate {
+  factory PostCreate({
+    required String area,
+    required String content,
+    required List<String> images,
+    required String contact,
+    required String? contactType,
+  }) = _PostCreate;
+
+  factory PostCreate.fromJson(Map<String, dynamic> json) => _$PostCreateFromJson(json);
 }

@@ -31,6 +31,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       phone: json['phone'] as String?,
       gender: json['gender'] as String?,
       area: json['area'] as String?,
+      isAdmin: json['isAdmin'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -46,6 +47,7 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'phone': instance.phone,
       'gender': instance.gender,
       'area': instance.area,
+      'isAdmin': instance.isAdmin,
     };
 
 _$PostImpl _$$PostImplFromJson(Map<String, dynamic> json) => _$PostImpl(
@@ -110,4 +112,23 @@ Map<String, dynamic> _$$UserSmallImplToJson(_$UserSmallImpl instance) =>
       'nickname': instance.nickname,
       'avatarUrl': instance.avatarUrl,
       'gender': instance.gender,
+    };
+
+_$PostCreateImpl _$$PostCreateImplFromJson(Map<String, dynamic> json) =>
+    _$PostCreateImpl(
+      area: json['area'] as String,
+      content: json['content'] as String,
+      images:
+          (json['images'] as List<dynamic>).map((e) => e as String).toList(),
+      contact: json['contact'] as String,
+      contactType: json['contactType'] as String?,
+    );
+
+Map<String, dynamic> _$$PostCreateImplToJson(_$PostCreateImpl instance) =>
+    <String, dynamic>{
+      'area': instance.area,
+      'content': instance.content,
+      'images': instance.images,
+      'contact': instance.contact,
+      'contactType': instance.contactType,
     };
