@@ -7,6 +7,7 @@ import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/date.dart';
 import 'package:ifafu/util/extensions.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/widget/comment_input.dart';
 import 'package:ifafu/widget/post.dart';
 
 class PostDetailPage extends StatefulWidget {
@@ -158,8 +159,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       ),
                       //删除按钮
                       if ((_user != null &&
-                              (_user!.id == comment.createBy.id) ||
-                          _user!.hasPermission('post:del')))
+                          (_user!.id == comment.createBy.id ||
+                              _user!.hasPermission('post:del'))))
                         GestureDetector(
                           onTap: () {
                             _showCommentDeleteDialog(context, comment.id);
@@ -188,61 +189,19 @@ class _PostDetailPageState extends State<PostDetailPage> {
   }
 
   Widget _buildCommentInput() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      color: Colors.white,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // 若用户不存在则头像框中显示未登录
-          _user == null
-              ? const CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('assets/image/defaultAvatar.png'),
-                  child: Text('未登录'),
-                )
-              : _getAvatar(_user?.avatarUrl, size: 20),
-          const SizedBox(width: 4.0),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              constraints: const BoxConstraints(
-                minHeight: 40.0,
-              ),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                border: Border.all(
-                  color: Theme.of(context).splashColor,
-                ),
-              ),
-              // color: Theme.of(context).splashColor,
-              child: TextField(
-                focusNode: commentFocus,
-                controller: commentController,
-                // expands: true,
-                minLines: null,
-                maxLines: null,
-                decoration: const InputDecoration.collapsed(
-                  hintText: '说点什么吧...',
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey,
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 4.0),
-          IconButton.filledTonal(
-            onPressed: () {
-              comment(widget.post!.id);
-            },
-            icon: const Icon(Icons.send),
-          ),
-        ],
-      ),
+    if (widget.post == null) {
+      return const SizedBox.shrink();
+    }
+    return CommentInput(
+      postId: widget.post!.id,
+      user: _user,
+      focusNode: commentFocus,
+      onCommented: (post) {
+        setState(() {
+          widget.post!.comments = post.comments;
+        });
+        widget.updated?.call(widget.post!);
+      },
     );
   }
 

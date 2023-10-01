@@ -6,12 +6,14 @@ import 'package:ifafu/util/toast.dart';
 class CommentInput extends StatefulWidget {
   final int postId;
   final void Function(Post) onCommented;
+  final FocusNode? focusNode;
   final User? user;
 
   const CommentInput({
     super.key,
     required this.postId,
     required this.onCommented,
+    this.focusNode,
     this.user,
   });
 
@@ -22,13 +24,16 @@ class CommentInput extends StatefulWidget {
 class _CommentInputState extends State<CommentInput> {
   final _controller = TextEditingController();
   var _lastComment = '';
-  final _focusNode = FocusNode();
+
+  FocusNode? _focusNode;
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_focusNode ??= FocusNode());
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
+    _effectiveFocusNode.addListener(() {
+      if (_effectiveFocusNode.hasFocus) {
         _controller.text = _lastComment;
       } else {
         _lastComment = _controller.text;
@@ -69,7 +74,7 @@ class _CommentInputState extends State<CommentInput> {
               ),
               // color: Theme.of(context).splashColor,
               child: TextField(
-                focusNode: _focusNode,
+                focusNode: _effectiveFocusNode,
                 controller: _controller,
                 minLines: null,
                 maxLines: null,
@@ -105,7 +110,7 @@ class _CommentInputState extends State<CommentInput> {
     Api.instance.commentPost(widget.postId, text).then((post) {
       widget.onCommented(post);
       _controller.clear();
-      _focusNode.unfocus();
+      _effectiveFocusNode.unfocus();
     });
   }
 

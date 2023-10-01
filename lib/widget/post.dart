@@ -184,8 +184,8 @@ class _PostState extends State<Post> {
                         //删除按钮
                         if ((widget.currentUser != null &&
                                 (widget.currentUser!.id ==
-                                    widget.post.createBy.id) ||
-                            widget.currentUser!.hasPermission('post:del')))
+                                    widget.post.createBy.id ||
+                            widget.currentUser!.hasPermission('post:del'))))
                           GestureDetector(
                             onTap: () {
                               _showDeleteDialog(context);
@@ -306,6 +306,10 @@ class _PostState extends State<Post> {
   }
 
   void _onCommentClick() {
+    if (widget.currentUser == null) {
+      ToastUtil.show('请先登录');
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // 可以滚动的底部面板
