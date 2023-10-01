@@ -208,7 +208,7 @@ class _PostState extends State<Post> {
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: GestureDetector(
                               onTap: _onCommentClick,
-                              child: const Icon(Icons.comment, size: 24.0),
+                              child: const Icon(Icons.comment_outlined, size: 24.0),
                             ),
                           ),
                         // GestureDetector(

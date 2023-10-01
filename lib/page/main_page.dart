@@ -62,6 +62,7 @@ class _MainPageState extends State<MainPage>
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent, // 透明状态栏背景
         statusBarIconBrightness: Brightness.dark, // 设置状态栏文字颜色为黑色
+        systemNavigationBarColor: Colors.transparent, // 设置底部导航栏背景颜色
       ),
     );
     return Scaffold(
@@ -75,6 +76,7 @@ class _MainPageState extends State<MainPage>
           UserTab(
             logouted: () {
               _currentIndex = 0;
+              setState(() {});
             },
           ),
         ],

@@ -42,6 +42,12 @@ class _CourseTabState extends State<TimetableTab> {
 
   TimetableSet? _set;
 
+  final titleStyle = const TextStyle(
+    fontSize: 20,
+    height: 1.0,
+    fontFamily: 'DingTalk',
+  );
+
   @override
   void initState() {
     super.initState();
@@ -61,10 +67,30 @@ class _CourseTabState extends State<TimetableTab> {
     return BlocBuilder<UserProvider, User?>(
       bloc: BlocProvider.of<UserProvider>(context),
       builder: (context, user) {
+        Widget? title;
+        if (!init) {
+          title = Text('加载中', style: titleStyle);
+        } else if (_timetable == null) {
+          title = Text('加载失败', style: titleStyle);
+        } else if (user == null) {
+          title = GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('/login');
+            },
+            child: Text('点击登录', style: titleStyle),
+          );
+        } else if (!user.isBindJw) {
+          title = GestureDetector(
+            onTap: _goToBindJwPage,
+            child: Text('点击绑定', style: titleStyle),
+          );
+        } else {
+          title = null;
+        }
         return Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(48),
-            child: _buildAppbar(!init? '加载中': _timetable == null? '': null),
+            child: _buildAppbar(title),
           ),
           body: Builder(
             builder: (context) {
@@ -198,77 +224,7 @@ class _CourseTabState extends State<TimetableTab> {
   }
 
   /// [currentWeek] 本周的周数
-  Widget _buildAppbar(String? loadText) {
-    Widget center;
-    if (loadText != null) {
-      center = Text(loadText);
-    } else {
-      center = StreamBuilder<int>(
-          initialData: _currentWeek,
-          stream: _showWeek.stream,
-          builder: (context, data) {
-            final int? showWeek = data.data;
-            final WeekState? weekState;
-            final String weekStateStr;
-            if (showWeek == null) {
-              weekState = null;
-              weekStateStr = '';
-            } else if (_currentWeek == -1) {
-              weekState = WeekState.vacation;
-              weekStateStr = '放假中';
-            } else if (_currentWeek == showWeek) {
-              weekState = WeekState.currentWeek;
-              weekStateStr = '';
-            } else {
-              weekState = WeekState.notCurrentWeek;
-              weekStateStr = '长按回到本周';
-            }
-            return GestureDetector(
-              onLongPress: () async {
-                int? toPage;
-                if (weekState == WeekState.vacation) {
-                  toPage = 0;
-                } else if (weekState != null) {
-                  toPage = _currentWeek - 1;
-                }
-                if (toPage != null && showWeek != null) {
-                  _pageController.animateToPage(
-                    toPage,
-                    duration: const Duration(seconds: 2),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                }
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    showWeek == null ? '加载中' : '第$showWeek周',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      height: 1.0,
-                      fontFamily: 'DingTalk',
-                    ),
-                  ),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 100),
-                    height: weekState == WeekState.currentWeek ? 0 : 16,
-                    transformAlignment: Alignment.center,
-                    child: Text(
-                      weekStateStr,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          });
-    }
+  Widget _buildAppbar(Widget? center) {
     return ColoredBox(
       color: const Color(0xFFF5F5F5),
       child: SafeArea(
@@ -289,7 +245,73 @@ class _CourseTabState extends State<TimetableTab> {
             ),
             Align(
               alignment: Alignment.center,
-              child: center,
+              child: center ??
+                  StreamBuilder<int>(
+                      initialData: _currentWeek,
+                      stream: _showWeek.stream,
+                      builder: (context, data) {
+                        final int? showWeek = data.data;
+                        final WeekState? weekState;
+                        final String weekStateStr;
+                        if (showWeek == null) {
+                          weekState = null;
+                          weekStateStr = '';
+                        } else if (_currentWeek == -1) {
+                          weekState = WeekState.vacation;
+                          weekStateStr = '放假中';
+                        } else if (_currentWeek == showWeek) {
+                          weekState = WeekState.currentWeek;
+                          weekStateStr = '';
+                        } else {
+                          weekState = WeekState.notCurrentWeek;
+                          weekStateStr = '长按回到本周';
+                        }
+                        return GestureDetector(
+                          onLongPress: () async {
+                            int? toPage;
+                            if (weekState == WeekState.vacation) {
+                              toPage = 0;
+                            } else if (weekState != null) {
+                              toPage = _currentWeek - 1;
+                            }
+                            if (toPage != null && showWeek != null) {
+                              _pageController.animateToPage(
+                                toPage,
+                                duration: const Duration(seconds: 2),
+                                curve: Curves.fastEaseInToSlowEaseOut,
+                              );
+                            }
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                showWeek == null ? '加载中' : '第$showWeek周',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  height: 1.0,
+                                  fontFamily: 'DingTalk',
+                                ),
+                              ),
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 100),
+                                height:
+                                    weekState == WeekState.currentWeek ? 0 : 16,
+                                transformAlignment: Alignment.center,
+                                child: Text(
+                                  weekStateStr,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
             ),
           ],
         ),
