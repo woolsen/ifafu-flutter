@@ -19,8 +19,7 @@ class ImagePicker {
       pickerConfig: AssetPickerConfig(
         selectedAssets: selectedAssets,
         maxAssets: maxAssets,
-        requestType: requestType
-        // routeDuration: _duration,
+        requestType: requestType,
       ),
     );
     Future.delayed(_duration).then((value) {
@@ -38,8 +37,11 @@ class ImagePicker {
     }
   }
 
-  static Future<File?> pickWithCrop(BuildContext context,
-      {CropAspectRatio? aspectRatio}) async {
+  static Future<File?> pickWithCrop(
+    BuildContext context, {
+    CropAspectRatio? aspectRatio,
+    ImageCompressFormat? compressFormat,
+  }) async {
     final image = await pick(context);
     if (image == null) {
       return null;
@@ -51,8 +53,9 @@ class ImagePicker {
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: '裁剪照片',
+          toolbarColor: Colors.white,
           hideBottomControls: true,
-          toolbarWidgetColor: Colors.white,
+          toolbarWidgetColor: Colors.black,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: true,
         ),
@@ -63,6 +66,6 @@ class ImagePicker {
         ),
       ],
     );
-    return croppedFile == null ? null : File(image.path);
+    return croppedFile == null ? null : File(croppedFile.path);
   }
 }

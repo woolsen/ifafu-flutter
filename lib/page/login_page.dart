@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/toast.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -138,11 +137,11 @@ class _LoginPageState extends State<LoginPage> {
   _getSmsCode() async {
     var phone = _phoneController.text;
     if (phone.isEmpty) {
-      _showToast('请输入手机号');
+      ToastUtil.show('请输入手机号');
       return;
     }
     if (!RegExp(r"^1[3456789]\d{9}$").hasMatch(phone)) {
-      _showToast('手机号格式不正确');
+      ToastUtil.show('手机号格式不正确');
       return;
     }
     if (!_isCodeClickable) {
@@ -153,12 +152,9 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
     try {
       await Api.instance.getSmsCode(phone);
-      _showToast('验证码已发送');
+      ToastUtil.show('验证码已发送');
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      _showToast('验证码获取失败');
+      ToastUtil.show('验证码获取失败');
       _isCodeClickable = true;
       _codeHint = '获取验证码';
       setState(() {});
@@ -179,38 +175,28 @@ class _LoginPageState extends State<LoginPage> {
     var phone = _phoneController.text;
     var code = _codeController.text;
     if (phone.isEmpty) {
-      _showToast('请输入手机号');
+      ToastUtil.show('请输入手机号');
       return;
     }
     if (!_phoneRegex.hasMatch(phone)) {
-      _showToast('手机号格式不正确');
+      ToastUtil.show('手机号格式不正确');
       return;
     }
     if (code.isEmpty) {
-      _showToast('请输入验证码');
+      ToastUtil.show('请输入验证码');
       return;
     }
     _loging = true;
     setState(() {});
     Api.instance.login(phone, code).then((user) {
       context.read<UserProvider>().update(user);
-      _showToast('登录成功');
+      ToastUtil.show('登录成功');
       Navigator.of(context).pop();
     }).catchError((e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      _showToast('登录失败');
+      ToastUtil.error(e);
     }).whenComplete(() {
       _loging = false;
       setState(() {});
     });
-  }
-
-  void _showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-    );
   }
 }

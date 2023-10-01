@@ -172,27 +172,17 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   int get id => throw _privateConstructorUsedError;
-  set id(int value) => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
-  set nickname(String value) => throw _privateConstructorUsedError;
   String get avatarUrl => throw _privateConstructorUsedError;
-  set avatarUrl(String value) => throw _privateConstructorUsedError;
   List<String> get permissions => throw _privateConstructorUsedError;
-  set permissions(List<String> value) => throw _privateConstructorUsedError;
   List<String> get auths => throw _privateConstructorUsedError;
-  set auths(List<String> value) => throw _privateConstructorUsedError;
+  bool get isBindJw => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
-  set username(String? value) => throw _privateConstructorUsedError;
   int? get qq => throw _privateConstructorUsedError;
-  set qq(int? value) => throw _privateConstructorUsedError;
   String? get guildUserId => throw _privateConstructorUsedError;
-  set guildUserId(String? value) => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
-  set phone(String? value) => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
-  set gender(String? value) => throw _privateConstructorUsedError;
   String? get area => throw _privateConstructorUsedError;
-  set area(String? value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -210,6 +200,7 @@ abstract class $UserCopyWith<$Res> {
       String avatarUrl,
       List<String> permissions,
       List<String> auths,
+      bool isBindJw,
       String? username,
       int? qq,
       String? guildUserId,
@@ -236,6 +227,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? avatarUrl = null,
     Object? permissions = null,
     Object? auths = null,
+    Object? isBindJw = null,
     Object? username = freezed,
     Object? qq = freezed,
     Object? guildUserId = freezed,
@@ -264,6 +256,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.auths
           : auths // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBindJw: null == isBindJw
+          ? _value.isBindJw
+          : isBindJw // ignore: cast_nullable_to_non_nullable
+              as bool,
       username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -305,6 +301,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String avatarUrl,
       List<String> permissions,
       List<String> auths,
+      bool isBindJw,
       String? username,
       int? qq,
       String? guildUserId,
@@ -328,6 +325,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? avatarUrl = null,
     Object? permissions = null,
     Object? auths = null,
+    Object? isBindJw = null,
     Object? username = freezed,
     Object? qq = freezed,
     Object? guildUserId = freezed,
@@ -349,13 +347,17 @@ class __$$UserImplCopyWithImpl<$Res>
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String,
       permissions: null == permissions
-          ? _value.permissions
+          ? _value._permissions
           : permissions // ignore: cast_nullable_to_non_nullable
               as List<String>,
       auths: null == auths
-          ? _value.auths
+          ? _value._auths
           : auths // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBindJw: null == isBindJw
+          ? _value.isBindJw
+          : isBindJw // ignore: cast_nullable_to_non_nullable
+              as bool,
       username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -391,45 +393,105 @@ class _$UserImpl implements _User {
       {required this.id,
       required this.nickname,
       required this.avatarUrl,
-      required this.permissions,
-      required this.auths,
+      required final List<String> permissions,
+      required final List<String> auths,
+      this.isBindJw = false,
       this.username,
       this.qq,
       this.guildUserId,
       this.phone,
       this.gender,
-      this.area});
+      this.area})
+      : _permissions = permissions,
+        _auths = auths;
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
 
   @override
-  int id;
+  final int id;
   @override
-  String nickname;
+  final String nickname;
   @override
-  String avatarUrl;
+  final String avatarUrl;
+  final List<String> _permissions;
   @override
-  List<String> permissions;
+  List<String> get permissions {
+    if (_permissions is EqualUnmodifiableListView) return _permissions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_permissions);
+  }
+
+  final List<String> _auths;
   @override
-  List<String> auths;
+  List<String> get auths {
+    if (_auths is EqualUnmodifiableListView) return _auths;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_auths);
+  }
+
   @override
-  String? username;
+  @JsonKey()
+  final bool isBindJw;
   @override
-  int? qq;
+  final String? username;
   @override
-  String? guildUserId;
+  final int? qq;
   @override
-  String? phone;
+  final String? guildUserId;
   @override
-  String? gender;
+  final String? phone;
   @override
-  String? area;
+  final String? gender;
+  @override
+  final String? area;
 
   @override
   String toString() {
-    return 'User(id: $id, nickname: $nickname, avatarUrl: $avatarUrl, permissions: $permissions, auths: $auths, username: $username, qq: $qq, guildUserId: $guildUserId, phone: $phone, gender: $gender, area: $area)';
+    return 'User(id: $id, nickname: $nickname, avatarUrl: $avatarUrl, permissions: $permissions, auths: $auths, isBindJw: $isBindJw, username: $username, qq: $qq, guildUserId: $guildUserId, phone: $phone, gender: $gender, area: $area)';
   }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.nickname, nickname) ||
+                other.nickname == nickname) &&
+            (identical(other.avatarUrl, avatarUrl) ||
+                other.avatarUrl == avatarUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._permissions, _permissions) &&
+            const DeepCollectionEquality().equals(other._auths, _auths) &&
+            (identical(other.isBindJw, isBindJw) ||
+                other.isBindJw == isBindJw) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.qq, qq) || other.qq == qq) &&
+            (identical(other.guildUserId, guildUserId) ||
+                other.guildUserId == guildUserId) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.area, area) || other.area == area));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      nickname,
+      avatarUrl,
+      const DeepCollectionEquality().hash(_permissions),
+      const DeepCollectionEquality().hash(_auths),
+      isBindJw,
+      username,
+      qq,
+      guildUserId,
+      phone,
+      gender,
+      area);
 
   @JsonKey(ignore: true)
   @override
@@ -447,56 +509,243 @@ class _$UserImpl implements _User {
 
 abstract class _User implements User {
   factory _User(
-      {required int id,
-      required String nickname,
-      required String avatarUrl,
-      required List<String> permissions,
-      required List<String> auths,
-      String? username,
-      int? qq,
-      String? guildUserId,
-      String? phone,
-      String? gender,
-      String? area}) = _$UserImpl;
+      {required final int id,
+      required final String nickname,
+      required final String avatarUrl,
+      required final List<String> permissions,
+      required final List<String> auths,
+      final bool isBindJw,
+      final String? username,
+      final int? qq,
+      final String? guildUserId,
+      final String? phone,
+      final String? gender,
+      final String? area}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
   int get id;
-  set id(int value);
   @override
   String get nickname;
-  set nickname(String value);
   @override
   String get avatarUrl;
-  set avatarUrl(String value);
   @override
   List<String> get permissions;
-  set permissions(List<String> value);
   @override
   List<String> get auths;
-  set auths(List<String> value);
+  @override
+  bool get isBindJw;
   @override
   String? get username;
-  set username(String? value);
   @override
   int? get qq;
-  set qq(int? value);
   @override
   String? get guildUserId;
-  set guildUserId(String? value);
   @override
   String? get phone;
-  set phone(String? value);
   @override
   String? get gender;
-  set gender(String? value);
   @override
   String? get area;
-  set area(String? value);
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+UserUpdate _$UserUpdateFromJson(Map<String, dynamic> json) {
+  return _UserUpdate.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UserUpdate {
+  String get nickname => throw _privateConstructorUsedError;
+  String get avatarUrl => throw _privateConstructorUsedError;
+  String? get area => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $UserUpdateCopyWith<UserUpdate> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UserUpdateCopyWith<$Res> {
+  factory $UserUpdateCopyWith(
+          UserUpdate value, $Res Function(UserUpdate) then) =
+      _$UserUpdateCopyWithImpl<$Res, UserUpdate>;
+  @useResult
+  $Res call({String nickname, String avatarUrl, String? area, String? gender});
+}
+
+/// @nodoc
+class _$UserUpdateCopyWithImpl<$Res, $Val extends UserUpdate>
+    implements $UserUpdateCopyWith<$Res> {
+  _$UserUpdateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? nickname = null,
+    Object? avatarUrl = null,
+    Object? area = freezed,
+    Object? gender = freezed,
+  }) {
+    return _then(_value.copyWith(
+      nickname: null == nickname
+          ? _value.nickname
+          : nickname // ignore: cast_nullable_to_non_nullable
+              as String,
+      avatarUrl: null == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      area: freezed == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$UserUpdateImplCopyWith<$Res>
+    implements $UserUpdateCopyWith<$Res> {
+  factory _$$UserUpdateImplCopyWith(
+          _$UserUpdateImpl value, $Res Function(_$UserUpdateImpl) then) =
+      __$$UserUpdateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String nickname, String avatarUrl, String? area, String? gender});
+}
+
+/// @nodoc
+class __$$UserUpdateImplCopyWithImpl<$Res>
+    extends _$UserUpdateCopyWithImpl<$Res, _$UserUpdateImpl>
+    implements _$$UserUpdateImplCopyWith<$Res> {
+  __$$UserUpdateImplCopyWithImpl(
+      _$UserUpdateImpl _value, $Res Function(_$UserUpdateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? nickname = null,
+    Object? avatarUrl = null,
+    Object? area = freezed,
+    Object? gender = freezed,
+  }) {
+    return _then(_$UserUpdateImpl(
+      nickname: null == nickname
+          ? _value.nickname
+          : nickname // ignore: cast_nullable_to_non_nullable
+              as String,
+      avatarUrl: null == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      area: freezed == area
+          ? _value.area
+          : area // ignore: cast_nullable_to_non_nullable
+              as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserUpdateImpl implements _UserUpdate {
+  _$UserUpdateImpl(
+      {required this.nickname,
+      required this.avatarUrl,
+      this.area,
+      this.gender});
+
+  factory _$UserUpdateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserUpdateImplFromJson(json);
+
+  @override
+  final String nickname;
+  @override
+  final String avatarUrl;
+  @override
+  final String? area;
+  @override
+  final String? gender;
+
+  @override
+  String toString() {
+    return 'UserUpdate(nickname: $nickname, avatarUrl: $avatarUrl, area: $area, gender: $gender)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserUpdateImpl &&
+            (identical(other.nickname, nickname) ||
+                other.nickname == nickname) &&
+            (identical(other.avatarUrl, avatarUrl) ||
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.area, area) || other.area == area) &&
+            (identical(other.gender, gender) || other.gender == gender));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, nickname, avatarUrl, area, gender);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserUpdateImplCopyWith<_$UserUpdateImpl> get copyWith =>
+      __$$UserUpdateImplCopyWithImpl<_$UserUpdateImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserUpdateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _UserUpdate implements UserUpdate {
+  factory _UserUpdate(
+      {required final String nickname,
+      required final String avatarUrl,
+      final String? area,
+      final String? gender}) = _$UserUpdateImpl;
+
+  factory _UserUpdate.fromJson(Map<String, dynamic> json) =
+      _$UserUpdateImpl.fromJson;
+
+  @override
+  String get nickname;
+  @override
+  String get avatarUrl;
+  @override
+  String? get area;
+  @override
+  String? get gender;
+  @override
+  @JsonKey(ignore: true)
+  _$$UserUpdateImplCopyWith<_$UserUpdateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1466,5 +1715,804 @@ abstract class _PostCreate implements PostCreate {
   @override
   @JsonKey(ignore: true)
   _$$PostCreateImplCopyWith<_$PostCreateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PersonalTimetable _$PersonalTimetableFromJson(Map<String, dynamic> json) {
+  return _PersonalTimetable.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PersonalTimetable {
+  String get year => throw _privateConstructorUsedError;
+  int get semester => throw _privateConstructorUsedError;
+  @DateTimeConverter()
+  DateTime get openDay => throw _privateConstructorUsedError;
+  List<Course> get courses => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PersonalTimetableCopyWith<PersonalTimetable> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PersonalTimetableCopyWith<$Res> {
+  factory $PersonalTimetableCopyWith(
+          PersonalTimetable value, $Res Function(PersonalTimetable) then) =
+      _$PersonalTimetableCopyWithImpl<$Res, PersonalTimetable>;
+  @useResult
+  $Res call(
+      {String year,
+      int semester,
+      @DateTimeConverter() DateTime openDay,
+      List<Course> courses});
+}
+
+/// @nodoc
+class _$PersonalTimetableCopyWithImpl<$Res, $Val extends PersonalTimetable>
+    implements $PersonalTimetableCopyWith<$Res> {
+  _$PersonalTimetableCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? year = null,
+    Object? semester = null,
+    Object? openDay = null,
+    Object? courses = null,
+  }) {
+    return _then(_value.copyWith(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      semester: null == semester
+          ? _value.semester
+          : semester // ignore: cast_nullable_to_non_nullable
+              as int,
+      openDay: null == openDay
+          ? _value.openDay
+          : openDay // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      courses: null == courses
+          ? _value.courses
+          : courses // ignore: cast_nullable_to_non_nullable
+              as List<Course>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PersonalTimetableImplCopyWith<$Res>
+    implements $PersonalTimetableCopyWith<$Res> {
+  factory _$$PersonalTimetableImplCopyWith(_$PersonalTimetableImpl value,
+          $Res Function(_$PersonalTimetableImpl) then) =
+      __$$PersonalTimetableImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String year,
+      int semester,
+      @DateTimeConverter() DateTime openDay,
+      List<Course> courses});
+}
+
+/// @nodoc
+class __$$PersonalTimetableImplCopyWithImpl<$Res>
+    extends _$PersonalTimetableCopyWithImpl<$Res, _$PersonalTimetableImpl>
+    implements _$$PersonalTimetableImplCopyWith<$Res> {
+  __$$PersonalTimetableImplCopyWithImpl(_$PersonalTimetableImpl _value,
+      $Res Function(_$PersonalTimetableImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? year = null,
+    Object? semester = null,
+    Object? openDay = null,
+    Object? courses = null,
+  }) {
+    return _then(_$PersonalTimetableImpl(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      semester: null == semester
+          ? _value.semester
+          : semester // ignore: cast_nullable_to_non_nullable
+              as int,
+      openDay: null == openDay
+          ? _value.openDay
+          : openDay // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      courses: null == courses
+          ? _value._courses
+          : courses // ignore: cast_nullable_to_non_nullable
+              as List<Course>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PersonalTimetableImpl implements _PersonalTimetable {
+  _$PersonalTimetableImpl(
+      {required this.year,
+      required this.semester,
+      @DateTimeConverter() required this.openDay,
+      required final List<Course> courses})
+      : _courses = courses;
+
+  factory _$PersonalTimetableImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PersonalTimetableImplFromJson(json);
+
+  @override
+  final String year;
+  @override
+  final int semester;
+  @override
+  @DateTimeConverter()
+  final DateTime openDay;
+  final List<Course> _courses;
+  @override
+  List<Course> get courses {
+    if (_courses is EqualUnmodifiableListView) return _courses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_courses);
+  }
+
+  @override
+  String toString() {
+    return 'PersonalTimetable(year: $year, semester: $semester, openDay: $openDay, courses: $courses)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PersonalTimetableImpl &&
+            (identical(other.year, year) || other.year == year) &&
+            (identical(other.semester, semester) ||
+                other.semester == semester) &&
+            (identical(other.openDay, openDay) || other.openDay == openDay) &&
+            const DeepCollectionEquality().equals(other._courses, _courses));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, year, semester, openDay,
+      const DeepCollectionEquality().hash(_courses));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PersonalTimetableImplCopyWith<_$PersonalTimetableImpl> get copyWith =>
+      __$$PersonalTimetableImplCopyWithImpl<_$PersonalTimetableImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PersonalTimetableImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PersonalTimetable implements PersonalTimetable {
+  factory _PersonalTimetable(
+      {required final String year,
+      required final int semester,
+      @DateTimeConverter() required final DateTime openDay,
+      required final List<Course> courses}) = _$PersonalTimetableImpl;
+
+  factory _PersonalTimetable.fromJson(Map<String, dynamic> json) =
+      _$PersonalTimetableImpl.fromJson;
+
+  @override
+  String get year;
+  @override
+  int get semester;
+  @override
+  @DateTimeConverter()
+  DateTime get openDay;
+  @override
+  List<Course> get courses;
+  @override
+  @JsonKey(ignore: true)
+  _$$PersonalTimetableImplCopyWith<_$PersonalTimetableImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Course _$CourseFromJson(Map<String, dynamic> json) {
+  return _Course.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Course {
+  int? get id => throw _privateConstructorUsedError;
+  set id(int? value) => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  set name(String value) => throw _privateConstructorUsedError;
+  String get teacher => throw _privateConstructorUsedError;
+  set teacher(String value) => throw _privateConstructorUsedError;
+  String get location => throw _privateConstructorUsedError;
+  set location(String value) => throw _privateConstructorUsedError;
+  Set<int> get weeks => throw _privateConstructorUsedError;
+  set weeks(Set<int> value) => throw _privateConstructorUsedError;
+  int get weekday => throw _privateConstructorUsedError;
+  set weekday(int value) => throw _privateConstructorUsedError;
+  int get startNode => throw _privateConstructorUsedError;
+  set startNode(int value) => throw _privateConstructorUsedError;
+  int get nodeCount => throw _privateConstructorUsedError;
+  set nodeCount(int value) => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $CourseCopyWith<Course> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CourseCopyWith<$Res> {
+  factory $CourseCopyWith(Course value, $Res Function(Course) then) =
+      _$CourseCopyWithImpl<$Res, Course>;
+  @useResult
+  $Res call(
+      {int? id,
+      String name,
+      String teacher,
+      String location,
+      Set<int> weeks,
+      int weekday,
+      int startNode,
+      int nodeCount});
+}
+
+/// @nodoc
+class _$CourseCopyWithImpl<$Res, $Val extends Course>
+    implements $CourseCopyWith<$Res> {
+  _$CourseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = freezed,
+    Object? name = null,
+    Object? teacher = null,
+    Object? location = null,
+    Object? weeks = null,
+    Object? weekday = null,
+    Object? startNode = null,
+    Object? nodeCount = null,
+  }) {
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      teacher: null == teacher
+          ? _value.teacher
+          : teacher // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
+      weeks: null == weeks
+          ? _value.weeks
+          : weeks // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
+      weekday: null == weekday
+          ? _value.weekday
+          : weekday // ignore: cast_nullable_to_non_nullable
+              as int,
+      startNode: null == startNode
+          ? _value.startNode
+          : startNode // ignore: cast_nullable_to_non_nullable
+              as int,
+      nodeCount: null == nodeCount
+          ? _value.nodeCount
+          : nodeCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$CourseImplCopyWith<$Res> implements $CourseCopyWith<$Res> {
+  factory _$$CourseImplCopyWith(
+          _$CourseImpl value, $Res Function(_$CourseImpl) then) =
+      __$$CourseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int? id,
+      String name,
+      String teacher,
+      String location,
+      Set<int> weeks,
+      int weekday,
+      int startNode,
+      int nodeCount});
+}
+
+/// @nodoc
+class __$$CourseImplCopyWithImpl<$Res>
+    extends _$CourseCopyWithImpl<$Res, _$CourseImpl>
+    implements _$$CourseImplCopyWith<$Res> {
+  __$$CourseImplCopyWithImpl(
+      _$CourseImpl _value, $Res Function(_$CourseImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = freezed,
+    Object? name = null,
+    Object? teacher = null,
+    Object? location = null,
+    Object? weeks = null,
+    Object? weekday = null,
+    Object? startNode = null,
+    Object? nodeCount = null,
+  }) {
+    return _then(_$CourseImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      teacher: null == teacher
+          ? _value.teacher
+          : teacher // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
+      weeks: null == weeks
+          ? _value.weeks
+          : weeks // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
+      weekday: null == weekday
+          ? _value.weekday
+          : weekday // ignore: cast_nullable_to_non_nullable
+              as int,
+      startNode: null == startNode
+          ? _value.startNode
+          : startNode // ignore: cast_nullable_to_non_nullable
+              as int,
+      nodeCount: null == nodeCount
+          ? _value.nodeCount
+          : nodeCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CourseImpl implements _Course {
+  _$CourseImpl(
+      {this.id,
+      required this.name,
+      required this.teacher,
+      required this.location,
+      required this.weeks,
+      required this.weekday,
+      required this.startNode,
+      required this.nodeCount});
+
+  factory _$CourseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CourseImplFromJson(json);
+
+  @override
+  int? id;
+  @override
+  String name;
+  @override
+  String teacher;
+  @override
+  String location;
+  @override
+  Set<int> weeks;
+  @override
+  int weekday;
+  @override
+  int startNode;
+  @override
+  int nodeCount;
+
+  @override
+  String toString() {
+    return 'Course(id: $id, name: $name, teacher: $teacher, location: $location, weeks: $weeks, weekday: $weekday, startNode: $startNode, nodeCount: $nodeCount)';
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CourseImplCopyWith<_$CourseImpl> get copyWith =>
+      __$$CourseImplCopyWithImpl<_$CourseImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CourseImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Course implements Course {
+  factory _Course(
+      {int? id,
+      required String name,
+      required String teacher,
+      required String location,
+      required Set<int> weeks,
+      required int weekday,
+      required int startNode,
+      required int nodeCount}) = _$CourseImpl;
+
+  factory _Course.fromJson(Map<String, dynamic> json) = _$CourseImpl.fromJson;
+
+  @override
+  int? get id;
+  set id(int? value);
+  @override
+  String get name;
+  set name(String value);
+  @override
+  String get teacher;
+  set teacher(String value);
+  @override
+  String get location;
+  set location(String value);
+  @override
+  Set<int> get weeks;
+  set weeks(Set<int> value);
+  @override
+  int get weekday;
+  set weekday(int value);
+  @override
+  int get startNode;
+  set startNode(int value);
+  @override
+  int get nodeCount;
+  set nodeCount(int value);
+  @override
+  @JsonKey(ignore: true)
+  _$$CourseImplCopyWith<_$CourseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Term _$TermFromJson(Map<String, dynamic> json) {
+  return _Term.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Term {
+  String get year => throw _privateConstructorUsedError;
+  String get term => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $TermCopyWith<Term> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TermCopyWith<$Res> {
+  factory $TermCopyWith(Term value, $Res Function(Term) then) =
+      _$TermCopyWithImpl<$Res, Term>;
+  @useResult
+  $Res call({String year, String term});
+}
+
+/// @nodoc
+class _$TermCopyWithImpl<$Res, $Val extends Term>
+    implements $TermCopyWith<$Res> {
+  _$TermCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? year = null,
+    Object? term = null,
+  }) {
+    return _then(_value.copyWith(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      term: null == term
+          ? _value.term
+          : term // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TermImplCopyWith<$Res> implements $TermCopyWith<$Res> {
+  factory _$$TermImplCopyWith(
+          _$TermImpl value, $Res Function(_$TermImpl) then) =
+      __$$TermImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String year, String term});
+}
+
+/// @nodoc
+class __$$TermImplCopyWithImpl<$Res>
+    extends _$TermCopyWithImpl<$Res, _$TermImpl>
+    implements _$$TermImplCopyWith<$Res> {
+  __$$TermImplCopyWithImpl(_$TermImpl _value, $Res Function(_$TermImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? year = null,
+    Object? term = null,
+  }) {
+    return _then(_$TermImpl(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      term: null == term
+          ? _value.term
+          : term // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TermImpl implements _Term {
+  _$TermImpl({required this.year, required this.term});
+
+  factory _$TermImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TermImplFromJson(json);
+
+  @override
+  final String year;
+  @override
+  final String term;
+
+  @override
+  String toString() {
+    return 'Term(year: $year, term: $term)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TermImpl &&
+            (identical(other.year, year) || other.year == year) &&
+            (identical(other.term, term) || other.term == term));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, year, term);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TermImplCopyWith<_$TermImpl> get copyWith =>
+      __$$TermImplCopyWithImpl<_$TermImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TermImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Term implements Term {
+  factory _Term({required final String year, required final String term}) =
+      _$TermImpl;
+
+  factory _Term.fromJson(Map<String, dynamic> json) = _$TermImpl.fromJson;
+
+  @override
+  String get year;
+  @override
+  String get term;
+  @override
+  @JsonKey(ignore: true)
+  _$$TermImplCopyWith<_$TermImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TimetableSet _$TimetableSetFromJson(Map<String, dynamic> json) {
+  return _TimetableSet.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TimetableSet {
+  int? get timeIndex => throw _privateConstructorUsedError;
+  set timeIndex(int? value) => throw _privateConstructorUsedError;
+  bool get showTime => throw _privateConstructorUsedError;
+  set showTime(bool value) => throw _privateConstructorUsedError;
+  String? get backgroundPath => throw _privateConstructorUsedError;
+  set backgroundPath(String? value) => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $TimetableSetCopyWith<TimetableSet> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TimetableSetCopyWith<$Res> {
+  factory $TimetableSetCopyWith(
+          TimetableSet value, $Res Function(TimetableSet) then) =
+      _$TimetableSetCopyWithImpl<$Res, TimetableSet>;
+  @useResult
+  $Res call({int? timeIndex, bool showTime, String? backgroundPath});
+}
+
+/// @nodoc
+class _$TimetableSetCopyWithImpl<$Res, $Val extends TimetableSet>
+    implements $TimetableSetCopyWith<$Res> {
+  _$TimetableSetCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? timeIndex = freezed,
+    Object? showTime = null,
+    Object? backgroundPath = freezed,
+  }) {
+    return _then(_value.copyWith(
+      timeIndex: freezed == timeIndex
+          ? _value.timeIndex
+          : timeIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
+      showTime: null == showTime
+          ? _value.showTime
+          : showTime // ignore: cast_nullable_to_non_nullable
+              as bool,
+      backgroundPath: freezed == backgroundPath
+          ? _value.backgroundPath
+          : backgroundPath // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TimetableSetImplCopyWith<$Res>
+    implements $TimetableSetCopyWith<$Res> {
+  factory _$$TimetableSetImplCopyWith(
+          _$TimetableSetImpl value, $Res Function(_$TimetableSetImpl) then) =
+      __$$TimetableSetImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int? timeIndex, bool showTime, String? backgroundPath});
+}
+
+/// @nodoc
+class __$$TimetableSetImplCopyWithImpl<$Res>
+    extends _$TimetableSetCopyWithImpl<$Res, _$TimetableSetImpl>
+    implements _$$TimetableSetImplCopyWith<$Res> {
+  __$$TimetableSetImplCopyWithImpl(
+      _$TimetableSetImpl _value, $Res Function(_$TimetableSetImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? timeIndex = freezed,
+    Object? showTime = null,
+    Object? backgroundPath = freezed,
+  }) {
+    return _then(_$TimetableSetImpl(
+      timeIndex: freezed == timeIndex
+          ? _value.timeIndex
+          : timeIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
+      showTime: null == showTime
+          ? _value.showTime
+          : showTime // ignore: cast_nullable_to_non_nullable
+              as bool,
+      backgroundPath: freezed == backgroundPath
+          ? _value.backgroundPath
+          : backgroundPath // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TimetableSetImpl implements _TimetableSet {
+  _$TimetableSetImpl(
+      {this.timeIndex = null, this.showTime = true, this.backgroundPath});
+
+  factory _$TimetableSetImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TimetableSetImplFromJson(json);
+
+  @override
+  @JsonKey()
+  int? timeIndex;
+  @override
+  @JsonKey()
+  bool showTime;
+  @override
+  String? backgroundPath;
+
+  @override
+  String toString() {
+    return 'TimetableSet(timeIndex: $timeIndex, showTime: $showTime, backgroundPath: $backgroundPath)';
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TimetableSetImplCopyWith<_$TimetableSetImpl> get copyWith =>
+      __$$TimetableSetImplCopyWithImpl<_$TimetableSetImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TimetableSetImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TimetableSet implements TimetableSet {
+  factory _TimetableSet(
+      {int? timeIndex,
+      bool showTime,
+      String? backgroundPath}) = _$TimetableSetImpl;
+
+  factory _TimetableSet.fromJson(Map<String, dynamic> json) =
+      _$TimetableSetImpl.fromJson;
+
+  @override
+  int? get timeIndex;
+  set timeIndex(int? value);
+  @override
+  bool get showTime;
+  set showTime(bool value);
+  @override
+  String? get backgroundPath;
+  set backgroundPath(String? value);
+  @override
+  @JsonKey(ignore: true)
+  _$$TimetableSetImplCopyWith<_$TimetableSetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

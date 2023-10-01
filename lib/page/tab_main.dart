@@ -36,122 +36,100 @@ class _MainTabState extends State<MainTab> {
 
   final RefreshController _refreshController = RefreshController();
 
-  model.User? _user;
-
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserProvider, model.User?>(
+    return BlocBuilder<UserProvider, model.User?>(
       bloc: BlocProvider.of<UserProvider>(context),
-      listener: (context, user) {
-        _user = user;
-        setState(() {});
-      },
-      listenWhen: (previous, current) => previous != current,
-      child: Scaffold(
-        appBar: _buildAppbar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _goToCreatePost,
-          child: const Icon(Icons.add),
-        ),
-        body: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: _refresh,
-          enablePullDown: true,
-          enablePullUp: false,
-          header: const ClassicHeader(
-            refreshingText: '正在刷新',
-            idleText: '下拉刷新',
-            completeText: '刷新完成',
-            failedText: '刷新失败',
-            releaseText: '释放刷新',
-            refreshingIcon: SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.blue,
-              ),
-            ),
-            idleIcon: Icon(Icons.arrow_downward, color: Colors.blue),
-            completeIcon: Icon(Icons.done, color: Colors.green),
-            failedIcon: Icon(Icons.close, color: Colors.red),
+      builder: (context, user) {
+        return Scaffold(
+          appBar: _buildAppbar(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _goToCreatePost(user != null),
+            child: const Icon(Icons.add),
           ),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      aspectRatio: 2.4,
+          body: SmartRefresher(
+            controller: _refreshController,
+            onRefresh: _refresh,
+            enablePullDown: true,
+            enablePullUp: false,
+            header: const ClassicHeader(),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        aspectRatio: 2.4,
+                      ),
+                      items: banners.map((banner) {
+                        return Builder(
+                          builder: (context) => Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: CachedNetworkImage(
+                              imageUrl: banner.imageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                    items: banners.map((banner) {
-                      return Builder(
-                        builder: (context) => Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: CachedNetworkImage(
-                            imageUrl: banner.imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    }).toList(),
                   ),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  for (var value in postAdded) ...{
-                    Post(
-                      post: value,
-                      currentUser: _user,
-                      deleted: () {
-                        setState(() {
-                          postDeleted.add(value.id);
-                        });
-                      },
+                SliverList(
+                  delegate: SliverChildListDelegate.fixed([
+                    for (var value in postAdded) ...{
+                      Post(
+                        post: value,
+                        currentUser: user,
+                        deleted: () {
+                          setState(() {
+                            postDeleted.add(value.id);
+                          });
+                        },
+                      ),
+                      const Divider(thickness: 0.3),
+                    },
+                  ]),
+                ),
+                PagedSliverList.separated(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<model.Post>(
+                    itemBuilder: (context, item, index) => Visibility(
+                      visible: !postDeleted.contains(item.id),
+                      child: Post(
+                        post: item,
+                        currentUser: user,
+                        deleted: () {
+                          setState(() {
+                            postDeleted.add(item.id);
+                          });
+                        },
+                      ),
                     ),
-                    const Divider(thickness: 0.3),
+                  ),
+                  separatorBuilder: (context, index) {
+                    return Visibility(
+                      visible: !postDeleted
+                          .contains(_pagingController.itemList?[index].id),
+                      child: const Divider(
+                        thickness: 0.3,
+                      ),
+                    );
                   },
-                ]),
-              ),
-              PagedSliverList.separated(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<model.Post>(
-                  itemBuilder: (context, item, index) => Visibility(
-                    visible: !postDeleted.contains(item.id),
-                    child: Post(
-                      post: item,
-                      currentUser: _user,
-                      deleted: () {
-                        setState(() {
-                          postDeleted.add(item.id);
-                        });
-                      },
-                    ),
-                  ),
                 ),
-                separatorBuilder: (context, index) {
-                  return Visibility(
-                    visible: !postDeleted
-                        .contains(_pagingController.itemList?[index].id),
-                    child: const Divider(
-                      thickness: 0.3,
-                    ),
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -226,8 +204,8 @@ class _MainTabState extends State<MainTab> {
     }
   }
 
-  Future<void> _goToCreatePost() async {
-    if (_user == null) {
+  Future<void> _goToCreatePost(bool isLogon) async {
+    if (!isLogon) {
       ToastUtil.show('请先登录');
       return;
     }
@@ -280,9 +258,6 @@ class _MainTabState extends State<MainTab> {
     var data = await Api.instance.getBanners(area);
     setState(() {
       banners = data;
-      if (kDebugMode) {
-        print(banners);
-      }
     });
   }
 

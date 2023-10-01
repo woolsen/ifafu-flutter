@@ -71,8 +71,8 @@ class _PostState extends State<Post> {
       padding: const EdgeInsets.only(
         left: 12.0,
         right: 12.0,
-        top: 8.0,
-        bottom: 4.0,
+        top: 16.0,
+        bottom: 10.0,
       ),
       color: Colors.white,
       child: Column(
@@ -103,8 +103,10 @@ class _PostState extends State<Post> {
                           const SizedBox(width: 4),
                           Row(
                             children: [
-                              const Icon(Icons.location_on_outlined,
-                                  size: 14.0),
+                              const Icon(
+                                Icons.location_on_outlined,
+                                size: 14.0,
+                              ),
                               Text(widget.post.area),
                             ],
                           ),
@@ -130,36 +132,15 @@ class _PostState extends State<Post> {
                         ),
                       ),
                     if (!widget.detailMode && widget.post.content.isNotEmpty)
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          const maxLines = 5;
-                          const textStyle = TextStyle(fontSize: 16.0);
-                          var didExceed = didExceedMaxLines(
-                            widget.post.content,
-                            textStyle,
-                            maxLines,
-                            constraints.maxWidth,
-                          );
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.post.content,
-                                style: textStyle,
-                                maxLines: maxLines,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              if (didExceed)
-                                const Text(
-                                  '点击阅读更多',
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
+                      _readMoreTextWidget(
+                        text: TextSpan(
+                          text: widget.post.content,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                        maxLines: 5,
                       ),
                     if (images != null && images.isNotEmpty) ...[
                       const SizedBox(height: 4.0),
@@ -183,9 +164,9 @@ class _PostState extends State<Post> {
                         ),
                         //删除按钮
                         if ((widget.currentUser != null &&
-                                (widget.currentUser!.id ==
+                            (widget.currentUser!.id ==
                                     widget.post.createBy.id ||
-                            widget.currentUser!.hasPermission('post:del'))))
+                                widget.currentUser!.hasPermission('post:del'))))
                           GestureDetector(
                             onTap: () {
                               _showDeleteDialog(context);
@@ -208,16 +189,12 @@ class _PostState extends State<Post> {
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: GestureDetector(
                               onTap: _onCommentClick,
-                              child: const Icon(Icons.comment, size: 24.0),
+                              child: const Icon(
+                                Icons.comment_outlined,
+                                size: 24.0,
+                              ),
                             ),
                           ),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     // Handle share click
-                        //   },
-                        //   child: const Icon(Icons.share_rounded, size: 24.0),
-                        // ),
-                        // const SizedBox(width: 8),
                       ],
                     ),
                     if (!widget.detailMode &&
@@ -225,12 +202,9 @@ class _PostState extends State<Post> {
                         comments.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       for (var comment in comments.take(4))
-                        RichText(
+                        _readMoreTextWidget(
+                          maxLines: 3,
                           text: TextSpan(
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.black,
-                            ),
                             children: [
                               TextSpan(
                                 text: comment.createBy.nickname,
@@ -329,6 +303,41 @@ class _PostState extends State<Post> {
     );
   }
 
+  Widget _readMoreTextWidget({
+    required TextSpan text,
+    required int maxLines,
+  }) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final didExceed = didExceedMaxLines(
+        text,
+        maxLines,
+        constraints.maxWidth,
+      );
+      final richText = Text.rich(
+        text,
+        maxLines: maxLines,
+        overflow: TextOverflow.ellipsis,
+      );
+      if (!didExceed) {
+        return richText;
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          richText,
+          if (didExceed)
+            const Text(
+              '点击阅读更多',
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.blue,
+              ),
+            ),
+        ],
+      );
+    });
+  }
+
 // 复制文本到剪贴板
   void _copyContactToClipboard() {
     if (widget.post.contact == null) {
@@ -338,10 +347,9 @@ class _PostState extends State<Post> {
     ToastUtil.show('联系方式已复制到剪贴板');
   }
 
-  bool didExceedMaxLines(
-      String text, TextStyle style, int maxLines, double maxWidth) {
+  bool didExceedMaxLines(TextSpan text, int maxLines, double maxWidth) {
     final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
+      text: text,
       maxLines: maxLines,
       textDirection: TextDirection.ltr,
     )..layout(minWidth: 0, maxWidth: maxWidth);
