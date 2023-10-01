@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+
+jobs:
+  build:
+    name: Build and Package APKs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up JDK        
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          
+      - name: Cache Flutter and Dart dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+            
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - name: Set up Keys
+        run: |
+          mkdir -p android/
+          echo "${{ secrets.RELEASE_KEYS }}" | base64 --decode > android/release.jks
+          echo "${{ secrets.RELEASE_PROPERTIES }}" > android/release.properties
+          
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+        
+      - name: Build and package APKs
+        run: flutter build apk --release --split-per-abi
+      
+      - name: Upload APKs
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-arm64-v8a-release.apk
+          path: build/app/outputs/apk/release/app-arm64-v8a-release.apk
+      
+      - name: Upload APKs
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-armeabi-v7a-release.apk
+          path: build/app/outputs/apk/release/app-armeabi-v7a-release.apk
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-x86_64-release.apk
+          path: build/app/outputs/apk/release/app-x86_64-release.apk
+
