@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:ifafu/http/interceptor.dart';
 import 'package:ifafu/http/model.dart';
@@ -21,13 +22,13 @@ class Api {
       receiveTimeout: const Duration(seconds: 30),
     );
     dio = Dio(options)
-      ..interceptors.add(PrettyDioLogger(
-          requestHeader: true,
-          requestBody: false,
-          responseBody: false,
-          responseHeader: false,
-          error: true,
-          maxWidth: 90))
+      // ..interceptors.add(PrettyDioLogger(
+      //     requestHeader: true,
+      //     requestBody: false,
+      //     responseBody: true,
+      //     responseHeader: false,
+      //     error: true,
+      //     maxWidth: 90))
       ..interceptors.add(DioInterceptor())
       ..interceptors.add(_tokenInterceptor);
   }
@@ -42,7 +43,7 @@ class Api {
       queryParameters: queryParameters,
     );
     return (response.data as List)
-        .map((e) => Banner.fromJson(e as Map<String, dynamic>))
+        .map((e) => Banner.fromJson(e))
         .toList();
   }
 
@@ -70,7 +71,7 @@ class Api {
     return User.fromJson(response.data);
   }
 
-  Future<User> editProfile(User user) async {
+  Future<User> editProfile(UserUpdate user) async {
     var response = await dio.put('/api/users/center', data: user.toJson());
     return User.fromJson(response.data);
   }
@@ -85,7 +86,7 @@ class Api {
       },
     );
     return (response.data['content'] as List)
-        .map((e) => Post.fromJson(e as Map<String, dynamic>))
+        .map((e) => Post.fromJson(e))
         .toList();
   }
 
@@ -98,7 +99,7 @@ class Api {
       },
     );
     return (response.data['content'] as List)
-        .map((e) => Post.fromJson(e as Map<String, dynamic>))
+        .map((e) => Post.fromJson(e))
         .toList();
   }
 
@@ -148,5 +149,29 @@ class Api {
       }),
     );
     return response.data;
+  }
+
+  Future<PersonalTimetable> getPersonalTimetable() async {
+    var response = await dio.get('/api/jw/timetable/personal');
+    return PersonalTimetable.fromJson(response.data);
+  }
+
+  Future<PersonalTimetable> refreshPersonalTimetable() async {
+    var response = await dio.get('/api/jw/timetable/personal/refresh');
+    return PersonalTimetable.fromJson(response.data);
+  }
+
+  Future<void> bindJw(String sno, String password) async {
+    await dio.post(
+      '/api/jw/user/bind',
+      data: {
+        'sno': sno,
+        'password': password,
+      },
+    );
+  }
+
+  Future<void> unbindJw() async {
+    await dio.post('/api/jw/user/unbind');
   }
 }

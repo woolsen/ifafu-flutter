@@ -1,12 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ifafu/util/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioInterceptor extends Interceptor {
-
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     super.onRequest(options, handler);
@@ -26,7 +24,8 @@ class DioInterceptor extends Interceptor {
         return;
       case DioExceptionType.badResponse:
         final data = err.response?.data;
-        handler.reject(err.copyWith(message: data['message'] ?? '网络异常，请检查网络连接'));
+        handler
+            .reject(err.copyWith(message: data['message'] ?? '网络异常，请检查网络连接'));
         return;
       case DioExceptionType.badCertificate:
       case DioExceptionType.connectionError:
@@ -51,9 +50,6 @@ class TokenInterceptor extends Interceptor {
   void initialize() async {
     final sp = await SharedPreferences.getInstance();
     token = sp.getString('TOKEN');
-    if (kDebugMode) {
-      print('Get token: $token');
-    }
   }
 
   @override

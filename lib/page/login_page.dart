@@ -155,9 +155,6 @@ class _LoginPageState extends State<LoginPage> {
       await Api.instance.getSmsCode(phone);
       _showToast('验证码已发送');
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
       _showToast('验证码获取失败');
       _isCodeClickable = true;
       _codeHint = '获取验证码';

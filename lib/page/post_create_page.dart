@@ -352,10 +352,8 @@ class _PostCreatePageState extends State<PostCreatePage> {
       ToastUtil.show('发布成功');
       _pop(post);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
       _submitting = false;
+      setState(() {});
       ToastUtil.show('发布失败');
     }
   }

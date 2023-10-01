@@ -20,9 +20,15 @@ class UserProvider extends Cubit<User?> {
     return state != null;
   }
 
-  void update(User user) {
-    emit(user);
-    SPUtil.setString('USER', json.encode(user.toJson()));
+  void update(User? user) {
+    if (user == null) {
+      logout();
+      return;
+    } else if (user != state) {
+      print('### update user: $user');
+      emit(user);
+      SPUtil.setString('USER', json.encode(user.toJson()));
+    }
   }
 
   void logout() {

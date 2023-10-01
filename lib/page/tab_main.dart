@@ -46,7 +46,6 @@ class _MainTabState extends State<MainTab> {
         _user = user;
         setState(() {});
       },
-      listenWhen: (previous, current) => previous != current,
       child: Scaffold(
         appBar: _buildAppbar(),
         floatingActionButton: FloatingActionButton(
@@ -58,24 +57,7 @@ class _MainTabState extends State<MainTab> {
           onRefresh: _refresh,
           enablePullDown: true,
           enablePullUp: false,
-          header: const ClassicHeader(
-            refreshingText: '正在刷新',
-            idleText: '下拉刷新',
-            completeText: '刷新完成',
-            failedText: '刷新失败',
-            releaseText: '释放刷新',
-            refreshingIcon: SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.blue,
-              ),
-            ),
-            idleIcon: Icon(Icons.arrow_downward, color: Colors.blue),
-            completeIcon: Icon(Icons.done, color: Colors.green),
-            failedIcon: Icon(Icons.close, color: Colors.red),
-          ),
+          header: const ClassicHeader(),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -280,9 +262,6 @@ class _MainTabState extends State<MainTab> {
     var data = await Api.instance.getBanners(area);
     setState(() {
       banners = data;
-      if (kDebugMode) {
-        print(banners);
-      }
     });
   }
 
