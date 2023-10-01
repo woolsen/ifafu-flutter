@@ -11,6 +11,7 @@ import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
 import 'package:ifafu/widget/post.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MainTab extends StatefulWidget {
   const MainTab({Key? key}) : super(key: key);
@@ -33,6 +34,8 @@ class _MainTabState extends State<MainTab> {
   final PagingController<int, model.Post> _pagingController =
       PagingController(firstPageKey: 0);
 
+  final RefreshController _refreshController = RefreshController();
+
   model.User? _user;
 
   @override
@@ -50,79 +53,103 @@ class _MainTabState extends State<MainTab> {
           onPressed: _goToCreatePost,
           child: const Icon(Icons.add),
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    autoPlay: true,
-                    aspectRatio: 2.4,
-                  ),
-                  items: banners.map((banner) {
-                    return Builder(
-                      builder: (context) => Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: CachedNetworkImage(
-                          imageUrl: banner.imageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+        body: SmartRefresher(
+          controller: _refreshController,
+          onRefresh: _refresh,
+          enablePullDown: true,
+          enablePullUp: false,
+          header: const ClassicHeader(
+            refreshingText: '正在刷新',
+            idleText: '下拉刷新',
+            completeText: '刷新完成',
+            failedText: '刷新失败',
+            releaseText: '释放刷新',
+            refreshingIcon: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.blue,
               ),
             ),
-            SliverList(
-              delegate: SliverChildListDelegate.fixed([
-                for (var value in postAdded) ...{
-                  Post(
-                    post: value,
-                    currentUser: _user,
-                    deleted: () {
-                      setState(() {
-                        postDeleted.add(value.id);
-                      });
-                    },
+            idleIcon: Icon(Icons.arrow_downward, color: Colors.blue),
+            completeIcon: Icon(Icons.done, color: Colors.green),
+            failedIcon: Icon(Icons.close, color: Colors.red),
+          ),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      aspectRatio: 2.4,
+                    ),
+                    items: banners.map((banner) {
+                      return Builder(
+                        builder: (context) => Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: CachedNetworkImage(
+                            imageUrl: banner.imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const Divider(thickness: 0.3),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  for (var value in postAdded) ...{
+                    Post(
+                      post: value,
+                      currentUser: _user,
+                      deleted: () {
+                        setState(() {
+                          postDeleted.add(value.id);
+                        });
+                      },
+                    ),
+                    const Divider(thickness: 0.3),
+                  },
+                ]),
+              ),
+              PagedSliverList.separated(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<model.Post>(
+                  itemBuilder: (context, item, index) => Visibility(
+                    visible: !postDeleted.contains(item.id),
+                    child: Post(
+                      post: item,
+                      currentUser: _user,
+                      deleted: () {
+                        setState(() {
+                          postDeleted.add(item.id);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                separatorBuilder: (context, index) {
+                  return Visibility(
+                    visible: !postDeleted
+                        .contains(_pagingController.itemList?[index].id),
+                    child: const Divider(
+                      thickness: 0.3,
+                    ),
+                  );
                 },
-              ]),
-            ),
-            PagedSliverList.separated(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<model.Post>(
-                itemBuilder: (context, item, index) => Visibility(
-                  visible: !postDeleted.contains(item.id),
-                  child: Post(
-                    post: item,
-                    currentUser: _user,
-                    deleted: () {
-                      setState(() {
-                        postDeleted.add(item.id);
-                      });
-                    },
-                  ),
-                ),
               ),
-              separatorBuilder: (context, index) {
-                return Visibility(
-                  visible: !postDeleted
-                      .contains(_pagingController.itemList?[index].id),
-                  child: const Divider(
-                    thickness: 0.3,
-                  ),
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -214,6 +241,11 @@ class _MainTabState extends State<MainTab> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
+    if (pageKey == 0) {
+      postAdded.clear();
+      postDeleted.clear();
+      await fetchBanner();
+    }
     if (area == null) {
       _pagingController.appendLastPage([]);
       return;
@@ -233,6 +265,9 @@ class _MainTabState extends State<MainTab> {
       }
       _pagingController.error = error;
     }
+    if (_refreshController.isRefresh) {
+      _refreshController.refreshCompleted();
+    }
   }
 
   @override
@@ -241,7 +276,7 @@ class _MainTabState extends State<MainTab> {
     super.dispose();
   }
 
-  void fetchBanner() async {
+  Future<void> fetchBanner() async {
     var data = await Api.instance.getBanners(area);
     setState(() {
       banners = data;
@@ -289,7 +324,6 @@ class _MainTabState extends State<MainTab> {
   _refresh() async {
     postAdded.clear();
     postDeleted.clear();
-    fetchBanner();
     _pagingController.refresh();
   }
 }
