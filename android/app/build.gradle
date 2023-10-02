@@ -49,8 +49,6 @@ android {
 
     defaultConfig {
         applicationId "com.fafutech.ifafu"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -71,15 +69,14 @@ android {
 
     buildTypes {
         debug {
-            applicationId "com.fafutech.ifafu.debug"
+            applicationIdSuffix ".debug"
         }
 
         profile {
-            applicationId "com.fafutech.ifafu.profile"
+            applicationIdSuffix ".profile"
         }
 
         release {
-            applicationId "com.fafutech.ifafu"
             if (!keystorePropertiesFile.exists()) {
                 println 'Keystore properties not found, use debug key'
                 signingConfig signingConfigs.debug
