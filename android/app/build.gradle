@@ -30,7 +30,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.ifafu"
+    namespace "com.fafutech.ifafu"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -70,7 +70,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationId "com.fafutech.ifafu.debug"
+        }
+
+        profile {
+            applicationId "com.fafutech.ifafu.profile"
+        }
+
         release {
+            applicationId "com.fafutech.ifafu"
             if (!keystorePropertiesFile.exists()) {
                 println 'Keystore properties not found, use debug key'
                 signingConfig signingConfigs.debug
