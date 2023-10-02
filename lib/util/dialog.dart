@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
-Future<String?> showSimpleDialog(BuildContext context, List<String> list, {String? title}) async {
+Future<String?> showSimpleDialog(
+  BuildContext context,
+  List<String> list, {
+  bool barrierDismissible = true,
+  String? title,
+}) async {
   return await showDialog(
     context: context,
+    barrierDismissible: barrierDismissible,
     builder: (context) {
       return SimpleDialog(
         title: Text(title ?? '请选择'),

@@ -7,6 +7,7 @@ import 'package:ifafu/page/tab_main.dart';
 import 'package:ifafu/page/tab_timetable.dart';
 import 'package:ifafu/page/tab_user.dart';
 import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/sp.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -46,6 +47,9 @@ class _MainPageState extends State<MainPage>
   }
 
   void _fetchUserInfo() {
+    if (SPUtil.getString('TOKEN') == null) {
+      return;
+    }
     final currentTime = DateTime.now().millisecondsSinceEpoch;
     if (currentTime - lastFetchUserInfoTime < 60000) {
       return;

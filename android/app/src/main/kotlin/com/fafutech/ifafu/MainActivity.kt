@@ -1,4 +1,4 @@
-package com.example.ifafu
+package com.fafutech.ifafu
 
 import io.flutter.embedding.android.FlutterActivity
 

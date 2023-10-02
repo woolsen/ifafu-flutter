@@ -24,49 +24,53 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => UserProvider()),
-      ],
-      child: MaterialApp(
-        title: 'iFAFU',
-        localizationsDelegates: const [
-          RefreshLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+    return RefreshConfiguration(
+      headerBuilder: () => const ClassicHeader(),
+      headerTriggerDistance: 80.0,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => UserProvider()),
         ],
-        locale: const Locale("zh", "CH"),
-        supportedLocales: const [Locale("zh", "CH")],
-        routes: {
-          '/': (context) => const MainPage(),
-          '/login': (context) => const LoginPage(),
-          '/post/my': (context) => const PostMyPage(),
-          '/post/create': (context) => const PostCreatePage(),
-          '/post/detail': (context) => const PostDetailPage(),
-          '/profile/edit': (context) => const EditProfilePage(),
-          '/feedback': (context) => const FeedbackPage(),
-        },
-        scrollBehavior: const MaterialScrollBehavior().copyWith(
-          physics: const BouncingScrollPhysics(),
-        ),
-        theme: ThemeData(
-          dividerTheme: const DividerThemeData(
-            thickness: 0.8,
-            space: 0.8,
-            color: Color(0xFFE5E5E5),
+        child: MaterialApp(
+          title: 'iFAFU',
+          localizationsDelegates: const [
+            RefreshLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: const Locale("zh", "CH"),
+          supportedLocales: const [Locale("zh", "CH")],
+          routes: {
+            '/': (context) => const MainPage(),
+            '/login': (context) => const LoginPage(),
+            '/post/my': (context) => const PostMyPage(),
+            '/post/create': (context) => const PostCreatePage(),
+            '/post/detail': (context) => const PostDetailPage(),
+            '/profile/edit': (context) => const EditProfilePage(),
+            '/feedback': (context) => const FeedbackPage(),
+          },
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            physics: const BouncingScrollPhysics(),
           ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFFF5F5F5),
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-              fontFamily: 'DingTalk',
+          theme: ThemeData(
+            dividerTheme: const DividerThemeData(
+              thickness: 0.8,
+              space: 0.8,
+              color: Color(0xFFE5E5E5),
+            ),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(),
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFFF5F5F5),
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0,
+                fontFamily: 'DingTalk',
+              ),
             ),
           ),
         ),

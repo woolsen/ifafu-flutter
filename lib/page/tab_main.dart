@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart' as model;
 import 'package:ifafu/page/post_create_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/dialog.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/widget/empty.dart';
+import 'package:ifafu/widget/infinite_scroll_pagination.dart';
 import 'package:ifafu/widget/post.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -51,8 +53,7 @@ class _MainTabState extends State<MainTab> {
             controller: _refreshController,
             onRefresh: _refresh,
             enablePullDown: true,
-            enablePullUp: false,
-            header: const ClassicHeader(),
+            // enablePullUp: false,
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -101,7 +102,13 @@ class _MainTabState extends State<MainTab> {
                 ),
                 PagedSliverList.separated(
                   pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<model.Post>(
+                  builderDelegate: CustomPagedChildBuilder<model.Post>(
+                    onTryAgain: () => _pagingController.refresh(),
+                    noItemsFoundIndicatorBuilder: (context) {
+                      return const Center(
+                        child: EmptyIcon(message: '暂无帖子'),
+                      );
+                    },
                     itemBuilder: (context, item, index) => Visibility(
                       visible: !postDeleted.contains(item.id),
                       child: Post(
@@ -141,10 +148,10 @@ class _MainTabState extends State<MainTab> {
         child: SafeArea(
           child: SizedBox(
             height: 48,
-            child: Row(
+            child: Stack(
               children: [
-                SizedBox(
-                  width: 100,
+                Align(
+                  alignment: Alignment.centerLeft,
                   child: GestureDetector(
                     onTap: () {
                       _showListSelectionDialog(context);
@@ -153,36 +160,37 @@ class _MainTabState extends State<MainTab> {
                       children: [
                         const SizedBox(width: 8),
                         const Icon(Icons.location_on),
-                        const SizedBox(width: 2),
-                        Text(area ?? '点击选择校区'),
+                        Text(
+                          area ?? '点击选择校区',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      'iFAFU',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'DingTalk',
-                        fontWeight: FontWeight.bold,
-                      ),
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'iFAFU',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'DingTalk',
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 100,
-                  child: SizedBox.shrink(),
-                  // child: GestureDetector(
-                  //   onTap: () {},
-                  //   child: Container(
-                  //     alignment: Alignment.centerRight,
-                  //     padding: const EdgeInsets.only(right: 16),
-                  //     child: const Icon(Icons.search),
-                  //   ),
-                  // ),
-                ),
+                // const SizedBox(
+                //   width: 100,
+                //   child: SizedBox.shrink(),
+                // child: GestureDetector(
+                //   onTap: () {},
+                //   child: Container(
+                //     alignment: Alignment.centerRight,
+                //     padding: const EdgeInsets.only(right: 16),
+                //     child: const Icon(Icons.search),
+                //   ),
+                // ),
+                // ),
               ],
             ),
           ),
@@ -198,10 +206,6 @@ class _MainTabState extends State<MainTab> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
-    fetchBanner();
-    if (area == null) {
-      _showListSelectionDialog(context);
-    }
   }
 
   Future<void> _goToCreatePost(bool isLogon) async {
@@ -219,32 +223,30 @@ class _MainTabState extends State<MainTab> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    if (pageKey == 0) {
-      postAdded.clear();
-      postDeleted.clear();
-      await fetchBanner();
-    }
-    if (area == null) {
-      _pagingController.appendLastPage([]);
-      return;
-    }
     try {
-      final newItems = await Api.instance.getPosts(pageKey, _pageSize, area!);
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
+      if (pageKey == 0) {
+        postAdded.clear();
+        postDeleted.clear();
+        await fetchBanner();
+      }
+      if (area == null) {
+        _showListSelectionDialog(context);
+        _pagingController.itemList = [];
       } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey);
+        final newItems = await Api.instance.getPosts(pageKey, _pageSize, area!);
+        final isLastPage = newItems.length < _pageSize;
+        if (isLastPage) {
+          _pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + 1;
+          _pagingController.appendPage(newItems, nextPageKey);
+        }
+      }
+      if (_refreshController.isRefresh) {
+        _refreshController.refreshCompleted();
       }
     } catch (error) {
-      if (kDebugMode) {
-        print(error);
-      }
       _pagingController.error = error;
-    }
-    if (_refreshController.isRefresh) {
-      _refreshController.refreshCompleted();
     }
   }
 
@@ -263,31 +265,12 @@ class _MainTabState extends State<MainTab> {
 
   Future<void> _showListSelectionDialog(BuildContext context) async {
     final areas = ['金山校区', '旗山校区', '安溪校区'];
-    final selectedValue = await showDialog<String>(
-      context: context,
-      barrierDismissible: area != null,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('选择校区'),
-          children: [
-            for (var area in areas)
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, area);
-                },
-                padding: const EdgeInsets.all(16),
-                child: Center(
-                  child: Text(
-                    area,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
+    final selectedValue = await showSimpleDialog(
+      context,
+      areas,
+      barrierDismissible: false,
+      title: '选择校区',
     );
-
     if (selectedValue != null && selectedValue != area) {
       area = selectedValue;
       setState(() {});
