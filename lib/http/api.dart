@@ -183,4 +183,17 @@ class Api {
     );
     return (response.data as List).map((e) => Message.fromJson(e)).toList();
   }
+
+  Future<Map<String, List<String>>> queryQaLibrary() async {
+    var response = await dio.post(
+      '/api/qa/library/question',
+      data: ['FAFU'],
+      options: Options(
+        contentType: 'application/json',
+      ),
+    );
+    return (response.data as Map<String, dynamic>).map((key, value) {
+      return MapEntry(key, (value as List).map((e) => e as String).toList());
+    });
+  }
 }

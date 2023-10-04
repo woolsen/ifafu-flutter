@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/page/image_viewer.dart';
+import 'package:ifafu/page/qa_library_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/widget/bottom_input_bar.dart';
+import 'package:ifafu/widget/router.dart';
 
 class QaPage extends StatefulWidget {
   const QaPage({Key? key}) : super(key: key);
@@ -36,28 +38,31 @@ class _QaPageState extends State<QaPage> {
   @override
   Widget build(BuildContext context) {
     if (_records.isEmpty) {
-      addMessage(
+      _addMessage(
         Sender.bot,
         [
+          Message(type: 'text', data: {'text': '你好，我是你的专属词条机器人~\n发送关键词查询词条~'}),
           Message(
-            type: 'text',
+            type: 'clickable',
             data: {
-              'text': '你好，我是你的专属词条机器人~\n发送关键词查询词条~',
+              'text': '点击查看【常用词条】',
+              'click': () {
+                _sendMessage('常用词条');
+              }
             },
           ),
           Message(
-            type: 'widget',
+            type: 'clickable',
             data: {
-              'widget': GestureDetector(
-                onTap: () => sendMessage('常用词条'),
-                child: Text(
-                  '点击查看【常用词条】',
-                  style: MessageView.messageTextStyle.copyWith(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
+              'text': '点击查看【全部词条】',
+              'click': () async {
+                String? question = await Navigator.of(context).push<String?>(
+                  SlideRightRoute(page: const QaLibraryPage()),
+                );
+                if (question != null) {
+                  _sendMessage(question);
+                }
+              },
             },
           ),
         ],
@@ -114,7 +119,7 @@ class _QaPageState extends State<QaPage> {
               focusNode: _focusNode,
               oneLine: true,
               textInputAction: TextInputAction.send,
-              sendAsync: sendMessage,
+              sendAsync: _sendMessage,
             )
           ],
         ),
@@ -166,7 +171,14 @@ class _QaPageState extends State<QaPage> {
                     : const Color(0xFFE1F5FE),
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: MessageView(record.message),
+              child: MessageView(
+                record.message,
+                onClick: (message) {
+                  if (message.type == 'send_message') {
+                    _sendMessage(message.data['message'].toString());
+                  }
+                },
+              ),
             ),
           ),
           if (record.sender == Sender.me) ...[
@@ -178,8 +190,8 @@ class _QaPageState extends State<QaPage> {
     );
   }
 
-  Future<bool> sendMessage(String text) async {
-    await addMessage(
+  Future<bool> _sendMessage(String text) async {
+    await _addMessage(
       Sender.me,
       [
         Message(type: 'text', data: {'text': text})
@@ -187,32 +199,26 @@ class _QaPageState extends State<QaPage> {
     );
     try {
       var res = await Api.instance.queryQaAnswer(text);
-      await addMessage(Sender.bot, res);
+      await _addMessage(Sender.bot, res);
     } catch (e) {
       if (e is DioException && e.response?.data['code'] == 404) {
-        await addMessage(
+        await _addMessage(
           Sender.bot,
           [
             Message(type: 'text', data: {'text': '未找到答案'}),
             Message(
-              type: 'widget',
+              type: 'clickable',
               data: {
-                'widget': GestureDetector(
-                  onTap: () => sendMessage('常用词条'),
-                  child: Text(
-                    '点击查看【常用词条】',
-                    style: MessageView.messageTextStyle.copyWith(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
+                'text': '点击查看【常用词条】',
+                'click': () {
+                  _sendMessage('常用词条');
+                }
               },
             ),
           ],
         );
       } else {
-        await addMessage(
+        await _addMessage(
           Sender.bot,
           [
             Message(type: 'text', data: {'text': '出错了，你可以稍后再试试\n$e'})
@@ -223,7 +229,7 @@ class _QaPageState extends State<QaPage> {
     return true;
   }
 
-  Future<void> addMessage(
+  Future<void> _addMessage(
     Sender sender,
     List<Message> message,
   ) async {
@@ -231,8 +237,17 @@ class _QaPageState extends State<QaPage> {
       0,
       _Record(sender, _mapMessage(message)),
     );
-    _listKey.currentState
-        ?.insertItem(0, duration: const Duration(milliseconds: 200));
+    _listKey.currentState?.insertItem(
+      0,
+      duration: const Duration(milliseconds: 200),
+    );
+    if (_scrollController.positions.isNotEmpty) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
@@ -273,6 +288,7 @@ class MessageView extends StatelessWidget {
   final List<Message> message;
 
   final TextStyle textStyle;
+  final void Function(Message) onClick;
 
   static const messageTextStyle = TextStyle(
     fontSize: 15,
@@ -282,6 +298,7 @@ class MessageView extends StatelessWidget {
   const MessageView(
     this.message, {
     super.key,
+    required this.onClick,
     this.textStyle = messageTextStyle,
   });
 
@@ -290,19 +307,35 @@ class MessageView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: message.map((e) {
+        Widget child;
         switch (e.type) {
           case 'text':
-            return SelectableText(
+            child = SelectableText(
               e.data['text'].toString(),
-              style: MessageView.messageTextStyle,
+              style: messageTextStyle,
             );
           case 'image':
-            return _buildImage(context, e.data['file']);
+            child = _buildImage(context, e.data['file']);
+          case 'clickable':
+            child = GestureDetector(
+              onTap: () {
+                Function? click = e.data['click'];
+                click?.call();
+              },
+              child: Text(
+                e.data['text'].toString(),
+                style: messageTextStyle.copyWith(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
           case 'widget':
-            return e.data['widget'] as Widget;
+            child = e.data['widget'] as Widget;
           default:
-            return const SizedBox();
+            child = const SizedBox();
         }
+        return child;
       }).toList(),
     );
   }
