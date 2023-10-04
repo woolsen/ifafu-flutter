@@ -27,6 +27,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   flutter_localizations:
     sdk: flutter
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:

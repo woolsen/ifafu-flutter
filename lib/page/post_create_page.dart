@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/util/dialog.dart';
 import 'package:ifafu/util/extensions.dart';
 import 'package:ifafu/util/sp.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:ifafu/util/toast.dart';
 import 'package:ifafu/widget/image_picker.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
@@ -37,8 +36,13 @@ class _PostCreatePageState extends State<PostCreatePage> {
   @override
   void initState() {
     super.initState();
-    contactType = contactTypes[0];
+    var contactType = SPUtil.getString('CONTACT_TYPE');
+    if (contactType != null) {
+      contactController.text = SPUtil.getString('CONTACT_$contactType') ?? '';
+    }
+    this.contactType = contactType;
     area = SPUtil.getString('AREA');
+    setState(() {});
   }
 
   @override
@@ -51,107 +55,110 @@ class _PostCreatePageState extends State<PostCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('发布内容'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 联系类型选择
-              const Text('联系类型'),
-              Row(
-                children: [
-                  for (var item in contactTypes)
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Radio<String?>(
-                            value: item,
-                            groupValue: contactType,
-                            onChanged: (value) {
-                              contactType = value;
-                              setState(() {});
-                            },
-                            materialTapTargetSize:
-                            MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          Text(
-                            item ?? '无',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
+    return Hero(
+      tag: 'post_create',
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('发布内容'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 联系类型选择
+                const Text('联系方式'),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<String?>(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.all(0),
                       ),
                     ),
+                    segments: contactTypes.map((e) {
+                      return ButtonSegment<String?>(
+                        value: e,
+                        label: Text(e ?? '不显示'),
+                      );
+                    }).toList(),
+                    selected: <String?>{contactType},
+                    onSelectionChanged: (newSelection) {
+                      contactType = newSelection.first;
+                      if (contactType != null) {
+                        contactController.text = SPUtil.getString('CONTACT_$contactType') ?? '';
+                      } else {
+                        contactController.text = '';
+                      }
+                      setState(() {});
+                    },
+                  ),
+                ),
+                // 联系方式输入
+                if (contactType != null) ...[
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: contactController,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: contactType == 'QQ' || contactType == '手机'
+                        ? TextInputType.number
+                        : TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: contactType!,
+                      hintText: '请输入$contactType',
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
                 ],
-              ),
-              // 联系方式输入
-              if (contactType != null) ...[
                 const SizedBox(height: 16),
+                // 内容输入
                 TextFormField(
-                  controller: contactController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: contactType == 'QQ' || contactType == '手机'
-                      ? TextInputType.number
-                      : TextInputType.text,
+                  controller: contentController,
                   decoration: const InputDecoration(
-                    labelText: '联系方式',
-                    hintText: '请输入联系方式',
+                    labelText: '帖子内容',
+                    hintText: '请输入帖子内容',
                     border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                ),
+                // 图片上传
+                const SizedBox(height: 16),
+                _buildImageLayout(),
+                // 校区选择
+                GestureDetector(
+                  onTap: _showAreaDialog,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined),
+                      const SizedBox(width: 8, height: 80),
+                      const Text(
+                        '校区',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const Spacer(),
+                      Text(
+                        area ?? '选择校区',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const Icon(Icons.arrow_right),
+                    ],
+                  ),
+                ),
+                // 提交按钮
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _submitting ? null : submit,
+                    child: _submitting
+                        ? const CircularProgressIndicator()
+                        : const Text('发布'),
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
-              // 内容输入
-              TextFormField(
-                controller: contentController,
-                decoration: const InputDecoration(
-                  labelText: '帖子内容',
-                  hintText: '请输入帖子内容',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 5,
-              ),
-
-              // 图片上传
-              const SizedBox(height: 16),
-              _buildImageLayout(),
-
-              // 校区选择
-              GestureDetector(
-                onTap: _showAreaDialog,
-                child: Row(
-                  children: [
-                    const Icon(Icons.location_on_outlined),
-                    const SizedBox(width: 8, height: 80),
-                    const Text(
-                      '校区',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const Spacer(),
-                    Text(
-                      area ?? '选择校区',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const Icon(Icons.arrow_right),
-                  ],
-                ),
-              ),
-              // 提交按钮
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _submitting ? null : submit,
-                  child: _submitting
-                      ? const CircularProgressIndicator()
-                      : const Text('发布'),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -296,22 +303,22 @@ class _PostCreatePageState extends State<PostCreatePage> {
       return;
     }
     if (contactType != null && contactController.text.isBlank) {
-      ToastUtil.show('请输入联系方式。若不显示联系方式，联系类型请选择『无』');
+      ToastUtil.show('请输入联系方式。若不显示联系方式，联系方式请选择『不显示』');
       return;
     }
     if (contactType == 'QQ') {
       if (!RegExp(r'^\d{5,11}$').hasMatch(contactController.text)) {
-        ToastUtil.show('QQ号格式不正确。若不显示联系方式，联系类型请选择『无』');
+        ToastUtil.show('QQ号格式不正确。若不显示联系方式，联系方式请选择『不显示』');
         return;
       }
     } else if (contactType == '微信') {
       if (!RegExp(r'^[a-zA-Z\d_-]{5,}$').hasMatch(contactController.text)) {
-        ToastUtil.show('微信号格式不正确。若不显示联系方式，联系类型请选择『无』');
+        ToastUtil.show('微信号格式不正确。若不显示联系方式，联系方式请选择『不显示』');
         return;
       }
     } else if (contactType == '手机') {
       if (!RegExp(r'^1\d{10}$').hasMatch(contactController.text)) {
-        ToastUtil.show('手机号格式不正确。若不显示联系方式，联系类型请选择『无』');
+        ToastUtil.show('手机号格式不正确。若不显示联系方式，联系方式请选择『不显示』');
         return;
       }
     }
@@ -326,16 +333,14 @@ class _PostCreatePageState extends State<PostCreatePage> {
       for (var image in _images) {
         final file = await image.file;
         if (file != null) {
-          final result = await Api.instance.uploadPostImage(
-              MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path
-                    .split('/')
-                    .last,
-                contentType: image.mimeType != null ? MediaType.parse(
-                    image.mimeType!) : null,
-              )
-          );
+          final result =
+              await Api.instance.uploadPostImage(MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+            contentType: image.mimeType != null
+                ? MediaType.parse(image.mimeType!)
+                : null,
+          ));
           imageUrls.add(result);
         }
       }
@@ -350,6 +355,10 @@ class _PostCreatePageState extends State<PostCreatePage> {
       );
       _submitting = false;
       ToastUtil.show('发布成功');
+      if (contactType != null) {
+        SPUtil.setString('CONTACT_TYPE', contactType!);
+        SPUtil.setString('CONTACT_$contactType', contactController.text);
+      }
       _pop(post);
     } catch (e) {
       _submitting = false;

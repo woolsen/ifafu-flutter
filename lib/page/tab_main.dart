@@ -93,9 +93,11 @@ class _MainTabState extends State<MainTab> {
                         post: item,
                         currentUser: user,
                         deleted: () {
-                          setState(() {
-                            postDeleted.add(item.id);
+                          postAdded.removeWhere((element) {
+                            return element.id == item.id;
                           });
+                          postDeleted.add(item.id);
+                          setState(() {});
                         },
                       ),
                     ),

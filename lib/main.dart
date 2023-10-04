@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
               space: 0.8,
               color: Color(0xFFE5E5E5),
             ),
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorSchemeSeed: const Color(0xff6750a4),
             useMaterial3: true,
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),

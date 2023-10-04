@@ -18,7 +18,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  int _currentIndex = 0;
+  int _selectedIndex = 0;
 
   var lastFetchUserInfoTime = 0;
 
@@ -28,6 +28,14 @@ class _MainPageState extends State<MainPage>
     _fetchUserInfo();
     // 注册WidgetsBindingObserver以监听应用程序生命周期状态
     WidgetsBinding.instance.addObserver(this);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   @override
@@ -62,16 +70,9 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent, // 透明状态栏背景
-        statusBarIconBrightness: Brightness.dark, // 设置状态栏文字颜色为黑色
-        systemNavigationBarColor: Colors.transparent, // 设置底部导航栏背景颜色
-      ),
-    );
     return Scaffold(
       body: IndexedStack(
-        index: _currentIndex,
+        index: _selectedIndex,
         children: [
           const MainTab(), // const TimetableTab(),
           const TimetableTab(
@@ -79,36 +80,23 @@ class _MainPageState extends State<MainPage>
           ),
           UserTab(
             logouted: () {
-              _currentIndex = 0;
+              _selectedIndex = 0;
               setState(() {});
             },
           ),
         ],
       ),
       bottomNavigationBar: BlocBuilder<UserProvider, User?>(
-          bloc: BlocProvider.of<UserProvider>(context),
-          builder: (context, user) {
-            return BottomNavigationBar(
-              currentIndex: _currentIndex,
-              items: [
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: '首页',
-                ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month),
-                  label: '课程表',
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.person),
-                  label: user == null ? '登录' : '我的',
-                ),
-              ],
-              onTap: (index) {
-                _handleTabChange(index, user != null);
-              },
-            );
-          }),
+        bloc: BlocProvider.of<UserProvider>(context),
+        builder: (context, user) {
+          return NavigationBars(
+            onSelectItem: (index) {
+              _handleTabChange(index, user != null);
+            },
+            selectedIndex: _selectedIndex,
+          );
+        },
+      ),
     );
   }
 
@@ -119,8 +107,91 @@ class _MainPageState extends State<MainPage>
     } else {
       // 允许切换到其他选项卡
       setState(() {
-        _currentIndex = index;
+        _selectedIndex = index;
       });
     }
   }
 }
+
+class NavigationBars extends StatefulWidget {
+  const NavigationBars({
+    super.key,
+    this.onSelectItem,
+    required this.selectedIndex,
+  });
+
+  final void Function(int)? onSelectItem;
+  final int selectedIndex;
+
+  @override
+  State<NavigationBars> createState() => _NavigationBarsState();
+}
+
+class _NavigationBarsState extends State<NavigationBars> {
+  late int selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex;
+  }
+
+  @override
+  void didUpdateWidget(covariant NavigationBars oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      selectedIndex = widget.selectedIndex;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //阴影
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12, // 阴影颜色和透明度
+            blurRadius: 10, // 阴影的模糊程度
+            spreadRadius: 2, // 阴影的扩散程度
+            offset: Offset(0, 4), // 阴影的偏移量
+          ),
+        ],
+      ),
+      child: NavigationBar(
+        selectedIndex: selectedIndex,
+        // backgroundColor: const Color(0xFFF3ECFA),
+        surfaceTintColor: Colors.transparent,
+        onDestinationSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+          widget.onSelectItem!(index);
+        },
+        destinations: appBarDestinations,
+      ),
+    );
+  }
+}
+
+const List<NavigationDestination> appBarDestinations = [
+  NavigationDestination(
+    tooltip: '',
+    icon: Icon(Icons.home_outlined),
+    label: '首页',
+    selectedIcon: Icon(Icons.home),
+  ),
+  NavigationDestination(
+    tooltip: '',
+    icon: Icon(Icons.calendar_month_outlined),
+    label: '课表',
+    selectedIcon: Icon(Icons.calendar_month),
+  ),
+  NavigationDestination(
+    tooltip: '',
+    icon: Icon(Icons.person_outline_sharp),
+    label: '我的',
+    selectedIcon: Icon(Icons.person_sharp),
+  ),
+];
