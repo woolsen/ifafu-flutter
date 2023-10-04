@@ -3,31 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-class ImageViewer extends StatefulWidget {
+class ImageViewer extends StatelessWidget {
   final List<ImageItem> items;
   final int? currentIndex;
   final ValueChanged<int>? onPageChanged;
+  final PageController? _pageController;
+  final ImageProvider Function(String)? imageProviderBuilder;
 
-  const ImageViewer({
+  ImageViewer({
     super.key,
     required this.items,
     this.currentIndex,
     this.onPageChanged,
-  });
-
-  @override
-  State<StatefulWidget> createState() => _ImageViewerState();
-}
-
-class _ImageViewerState extends State<ImageViewer> {
-
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    _pageController = PageController(initialPage: widget.currentIndex ?? 0);
-    super.initState();
-  }
+    this.imageProviderBuilder,
+  }) : _pageController = PageController(initialPage: currentIndex ?? 0);
 
   @override
   Widget build(BuildContext context) {
@@ -38,27 +27,28 @@ class _ImageViewerState extends State<ImageViewer> {
         pageController: _pageController,
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
-            imageProvider: CachedNetworkImageProvider(
-              widget.items[index].imageUrl,
-            ),
+            imageProvider: imageProviderBuilder != null
+                ? imageProviderBuilder!(items[index].imageUrl)
+                : CachedNetworkImageProvider(items[index].imageUrl),
             minScale: PhotoViewComputedScale.contained,
             maxScale: PhotoViewComputedScale.covered * 4.1,
             heroAttributes: PhotoViewHeroAttributes(
-              tag: widget.items[index].tag ?? '',
+              tag: items[index].tag ?? '',
+              createRectTween: (begin, end) {
+                return RectTween(begin: begin, end: end);
+              },
             ),
           );
         },
-        itemCount: widget.items.length,
+        itemCount: items.length,
       ),
     );
   }
-
 }
-
 
 class ImageItem {
   final String imageUrl;
-  final String? tag;
+  final Object? tag;
 
   ImageItem({required this.imageUrl, this.tag});
 }

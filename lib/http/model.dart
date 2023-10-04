@@ -210,3 +210,14 @@ class TimetableSet with _$TimetableSet {
 
   static const List<List<int>> times = [time0, time1];
 }
+
+@freezed
+class Message with _$Message {
+  factory Message({
+    required String type,
+    required Map<String, dynamic> data,
+  }) = _Message;
+
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
+}

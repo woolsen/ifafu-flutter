@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:ifafu/http/interceptor.dart';
 import 'package:ifafu/http/model.dart';
@@ -42,9 +41,7 @@ class Api {
       '/api/banner',
       queryParameters: queryParameters,
     );
-    return (response.data as List)
-        .map((e) => Banner.fromJson(e))
-        .toList();
+    return (response.data as List).map((e) => Banner.fromJson(e)).toList();
   }
 
   Future<void> getSmsCode(String phone) async {
@@ -173,5 +170,17 @@ class Api {
 
   Future<void> unbindJw() async {
     await dio.post('/api/jw/user/unbind');
+  }
+
+  Future<List<Message>> queryQaAnswer(String message) async {
+    var response = await dio.post(
+      '/api/qa/answer',
+      data: {
+        'message': message,
+        'type': 'array',
+        'library': ['FAFU'],
+      },
+    );
+    return (response.data as List).map((e) => Message.fromJson(e)).toList();
   }
 }

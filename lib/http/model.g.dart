@@ -216,3 +216,15 @@ Map<String, dynamic> _$$TimetableSetImplToJson(_$TimetableSetImpl instance) =>
       'showTime': instance.showTime,
       'backgroundPath': instance.backgroundPath,
     };
+
+_$MessageImpl _$$MessageImplFromJson(Map<String, dynamic> json) =>
+    _$MessageImpl(
+      type: json['type'] as String,
+      data: json['data'] as Map<String, dynamic>,
+    );
+
+Map<String, dynamic> _$$MessageImplToJson(_$MessageImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'data': instance.data,
+    };

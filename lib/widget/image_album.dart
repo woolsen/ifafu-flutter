@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:ifafu/page/image_viewer.dart';
 // import 'package:ifafu/widget/transition.dart';
 
@@ -57,32 +56,33 @@ class ImageAlbum extends StatelessWidget {
             _goToImageViewer(context, imageUrls.indexOf(url));
           },
           child: Hero(
-            tag: '$heroTagAddition#$url',
-            // createRectTween: linearTranslateTween,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: CachedNetworkImage(
-                imageUrl: url,
-                height: size,
-                width: size,
-                fit: BoxFit.cover,
-                placeholder: (context, url) {
-                  return const Center(
-                    child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.grey,
+              tag: '$heroTagAddition#$url',
+              createRectTween: (begin, end) {
+                return RectTween(begin: begin, end: end);
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  height: size,
+                  width: size,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) {
+                    return const Center(
+                      child: SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                httpHeaders: {
-                  'sec-fetch-platform': Platform.operatingSystem,
-                },
-              ),
-            )
-          ),
+                    );
+                  },
+                  httpHeaders: {
+                    'sec-fetch-platform': Platform.operatingSystem,
+                  },
+                ),
+              )),
         ));
       }
       widgets.add(const SizedBox(height: 4));
@@ -99,9 +99,12 @@ class ImageAlbum extends StatelessWidget {
         pageBuilder: (context, animation, __) {
           return ImageViewer(
             currentIndex: index,
-            items: imageUrls
-                .map((url) => ImageItem(imageUrl: url, tag: '$heroTagAddition#$url'))
-                .toList(growable: false),
+            items: imageUrls.map((url) {
+              return ImageItem(
+                imageUrl: url,
+                tag: '$heroTagAddition#$url',
+              );
+            }).toList(growable: false),
           );
         },
       ),

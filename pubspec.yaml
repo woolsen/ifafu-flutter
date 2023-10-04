@@ -46,6 +46,8 @@ flutter:
     - assets/image/location.svg
     - assets/image/logo_jw.png
     - assets/image/logo_fafu.png
+    - assets/image/qa.png
+    - assets/image/bot.jpg
 
   fonts:
     - family: DingTalk

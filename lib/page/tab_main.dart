@@ -38,6 +38,11 @@ class _MainTabState extends State<MainTab> {
 
   final RefreshController _refreshController = RefreshController();
 
+  final verticalDivider = const ColoredBox(
+    color: Colors.grey,
+    child: SizedBox(height: 20, width: 1),
+  );
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserProvider, model.User?>(
@@ -56,34 +61,7 @@ class _MainTabState extends State<MainTab> {
             // enablePullUp: false,
             child: CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        aspectRatio: 2.4,
-                      ),
-                      items: banners.map((banner) {
-                        return Builder(
-                          builder: (context) => Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: CachedNetworkImage(
-                              imageUrl: banner.imageUrl,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
+                SliverToBoxAdapter(child: _buildTopbar()),
                 SliverList(
                   delegate: SliverChildListDelegate.fixed([
                     for (var value in postAdded) ...{
@@ -179,20 +157,99 @@ class _MainTabState extends State<MainTab> {
                     ),
                   ),
                 ),
-                // const SizedBox(
-                //   width: 100,
-                //   child: SizedBox.shrink(),
-                // child: GestureDetector(
-                //   onTap: () {},
-                //   child: Container(
-                //     alignment: Alignment.centerRight,
-                //     padding: const EdgeInsets.only(right: 16),
-                //     child: const Icon(Icons.search),
-                //   ),
-                // ),
-                // ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopbar() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          child: CarouselSlider(
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: 2.4,
+            ),
+            items: banners.map((banner) {
+              return Builder(
+                builder: (context) => Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: CachedNetworkImage(
+                    imageUrl: banner.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        _buildToolButtonLayout(),
+      ],
+    );
+  }
+
+  Widget _buildToolButtonLayout() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      // shape: const RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.all(Radius.circular(8)),
+      // ),
+      // clipBehavior: Clip.hardEdge,
+      child: ColoredBox(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(children: [
+            _buildToolButton(
+              '词条问答',
+              'assets/image/qa.png',
+              routerName: '/qa',
+            ),
+            const Expanded(child: SizedBox.shrink()),
+            const Expanded(child: SizedBox.shrink()),
+            const Expanded(child: SizedBox.shrink()),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToolButton(
+    String text,
+    String image, {
+    required String routerName,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, routerName);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Image(
+                width: 36,
+                image: AssetImage(image),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                text,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+              ),
+            ],
           ),
         ),
       ),
