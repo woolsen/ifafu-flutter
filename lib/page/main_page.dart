@@ -22,6 +22,9 @@ class _MainPageState extends State<MainPage>
 
   var lastFetchUserInfoTime = 0;
 
+  final mainTabKey = GlobalKey<MainTabState>();
+  final timetableTabKey = GlobalKey<TimetableTabState>();
+
   @override
   void initState() {
     super.initState();
@@ -74,10 +77,8 @@ class _MainPageState extends State<MainPage>
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          const MainTab(), // const TimetableTab(),
-          const TimetableTab(
-            key: Key('timetable'),
-          ),
+          MainTab(key: mainTabKey),
+          TimetableTab(key: timetableTabKey),
           UserTab(
             logouted: () {
               _selectedIndex = 0;
@@ -101,14 +102,15 @@ class _MainPageState extends State<MainPage>
   }
 
   void _handleTabChange(int index, bool isLogin) {
-    // 在这里执行你的自定义逻辑，例如拦截Tab切换
+    if (index == _selectedIndex && index == 0) {
+      mainTabKey.currentState?.refresh();
+      return;
+    }
     if (index == 2 && !isLogin) {
       Navigator.of(context).pushNamed('/login');
     } else {
-      // 允许切换到其他选项卡
-      setState(() {
-        _selectedIndex = index;
-      });
+      _selectedIndex = index;
+      setState(() {});
     }
   }
 }
@@ -164,9 +166,8 @@ class _NavigationBarsState extends State<NavigationBars> {
         // backgroundColor: const Color(0xFFF3ECFA),
         surfaceTintColor: Colors.transparent,
         onDestinationSelected: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
+          selectedIndex = index;
+          setState(() {});
           widget.onSelectItem!(index);
         },
         destinations: appBarDestinations,

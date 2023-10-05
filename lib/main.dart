@@ -5,6 +5,7 @@ import 'package:ifafu/page/edit_profile_page.dart';
 import 'package:ifafu/page/feedback_page.dart';
 import 'package:ifafu/page/login_page.dart';
 import 'package:ifafu/page/main_page.dart';
+import 'package:ifafu/page/major_timetable_select_page.dart';
 import 'package:ifafu/page/post_create_page.dart';
 import 'package:ifafu/page/post_detail_page.dart';
 import 'package:ifafu/page/post_my_page.dart';
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
             '/profile/edit': (context) => const EditProfilePage(),
             '/feedback': (context) => const FeedbackPage(),
             '/qa': (context) => const QaPage(),
+            '/timetable/major/select': (context) =>
+                const MajorTimetableSelectPage(),
           },
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             physics: const BouncingScrollPhysics(),

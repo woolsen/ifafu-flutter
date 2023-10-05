@@ -221,3 +221,25 @@ class Message with _$Message {
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
 }
+
+typedef MajorTimetableOptions = Map<String, Map<String, Map<String, int>>>;
+
+@freezed
+class MajorTimetable with _$MajorTimetable {
+  // final String major;
+  // final String grade;
+  // final String clazz;
+  // final DateTime updateTime;
+  // final List<Course> courses;
+
+  factory MajorTimetable({
+    required String major,
+    required String grade,
+    required String clazz,
+    @DateTimeConverter() required DateTime updateTime,
+    required List<Course> courses,
+  }) = _MajorTimetable;
+
+  factory MajorTimetable.fromJson(Map<String, dynamic> json) =>
+      _$MajorTimetableFromJson(json);
+}

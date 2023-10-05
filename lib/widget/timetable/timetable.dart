@@ -4,9 +4,6 @@ import 'package:ifafu/util/chinese.dart';
 import 'package:ifafu/util/extensions.dart';
 
 class Timetable extends StatelessWidget {
-  ///周偏移量，若在本周则为0，若在本周之前则为-，若在本周之后则为+
-  final int offsetWeek;
-
   final int oneNodeLength;
 
   final List<Course> courses;
@@ -17,7 +14,7 @@ class Timetable extends StatelessWidget {
 
   final _leftTimeTextStyle = const TextStyle(
     fontSize: 9,
-    color: Colors.black87,
+    color: Colors.grey,
   );
 
   final _leftNodeTextStyle = const TextStyle(
@@ -30,29 +27,28 @@ class Timetable extends StatelessWidget {
     color: Colors.black87,
   );
 
-  final WidgetBuilder? empty;
+  final WidgetBuilder? emptyBuilder;
 
   final void Function(Course) onCourseClick;
 
   static const _dividerHeight = 0.5;
 
-  static const _horizontalDivider =
-      Divider(thickness: _dividerHeight, height: _dividerHeight);
+  static const _horizontalDivider = Divider(
+    thickness: _dividerHeight,
+    height: _dividerHeight,
+    color: Color(0x33333333),
+  );
 
   final Widget Function(BuildContext context, int weekday)? weekdayBuilder;
 
-  final bool showTime;
-
   Timetable({
     super.key,
-    required this.offsetWeek,
     required this.courses,
-    required this.times,
-    required this.showTime,
     required this.oneNodeLength,
     required this.onCourseClick,
+    this.times,
     this.weekdayBuilder,
-    this.empty,
+    this.emptyBuilder,
   });
 
   @override
@@ -81,31 +77,33 @@ class Timetable extends StatelessWidget {
     }
     Widget body = Row(children: children);
     if (courses.isEmpty) {
-      if (empty != null) {
+      if (emptyBuilder != null) {
         body = Stack(children: [
           Row(children: children),
           Center(
-            child: empty!(context),
+            child: emptyBuilder!(context),
           ),
         ]);
       } else {
         body = Stack(children: [
           Row(children: children),
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image(
-                height: 160,
-                image: AssetImage("assets/image/empty.png"),
-              ),
-              Text(
-                '这周没有课',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
+          const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image(
+                  height: 160,
+                  image: AssetImage("assets/image/empty.png"),
                 ),
-              )
-            ],
+                Text(
+                  '这周没有课',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
           )
         ]);
       }
@@ -113,9 +111,7 @@ class Timetable extends StatelessWidget {
     return Column(
       children: [
         //上部星期栏
-        _buildWeekdayRow(context),
-        _horizontalDivider,
-        //节数栏以及课程栏
+        _buildWeekdayRow(context), _horizontalDivider, //节数栏以及课程栏
         Expanded(
           child: body,
         ),
@@ -136,7 +132,9 @@ class Timetable extends StatelessWidget {
         ),
         ...List.generate(7, (index) {
           if (weekdayBuilder != null) {
-            return Expanded(flex: 2, child: weekdayBuilder!(context, index));
+            return Expanded(
+                flex: 2,
+                child: weekdayBuilder!(context, index == 0 ? 7 : index));
           }
           return Expanded(
             flex: 2,
@@ -161,48 +159,30 @@ class Timetable extends StatelessWidget {
 
   /// 构建左边节数列
   Widget _buildLeftNodeColumn() {
-    final currentTime = DateTime.now();
-    final current = currentTime.hour * 100 + currentTime.minute;
     List<Widget> nodes = [];
     // 这边的Expanded是为了每行能平均分布
     for (int i = 1; i < 13; i++) {
       if (i != 1) {
         nodes.add(_horizontalDivider);
       }
-      bool highLight = false;
       TextStyle leftTimeTextStyle = _leftTimeTextStyle;
       TextStyle leftNodeTextStyle = _leftNodeTextStyle;
-      if (times != null) {
-        final start = times![i];
-        final end = addTime(times![i], oneNodeLength);
-        highLight = offsetWeek == 0 && current > start && current < end;
-        if (highLight) {
-          leftTimeTextStyle = _leftTimeTextStyle.copyWith(
-            color: primaryColor,
-          );
-          leftNodeTextStyle = _leftNodeTextStyle.copyWith(
-            color: primaryColor,
-          );
-        }
-      }
       nodes.add(Expanded(
         child: Container(
-          decoration: BoxDecoration(
-            color: highLight ? const Color(0x8884FFFF) : null,
-            borderRadius: const BorderRadius.all(Radius.circular(2)),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
           child: Stack(
             children: [
-              if (showTime && times != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 1.0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      '${times![i] ~/ 100}:${(times![i] % 100).toFix0String(2)}',
-                      textAlign: TextAlign.center,
-                      style: leftTimeTextStyle,
-                    ),
+              if (times != null)
+                Positioned(
+                  top: 1,
+                  left: 0,
+                  right: 0,
+                  child: Text(
+                    '${times![i] ~/ 100}:${(times![i] % 100).toFix0String(2)}',
+                    textAlign: TextAlign.center,
+                    style: leftTimeTextStyle,
                   ),
                 ),
               Center(
@@ -259,20 +239,19 @@ class Timetable extends StatelessWidget {
     });
   }
 
-  final colors = const [
-    Colors.lightGreen,
-    Colors.blue,
-    Colors.green,
-    Colors.lime,
-    Colors.cyan,
-    Colors.deepPurple,
-    Colors.teal,
-    Colors.red,
-    Colors.pink,
-    Colors.lightBlue,
-    Colors.purple,
-    Colors.deepOrange,
-    Colors.indigo,
+  final List<Color> colors = [
+    const Color(0xFFCE7CF4),
+    const Color(0xFFFF7171),
+    const Color(0xFF66CC99),
+    const Color(0xFFFF9966),
+    const Color(0xFF66CCCC),
+    const Color(0xFF6699CC),
+    const Color(0xFF99CC99),
+    const Color(0xFF669966),
+    const Color(0xFF66CCFF),
+    const Color(0xFF99CC66),
+    const Color(0xFFFF9999),
+    const Color(0xFF81CC74),
   ];
 
   final colorMap = <String>[];
@@ -283,25 +262,28 @@ class Timetable extends StatelessWidget {
       colorMap.add(course.name);
       colorIndex = colorMap.length - 1;
     }
-    final color = colors[colorIndex % colors.length].shade400;
+    final color = colors[colorIndex % colors.length];
     return GestureDetector(
       onTap: () {
         onCourseClick(course);
       },
       child: Container(
-          decoration: ShapeDecoration(
-              color: color,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(2)))),
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Center(
-                child: Text(
-              "${course.name}@${course.location}",
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: Colors.white),
-            )),
-          )),
+        decoration: ShapeDecoration(
+          color: color,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
+        ),
+        padding: const EdgeInsets.all(2.0),
+        margin: const EdgeInsets.all(0.5),
+        child: Center(
+          child: Text(
+            "${course.name}@${course.location}",
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 

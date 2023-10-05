@@ -196,4 +196,28 @@ class Api {
       return MapEntry(key, (value as List).map((e) => e as String).toList());
     });
   }
+
+  Future<MajorTimetableOptions> getMajorTimetableOptions() async {
+    var response = await dio.get('/api/jw/timetable/options2');
+    return (response.data as Map<String, dynamic>).map((key, value) {
+      return MapEntry(
+        key,
+        (value as Map<String, dynamic>).map((key, value) {
+          return MapEntry(
+            key,
+            (value as Map<String, dynamic>).map((key, value) {
+              return MapEntry(key, value as int);
+            }),
+          );
+        }),
+      );
+    });
+  }
+
+  Future<MajorTimetable> getMajorTimetable(int id) async {
+    var response = await dio.get(
+      '/api/jw/timetable/id/$id',
+    );
+    return MajorTimetable.fromJson(response.data);
+  }
 }

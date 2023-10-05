@@ -228,3 +228,25 @@ Map<String, dynamic> _$$MessageImplToJson(_$MessageImpl instance) =>
       'type': instance.type,
       'data': instance.data,
     };
+
+_$MajorTimetableImpl _$$MajorTimetableImplFromJson(Map<String, dynamic> json) =>
+    _$MajorTimetableImpl(
+      major: json['major'] as String,
+      grade: json['grade'] as String,
+      clazz: json['clazz'] as String,
+      updateTime:
+          const DateTimeConverter().fromJson(json['updateTime'] as String),
+      courses: (json['courses'] as List<dynamic>)
+          .map((e) => Course.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$MajorTimetableImplToJson(
+        _$MajorTimetableImpl instance) =>
+    <String, dynamic>{
+      'major': instance.major,
+      'grade': instance.grade,
+      'clazz': instance.clazz,
+      'updateTime': const DateTimeConverter().toJson(instance.updateTime),
+      'courses': instance.courses,
+    };

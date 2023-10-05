@@ -19,10 +19,10 @@ class MainTab extends StatefulWidget {
   const MainTab({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MainTabState();
+  State<StatefulWidget> createState() => MainTabState();
 }
 
-class _MainTabState extends State<MainTab> {
+class MainTabState extends State<MainTab> {
   var banners = <model.Banner>[];
 
   static const _pageSize = 10;
@@ -56,7 +56,7 @@ class _MainTabState extends State<MainTab> {
           ),
           body: SmartRefresher(
             controller: _refreshController,
-            onRefresh: _refresh,
+            onRefresh: refresh,
             enablePullDown: true,
             // enablePullUp: false,
             child: CustomScrollView(
@@ -218,7 +218,11 @@ class _MainTabState extends State<MainTab> {
               'assets/image/qa.png',
               routerName: '/qa',
             ),
-            const Expanded(child: SizedBox.shrink()),
+            _buildToolButton(
+              '专业课表',
+              'assets/image/timetable.png',
+              routerName: '/timetable/major/select',
+            ),
             const Expanded(child: SizedBox.shrink()),
             const Expanded(child: SizedBox.shrink()),
           ]),
@@ -334,13 +338,14 @@ class _MainTabState extends State<MainTab> {
       area = selectedValue;
       setState(() {});
       SPUtil.setString('AREA', selectedValue);
-      _refresh();
+      refresh();
     }
   }
 
-  _refresh() async {
+  refresh() async {
     postAdded.clear();
     postDeleted.clear();
     _pagingController.refresh();
+    _refreshController.requestRefresh();
   }
 }

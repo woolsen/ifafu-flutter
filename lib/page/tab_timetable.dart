@@ -9,6 +9,7 @@ import 'package:ifafu/http/model.dart';
 import 'package:ifafu/page/bind_jw_page.dart';
 import 'package:ifafu/page/timetable_set_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/chinese.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
 import 'package:ifafu/widget/timetable/course_detail.dart';
@@ -20,10 +21,10 @@ class TimetableTab extends StatefulWidget {
   const TimetableTab({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CourseTabState();
+  State<StatefulWidget> createState() => TimetableTabState();
 }
 
-class _CourseTabState extends State<TimetableTab> {
+class TimetableTabState extends State<TimetableTab> {
   final ValueNotifier<int> _showWeek = ValueNotifier(1);
 
   late PageController _pageController;
@@ -32,6 +33,8 @@ class _CourseTabState extends State<TimetableTab> {
 
   final tableKey = GlobalKey(debugLabel: 'timetable_pages');
 
+  String? todayDate;
+  List<List<String>>? weekDateList;
   final List<List<Course>> coursesList = List.generate(23, (index) => []);
 
   PersonalTimetable? _timetable;
@@ -154,10 +157,7 @@ class _CourseTabState extends State<TimetableTab> {
                           controller: _refreshController,
                           onRefresh: refresh,
                           enablePullUp: false,
-                          child: _buildTimetableBody(
-                            _user!,
-                            setting.showTime,
-                          ),
+                          child: _buildTimetableBody(_user!, setting),
                         ),
                       ),
               ],
@@ -179,9 +179,24 @@ class _CourseTabState extends State<TimetableTab> {
       }
     }
     var current = DateTime.now();
-    current = DateTime(current.year, current.month, current.day);
-    current = current.subtract(Duration(days: current.weekday % 7));
-    var currentWeek = current.difference(timetable.openDay).inDays ~/ 7 + 1;
+
+    var date = timetable.openDay
+        .subtract(Duration(days: timetable.openDay.weekday % 7));
+    var currentWeek = current.difference(date).inDays ~/ 7 + 1;
+
+    var weekDateList = <List<String>>[];
+    for (int i = 0; i < 23; i++) {
+      var weekDate = <String>[];
+      weekDate.add('${date.month}');
+      for (int j = 0; j < 7; j++) {
+        weekDate.add('${date.month}/${date.day}');
+        date = date.add(const Duration(days: 1));
+      }
+      weekDateList.add(weekDate);
+    }
+    this.weekDateList = weekDateList;
+    todayDate = '${current.month}/${current.day}';
+
     if (_currentWeek != currentWeek) {
       _currentWeek = currentWeek;
       _showWeek.value = _currentWeek;
@@ -244,7 +259,7 @@ class _CourseTabState extends State<TimetableTab> {
   /// [currentWeek] 本周的周数
   Widget _buildAppbar(Widget? Function() centerBuilder) {
     return ColoredBox(
-      color: const Color(0xFFF5F5F5),
+      color: Colors.white,
       child: SafeArea(
         child: Stack(
           alignment: AlignmentDirectional.center,
@@ -265,70 +280,68 @@ class _CourseTabState extends State<TimetableTab> {
               alignment: Alignment.center,
               child: centerBuilder() ??
                   ValueListenableBuilder(
-                      valueListenable: _showWeek,
-                      builder: (context, data, _) {
-                        final int? showWeek = data;
-                        final WeekState? weekState;
-                        final String weekStateStr;
-                        if (showWeek == null) {
-                          weekState = null;
-                          weekStateStr = '';
-                        } else if (_currentWeek == -1) {
-                          weekState = WeekState.vacation;
-                          weekStateStr = '放假中';
-                        } else if (_currentWeek == showWeek) {
-                          weekState = WeekState.currentWeek;
-                          weekStateStr = '';
-                        } else {
-                          weekState = WeekState.notCurrentWeek;
-                          weekStateStr = '长按回到本周';
-                        }
-                        return GestureDetector(
-                          onLongPress: () async {
-                            int? toPage;
-                            if (weekState == WeekState.vacation) {
-                              toPage = 0;
-                            } else if (weekState != null) {
-                              toPage = _currentWeek - 1;
-                            }
-                            if (toPage != null && showWeek != null) {
-                              _pageController.animateToPage(
-                                toPage,
-                                duration: const Duration(seconds: 2),
-                                curve: Curves.fastEaseInToSlowEaseOut,
-                              );
-                            }
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                showWeek == null ? '加载中' : '第$showWeek周',
+                    valueListenable: _showWeek,
+                    builder: (context, data, _) {
+                      final int showWeek = data;
+                      final WeekState? weekState;
+                      final String weekStateStr;
+                      if (_currentWeek == -1) {
+                        weekState = WeekState.vacation;
+                        weekStateStr = '放假中';
+                      } else if (_currentWeek == showWeek) {
+                        weekState = WeekState.currentWeek;
+                        weekStateStr = '';
+                      } else {
+                        weekState = WeekState.notCurrentWeek;
+                        weekStateStr = '长按回到本周';
+                      }
+                      return GestureDetector(
+                        onLongPress: () async {
+                          int? toPage;
+                          if (weekState == WeekState.vacation) {
+                            toPage = 0;
+                          } else if (weekState != null) {
+                            toPage = _currentWeek - 1;
+                          }
+                          if (toPage != null) {
+                            _pageController.animateToPage(
+                              toPage,
+                              duration: const Duration(seconds: 2),
+                              curve: Curves.fastEaseInToSlowEaseOut,
+                            );
+                          }
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '第$showWeek周',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                height: 1.0,
+                                fontFamily: 'DingTalk',
+                              ),
+                            ),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 100),
+                              height:
+                                  weekState == WeekState.currentWeek ? 0 : 16,
+                              transformAlignment: Alignment.center,
+                              child: Text(
+                                weekStateStr,
                                 style: const TextStyle(
-                                  fontSize: 20,
-                                  height: 1.0,
-                                  fontFamily: 'DingTalk',
+                                  fontSize: 12,
+                                  color: Colors.grey,
                                 ),
                               ),
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                height:
-                                    weekState == WeekState.currentWeek ? 0 : 16,
-                                transformAlignment: Alignment.center,
-                                child: Text(
-                                  weekStateStr,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
             ),
           ],
         ),
@@ -336,7 +349,9 @@ class _CourseTabState extends State<TimetableTab> {
     );
   }
 
-  Widget _buildTimetableBody(User user, bool showTime) {
+  Widget _buildTimetableBody(User user, TimetableSet set) {
+    final highlightColor =
+        Theme.of(context).colorScheme.primaryContainer.withOpacity(0.8);
     return PageView.builder(
       onPageChanged: (page) {
         _showWeek.value = page + 1;
@@ -348,15 +363,64 @@ class _CourseTabState extends State<TimetableTab> {
       itemBuilder: (context, index) {
         final showWeekCourses =
             !user.isBindJw ? <Course>[] : coursesList[index + 1];
+        final weekDates = weekDateList![index];
         return Timetable(
           key: ValueKey(showWeekCourses),
-          offsetWeek: index + 1,
           courses: showWeekCourses,
-          times: TimetableSet.times[0],
-          showTime: showTime,
+          times: set.showTime && set.timeIndex != null
+              ? TimetableSet.times[set.timeIndex!]
+              : null,
           oneNodeLength: 12,
           onCourseClick: (course) => _showCourseDetail(context, course),
-          empty: (context) {
+          weekdayBuilder: (context, weekday) {
+            String date = weekDates[weekday % 7 + 1];
+            bool today = date == todayDate;
+            Widget child;
+            if (weekday == 0) {
+              child = Text(
+                '${weekDates[0]}\n月',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  height: 1.2,
+                ),
+              );
+            } else {
+              child = Column(
+                children: [
+                  Text(
+                    Chinese.getWeekdayCN(weekday),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: today ? Colors.blueAccent : null,
+                    ),
+                  ),
+                  Text(
+                    date,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: today ? Colors.blueAccent : Colors.grey,
+                    ),
+                  ),
+                ],
+              );
+            }
+            child = Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: child,
+            );
+            if (today) {
+              child = DecoratedBox(
+                decoration: BoxDecoration(
+                  color: highlightColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: child,
+              );
+            }
+            return child;
+          },
+          emptyBuilder: (context) {
             return _buildEmptyView('这周没有课哦~');
           },
         );
@@ -417,11 +481,13 @@ class _CourseTabState extends State<TimetableTab> {
   }
 
   void _showCourseDetail(BuildContext context, Course course) {
-    showDialog(
+    showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return CourseDetail(course);
+        return Dialog(
+          child: CourseDetail(course),
+        );
       },
     );
   }

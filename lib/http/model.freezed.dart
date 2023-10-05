@@ -2673,3 +2673,235 @@ abstract class _Message implements Message {
   _$$MessageImplCopyWith<_$MessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+MajorTimetable _$MajorTimetableFromJson(Map<String, dynamic> json) {
+  return _MajorTimetable.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MajorTimetable {
+  String get major => throw _privateConstructorUsedError;
+  String get grade => throw _privateConstructorUsedError;
+  String get clazz => throw _privateConstructorUsedError;
+  @DateTimeConverter()
+  DateTime get updateTime => throw _privateConstructorUsedError;
+  List<Course> get courses => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MajorTimetableCopyWith<MajorTimetable> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MajorTimetableCopyWith<$Res> {
+  factory $MajorTimetableCopyWith(
+          MajorTimetable value, $Res Function(MajorTimetable) then) =
+      _$MajorTimetableCopyWithImpl<$Res, MajorTimetable>;
+  @useResult
+  $Res call(
+      {String major,
+      String grade,
+      String clazz,
+      @DateTimeConverter() DateTime updateTime,
+      List<Course> courses});
+}
+
+/// @nodoc
+class _$MajorTimetableCopyWithImpl<$Res, $Val extends MajorTimetable>
+    implements $MajorTimetableCopyWith<$Res> {
+  _$MajorTimetableCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? major = null,
+    Object? grade = null,
+    Object? clazz = null,
+    Object? updateTime = null,
+    Object? courses = null,
+  }) {
+    return _then(_value.copyWith(
+      major: null == major
+          ? _value.major
+          : major // ignore: cast_nullable_to_non_nullable
+              as String,
+      grade: null == grade
+          ? _value.grade
+          : grade // ignore: cast_nullable_to_non_nullable
+              as String,
+      clazz: null == clazz
+          ? _value.clazz
+          : clazz // ignore: cast_nullable_to_non_nullable
+              as String,
+      updateTime: null == updateTime
+          ? _value.updateTime
+          : updateTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      courses: null == courses
+          ? _value.courses
+          : courses // ignore: cast_nullable_to_non_nullable
+              as List<Course>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MajorTimetableImplCopyWith<$Res>
+    implements $MajorTimetableCopyWith<$Res> {
+  factory _$$MajorTimetableImplCopyWith(_$MajorTimetableImpl value,
+          $Res Function(_$MajorTimetableImpl) then) =
+      __$$MajorTimetableImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String major,
+      String grade,
+      String clazz,
+      @DateTimeConverter() DateTime updateTime,
+      List<Course> courses});
+}
+
+/// @nodoc
+class __$$MajorTimetableImplCopyWithImpl<$Res>
+    extends _$MajorTimetableCopyWithImpl<$Res, _$MajorTimetableImpl>
+    implements _$$MajorTimetableImplCopyWith<$Res> {
+  __$$MajorTimetableImplCopyWithImpl(
+      _$MajorTimetableImpl _value, $Res Function(_$MajorTimetableImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? major = null,
+    Object? grade = null,
+    Object? clazz = null,
+    Object? updateTime = null,
+    Object? courses = null,
+  }) {
+    return _then(_$MajorTimetableImpl(
+      major: null == major
+          ? _value.major
+          : major // ignore: cast_nullable_to_non_nullable
+              as String,
+      grade: null == grade
+          ? _value.grade
+          : grade // ignore: cast_nullable_to_non_nullable
+              as String,
+      clazz: null == clazz
+          ? _value.clazz
+          : clazz // ignore: cast_nullable_to_non_nullable
+              as String,
+      updateTime: null == updateTime
+          ? _value.updateTime
+          : updateTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      courses: null == courses
+          ? _value._courses
+          : courses // ignore: cast_nullable_to_non_nullable
+              as List<Course>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MajorTimetableImpl implements _MajorTimetable {
+  _$MajorTimetableImpl(
+      {required this.major,
+      required this.grade,
+      required this.clazz,
+      @DateTimeConverter() required this.updateTime,
+      required final List<Course> courses})
+      : _courses = courses;
+
+  factory _$MajorTimetableImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MajorTimetableImplFromJson(json);
+
+  @override
+  final String major;
+  @override
+  final String grade;
+  @override
+  final String clazz;
+  @override
+  @DateTimeConverter()
+  final DateTime updateTime;
+  final List<Course> _courses;
+  @override
+  List<Course> get courses {
+    if (_courses is EqualUnmodifiableListView) return _courses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_courses);
+  }
+
+  @override
+  String toString() {
+    return 'MajorTimetable(major: $major, grade: $grade, clazz: $clazz, updateTime: $updateTime, courses: $courses)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MajorTimetableImpl &&
+            (identical(other.major, major) || other.major == major) &&
+            (identical(other.grade, grade) || other.grade == grade) &&
+            (identical(other.clazz, clazz) || other.clazz == clazz) &&
+            (identical(other.updateTime, updateTime) ||
+                other.updateTime == updateTime) &&
+            const DeepCollectionEquality().equals(other._courses, _courses));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, major, grade, clazz, updateTime,
+      const DeepCollectionEquality().hash(_courses));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MajorTimetableImplCopyWith<_$MajorTimetableImpl> get copyWith =>
+      __$$MajorTimetableImplCopyWithImpl<_$MajorTimetableImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MajorTimetableImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MajorTimetable implements MajorTimetable {
+  factory _MajorTimetable(
+      {required final String major,
+      required final String grade,
+      required final String clazz,
+      @DateTimeConverter() required final DateTime updateTime,
+      required final List<Course> courses}) = _$MajorTimetableImpl;
+
+  factory _MajorTimetable.fromJson(Map<String, dynamic> json) =
+      _$MajorTimetableImpl.fromJson;
+
+  @override
+  String get major;
+  @override
+  String get grade;
+  @override
+  String get clazz;
+  @override
+  @DateTimeConverter()
+  DateTime get updateTime;
+  @override
+  List<Course> get courses;
+  @override
+  @JsonKey(ignore: true)
+  _$$MajorTimetableImplCopyWith<_$MajorTimetableImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

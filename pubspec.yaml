@@ -29,6 +29,7 @@ dependencies:
     sdk: flutter
   url_launcher: ^6.1.14
   scrollable_positioned_list: ^0.3.8
+  flutter_picker: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ flutter:
     - assets/image/logo_jw.png
     - assets/image/logo_fafu.png
     - assets/image/qa.png
+    - assets/image/timetable.png
     - assets/image/bot.jpg
 
   fonts:
