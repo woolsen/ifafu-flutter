@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
-import 'package:ifafu/widget/timetable/course_detail.dart';
-import 'package:ifafu/widget/timetable/timetable.dart';
+import 'package:ifafu/widget/timetable.dart';
 import 'package:intl/intl.dart';
 
 class MajorTimetablePage extends StatefulWidget {
@@ -45,31 +44,13 @@ class _MajorTimetablePageState extends State<MajorTimetablePage> {
           ],
         ),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Timetable(
-              courses: timetable?.courses ?? [],
-              oneNodeLength: 12,
-              onCourseClick: (course) {
-                _showCourseDetail(context, course);
-              },
-            ),
-          ),
-        ],
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Timetable(
+          courses: timetable?.courses ?? [],
+        ),
       ),
-    );
-  }
-
-  void _showCourseDetail(BuildContext context, Course course) {
-    showAdaptiveDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return Dialog(
-          child: CourseDetail(course),
-        );
-      },
     );
   }
 

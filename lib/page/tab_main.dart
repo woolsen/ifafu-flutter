@@ -9,6 +9,7 @@ import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/dialog.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/util/util.dart';
 import 'package:ifafu/widget/empty.dart';
 import 'package:ifafu/widget/infinite_scroll_pagination.dart';
 import 'package:ifafu/widget/post.dart';
@@ -216,14 +217,18 @@ class MainTabState extends State<MainTab> {
             _buildToolButton(
               '词条问答',
               'assets/image/qa.png',
-              routerName: '/qa',
+              () => Navigator.of(context).pushNamed('/qa'),
             ),
             _buildToolButton(
               '专业课表',
               'assets/image/timetable.png',
-              routerName: '/timetable/major/select',
+              () => Navigator.of(context).pushNamed('/timetable/major/select'),
             ),
-            const Expanded(child: SizedBox.shrink()),
+            _buildToolButton(
+              '反馈建议',
+              'assets/image/feedback.svg',
+              () => Util.joinQQGroup(groupId: 964416588),
+            ),
             const Expanded(child: SizedBox.shrink()),
           ]),
         ),
@@ -233,14 +238,12 @@ class MainTabState extends State<MainTab> {
 
   Widget _buildToolButton(
     String text,
-    String image, {
-    required String routerName,
-  }) {
+    String image,
+    Function() onClick,
+  ) {
     return Expanded(
       child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, routerName);
-        },
+        onTap: onClick,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           alignment: Alignment.center,

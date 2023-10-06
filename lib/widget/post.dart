@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -365,7 +366,7 @@ class _PostState extends State<Post> {
     }
     return CircleAvatar(
         radius: 22.0,
-        backgroundImage: NetworkImage(avatarUrl.startsWith('/')
+        backgroundImage: CachedNetworkImageProvider(avatarUrl.startsWith('/')
             ? 'https://api2.ifafu.cn$avatarUrl'
             : avatarUrl));
   }

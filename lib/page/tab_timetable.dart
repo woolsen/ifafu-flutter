@@ -12,8 +12,7 @@ import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/chinese.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
-import 'package:ifafu/widget/timetable/course_detail.dart';
-import 'package:ifafu/widget/timetable/timetable.dart';
+import 'package:ifafu/widget/timetable.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -37,12 +36,12 @@ class TimetableTabState extends State<TimetableTab> {
   List<List<String>>? weekDateList;
   final List<List<Course>> coursesList = List.generate(23, (index) => []);
 
-  PersonalTimetable? _timetable;
-
   bool init = false;
 
   int _currentWeek = 1;
 
+  PersonalTimetable? _timetable;
+  List<int>? _times;
   TimetableSet? _set;
 
   User? _user;
@@ -173,6 +172,7 @@ class TimetableTabState extends State<TimetableTab> {
     for (var courses in coursesList) {
       courses.clear();
     }
+
     for (var course in timetable.courses) {
       for (var week in course.weeks) {
         coursesList[week].add(course);
@@ -196,6 +196,15 @@ class TimetableTabState extends State<TimetableTab> {
     }
     this.weekDateList = weekDateList;
     todayDate = '${current.month}/${current.day}';
+
+    if (_set != null && _set!.timeIndex == null) {
+      var isQS = _timetable!.courses.any((e) {
+        return e.location.contains('旗山') || e.location.contains('旗教');
+      });
+      _times = TimetableSet.times[isQS ? 1 : 0];
+    } else if (_set != null && _set!.timeIndex != null) {
+      _times = TimetableSet.times[_set!.timeIndex!];
+    }
 
     if (_currentWeek != currentWeek) {
       _currentWeek = currentWeek;
@@ -367,11 +376,7 @@ class TimetableTabState extends State<TimetableTab> {
         return Timetable(
           key: ValueKey(showWeekCourses),
           courses: showWeekCourses,
-          times: set.showTime && set.timeIndex != null
-              ? TimetableSet.times[set.timeIndex!]
-              : null,
-          oneNodeLength: 12,
-          onCourseClick: (course) => _showCourseDetail(context, course),
+          times: set.showTime && _times != null ? _times! : null,
           weekdayBuilder: (context, weekday) {
             String date = weekDates[weekday % 7 + 1];
             bool today = date == todayDate;
@@ -478,18 +483,6 @@ class TimetableTabState extends State<TimetableTab> {
     //   ),
     // );
     // setState(() {});
-  }
-
-  void _showCourseDetail(BuildContext context, Course course) {
-    showAdaptiveDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return Dialog(
-          child: CourseDetail(course),
-        );
-      },
-    );
   }
 
   void refresh() {

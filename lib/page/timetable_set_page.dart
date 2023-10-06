@@ -82,7 +82,7 @@ class _TimetableSetPageState extends State<TimetableSetPage> {
     if (index == null) {
       return;
     }
-    widget.set.timeIndex = index;
+    widget.set.timeIndex = index == -1 ? null : index;
     setState(() {});
     widget.updated(widget.set);
   }
@@ -187,8 +187,8 @@ class _TimeSettingState extends State<TimeSetting> {
                 ),
                 const SizedBox(height: 8),
                 _buildSelectItem(
-                  onTap: () => updateSetting(null),
-                  selected: _index == null,
+                  onTap: () => updateSetting(-1),
+                  selected: _index == -1,
                   title: '自动设置',
                   subtitle: '根据课表自动选择',
                   width: double.infinity,
@@ -207,7 +207,7 @@ class _TimeSettingState extends State<TimeSetting> {
     );
   }
 
-  void updateSetting(int? index) {
+  void updateSetting(int index) {
     setState(() {
       _index = index;
     });
@@ -238,7 +238,7 @@ class _TimeSettingState extends State<TimeSetting> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: selected ? const Color(0xFF1976D2) : Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -246,7 +246,7 @@ class _TimeSettingState extends State<TimeSetting> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 15,
                 color: selected ? Colors.white : Colors.black,
               ),
             ),
