@@ -56,33 +56,34 @@ class ImageAlbum extends StatelessWidget {
             _goToImageViewer(context, imageUrls.indexOf(url));
           },
           child: Hero(
-              tag: '$heroTagAddition#$url',
-              createRectTween: (begin, end) {
-                return RectTween(begin: begin, end: end);
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: CachedNetworkImage(
-                  imageUrl: url,
-                  height: size,
-                  width: size,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return const Center(
-                      child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.grey,
-                        ),
+            tag: '$heroTagAddition#$url',
+            createRectTween: (begin, end) {
+              return RectTween(begin: begin, end: end);
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(size / 16),
+              child: CachedNetworkImage(
+                imageUrl: url,
+                height: size,
+                width: size,
+                fit: BoxFit.cover,
+                placeholder: (context, url) {
+                  return const Center(
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.grey,
                       ),
-                    );
-                  },
-                  httpHeaders: {
-                    'sec-fetch-platform': Platform.operatingSystem,
-                  },
-                ),
-              )),
+                    ),
+                  );
+                },
+                httpHeaders: {
+                  'sec-fetch-platform': Platform.operatingSystem,
+                },
+              ),
+            ),
+          ),
         ));
       }
       widgets.add(const SizedBox(height: 4));

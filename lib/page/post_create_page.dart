@@ -48,7 +48,6 @@ class _PostCreatePageState extends State<PostCreatePage> {
   @override
   void dispose() {
     // 资源释放和清理操作
-    contactController.dispose();
     contentController.dispose();
     super.dispose();
   }
