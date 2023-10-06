@@ -52,6 +52,7 @@ flutter:
     - assets/image/qa.png
     - assets/image/timetable.png
     - assets/image/bot.jpg
+    - assets/image/feedback.png
 
   fonts:
     - family: DingTalk

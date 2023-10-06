@@ -65,7 +65,7 @@ class MainTabState extends State<MainTab> {
                 SliverToBoxAdapter(child: _buildTopbar()),
                 SliverList(
                   delegate: SliverChildListDelegate.fixed([
-                    for (var value in postAdded) ...{
+                    for (var value in postAdded) ...[
                       Post(
                         post: value,
                         currentUser: user,
@@ -76,7 +76,7 @@ class MainTabState extends State<MainTab> {
                         },
                       ),
                       const Divider(thickness: 0.3),
-                    },
+                    ],
                   ]),
                 ),
                 PagedSliverList.separated(
@@ -226,7 +226,7 @@ class MainTabState extends State<MainTab> {
             ),
             _buildToolButton(
               '反馈建议',
-              'assets/image/feedback.svg',
+              'assets/image/feedback.png',
               () => Util.joinQQGroup(groupId: 964416588),
             ),
             const Expanded(child: SizedBox.shrink()),
@@ -334,7 +334,7 @@ class MainTabState extends State<MainTab> {
     final selectedValue = await showSimpleDialog(
       context,
       areas,
-      barrierDismissible: false,
+      barrierDismissible: area != null,
       title: '选择校区',
     );
     if (selectedValue != null && selectedValue != area) {

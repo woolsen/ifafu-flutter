@@ -205,10 +205,10 @@ packages:
     dependency: transitive
     description:
       name: csslib
-      sha256: "831883fb353c8bdc1d71979e5b342c7d88acfbc643113c14ae51e2442ea0f20f"
+      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.17.3"
+    version: "1.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -1078,10 +1078,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
+      sha256: "350a11abd2d1d97e0cc7a28a81b781c08002aa2864d9e3f192ca0ffa18b06ed3"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.1.4"
+    version: "5.0.9"
   xdg_directories:
     dependency: transitive
     description:

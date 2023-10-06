@@ -4,6 +4,7 @@ import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart' as model;
 import 'package:ifafu/page/bind_jw_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
+import 'package:ifafu/util/util.dart';
 
 typedef Logout = void Function();
 
@@ -81,18 +82,14 @@ class _UserTabState extends State<UserTab> {
                     ),
                   ),
                 ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.school),
-                  title: Text(user.isBindJw ? '解绑教务系统' : '绑定教务系统'),
-                  onTap: () {
-                    if (user.isBindJw) {
-                      _showUnbindJwDialog();
-                    } else {
-                      _goToBindJwPage();
-                    }
-                  },
-                ),
+                if (!user.isBindJw) ...[
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.school),
+                    title: const Text('绑定教务系统'),
+                    onTap: _goToBindJwPage,
+                  ),
+                ],
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.favorite),
@@ -101,6 +98,20 @@ class _UserTabState extends State<UserTab> {
                     Navigator.of(context).pushNamed('/post/my');
                   },
                 ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.feedback),
+                  title: const Text('反馈与建议'),
+                  onTap: _goToFeedback,
+                ),
+                if (user.isBindJw) ...[
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.school),
+                    title: const Text('解绑教务系统'),
+                    onTap: _showUnbindJwDialog,
+                  ),
+                ],
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.logout),
@@ -113,6 +124,10 @@ class _UserTabState extends State<UserTab> {
         );
       },
     );
+  }
+
+  void _goToFeedback() {
+    Util.joinQQGroup(groupId: 964416588);
   }
 
   void _showUnbindJwDialog() {
