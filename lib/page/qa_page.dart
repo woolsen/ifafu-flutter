@@ -6,6 +6,7 @@ import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart';
 import 'package:ifafu/page/image_viewer.dart';
 import 'package:ifafu/page/qa_library_page.dart';
+import 'package:ifafu/page/webview_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/widget/bottom_input_bar.dart';
 import 'package:ifafu/widget/router.dart';
@@ -27,6 +28,10 @@ class _QaPageState extends State<QaPage> {
   String? _userAvatarUrl;
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  final RegExp urlRegExp = RegExp(
+      r'https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)',
+      caseSensitive: false);
 
   @override
   void initState() {
@@ -198,7 +203,7 @@ class _QaPageState extends State<QaPage> {
       ],
     );
     try {
-      var res = await Api.instance.queryQaAnswer(text);
+      final res = await Api.instance.queryQaAnswer(text);
       await _addMessage(Sender.bot, res);
     } catch (e) {
       if (e is DioException && e.response?.data['code'] == 404) {
@@ -252,10 +257,45 @@ class _QaPageState extends State<QaPage> {
   }
 
   List<Message> _mapMessage(List<Message> message) {
-    if (message.length <= 1) {
+    if (message.isEmpty) {
       return message;
     }
-    final List<Message> mergedMessage = [];
+
+    List<Message> mergedMessage = [];
+    for (var element in message) {
+      if (element.type == 'text') {
+        String text = element.data['text'];
+        if (text.contains(urlRegExp)) {
+          final urls = urlRegExp.allMatches(text).map((e) => e.group(0)!);
+          final List<Message> messages = [];
+          for (var url in urls) {
+            messages.add(Message(
+              type: 'text',
+              data: {'text': text.substring(0, text.indexOf(url))},
+            ));
+            messages.add(Message(
+              type: 'link',
+              data: {'link': url},
+            ));
+            text = text.substring(text.indexOf(url) + url.length);
+          }
+          if (text.isNotEmpty) {
+            messages.add(Message(
+              type: 'text',
+              data: {'text': text},
+            ));
+          }
+          mergedMessage.addAll(messages);
+        } else {
+          mergedMessage.add(element);
+        }
+      } else {
+        mergedMessage.add(element);
+      }
+    }
+
+    message = mergedMessage;
+    mergedMessage = [];
     for (var i = 1; i < message.length; i++) {
       final pre = message[i - 1];
       final cur = message[i];
@@ -328,6 +368,22 @@ class MessageView extends StatelessWidget {
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+            );
+          case 'link':
+            child = GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  SlideRightRoute(
+                    page: WebViewPage(
+                      url: e.data['link'].toString(),
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                e.data['link'].toString(),
+                style: messageTextStyle.copyWith(color: Colors.blue),
               ),
             );
           case 'widget':
