@@ -35,6 +35,7 @@ dependencies:
   webview_flutter: ^4.4.1
   webview_flutter_android: ^3.12.0
   webview_flutter_wkwebview: ^3.9.1
+  package_info: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/image/logo.png
     - assets/image/defaultAvatar.png
     - assets/image/empty.png
     - assets/image/location.svg

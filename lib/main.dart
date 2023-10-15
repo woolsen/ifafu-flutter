@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ifafu/page/about_page.dart';
 import 'package:ifafu/page/edit_profile_page.dart';
 import 'package:ifafu/page/feedback_page.dart';
 import 'package:ifafu/page/login_page.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => const MainPage(),
             '/login': (context) => const LoginPage(),
+            '/about': (context) => const AboutPage(),
             '/post/my': (context) => const PostMyPage(),
             '/post/create': (context) => const PostCreatePage(),
             '/post/detail': (context) => const PostDetailPage(),

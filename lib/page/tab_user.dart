@@ -114,6 +114,12 @@ class _UserTabState extends State<UserTab> {
                 ],
                 const Divider(),
                 ListTile(
+                  leading: const Icon(Icons.info),
+                  title: const Text('关于iFAFU'),
+                  onTap: () => Navigator.of(context).pushNamed('/about'),
+                ),
+                const Divider(),
+                ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('退出登录'),
                   onTap: _showLogoutDialog,
