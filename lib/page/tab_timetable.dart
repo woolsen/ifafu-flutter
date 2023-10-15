@@ -56,13 +56,16 @@ class TimetableTabState extends State<TimetableTab> {
   void initState() {
     super.initState();
     _user = BlocProvider.of<UserProvider>(context).state;
-    if (_user != null && _user!.isBindJw) {
+    final timetable = _loadLocalTimetable();
+    if (timetable == null) {
       Api.instance.getPersonalTimetable().then((timetable) {
         _updateTimetable(timetable);
+        _saveTimetable(timetable);
       }).whenComplete(() {
         init = true;
       });
     } else {
+      _updateTimetable(timetable);
       init = true;
     }
   }
@@ -79,6 +82,7 @@ class TimetableTabState extends State<TimetableTab> {
         if (user != null && user.isBindJw) {
           Api.instance.getPersonalTimetable().then((timetable) {
             _updateTimetable(timetable);
+            _saveTimetable(timetable);
           });
         } else {
           setState(() {});
@@ -165,6 +169,23 @@ class TimetableTabState extends State<TimetableTab> {
         ),
       ),
     );
+  }
+
+  void _saveTimetable(PersonalTimetable timetable) {
+    SPUtil.setString('TIMETABLE', jsonEncode(timetable.toJson()));
+  }
+
+  PersonalTimetable? _loadLocalTimetable() {
+    final timetableJSON = SPUtil.getString('TIMETABLE');
+    if (timetableJSON != null) {
+      try {
+        return PersonalTimetable.fromJson(jsonDecode(timetableJSON));
+      } catch (e) {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   void _updateTimetable(PersonalTimetable timetable) {
@@ -488,6 +509,7 @@ class TimetableTabState extends State<TimetableTab> {
   void refresh() {
     Api.instance.refreshPersonalTimetable().then((value) {
       _updateTimetable(value);
+      _saveTimetable(value);
       _refreshController.refreshCompleted();
       ToastUtil.show('刷新成功');
     }).catchError((e) {
