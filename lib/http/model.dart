@@ -226,11 +226,6 @@ typedef MajorTimetableOptions = Map<String, Map<String, Map<String, int>>>;
 
 @freezed
 class MajorTimetable with _$MajorTimetable {
-  // final String major;
-  // final String grade;
-  // final String clazz;
-  // final DateTime updateTime;
-  // final List<Course> courses;
 
   factory MajorTimetable({
     required String major,

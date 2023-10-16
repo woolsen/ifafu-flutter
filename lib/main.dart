@@ -11,6 +11,7 @@ import 'package:ifafu/page/post_create_page.dart';
 import 'package:ifafu/page/post_detail_page.dart';
 import 'package:ifafu/page/post_my_page.dart';
 import 'package:ifafu/page/qa_page.dart';
+import 'package:ifafu/page/timetable_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
             '/profile/edit': (context) => const EditProfilePage(),
             '/feedback': (context) => const FeedbackPage(),
             '/qa': (context) => const QaPage(),
+            '/timetable': (context) => const TimetablePage(),
             '/timetable/major/select': (context) =>
                 const MajorTimetableSelectPage(),
           },

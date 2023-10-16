@@ -215,6 +215,11 @@ class MainTabState extends State<MainTab> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(children: [
             _buildToolButton(
+              '个人课表',
+              'assets/image/timetable.png',
+                  () => Navigator.of(context).pushNamed('/timetable'),
+            ),
+            _buildToolButton(
               '词条问答',
               'assets/image/qa.png',
               () => Navigator.of(context).pushNamed('/qa'),
@@ -229,7 +234,6 @@ class MainTabState extends State<MainTab> {
               'assets/image/feedback.png',
               () => Util.joinQQGroup(groupId: 964416588),
             ),
-            const Expanded(child: SizedBox.shrink()),
           ]),
         ),
       ),

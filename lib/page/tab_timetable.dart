@@ -17,7 +17,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class TimetableTab extends StatefulWidget {
-  const TimetableTab({Key? key}) : super(key: key);
+  final Widget? leading;
+
+  const TimetableTab({Key? key, this.leading}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => TimetableTabState();
@@ -32,7 +34,7 @@ class TimetableTabState extends State<TimetableTab> {
 
   final tableKey = GlobalKey(debugLabel: 'timetable_pages');
 
-  String? todayDate;
+  List<int>? todayDateIndex;
   List<List<String>>? weekDateList;
   final List<List<Course>> coursesList = List.generate(23, (index) => []);
 
@@ -75,99 +77,100 @@ class TimetableTabState extends State<TimetableTab> {
     TimetableSet setting = _set ??= loadTimeTableSetting();
     File? background =
         setting.backgroundPath == null ? null : File(setting.backgroundPath!);
-    return BlocListener<UserProvider, User?>(
-      bloc: BlocProvider.of<UserProvider>(context),
-      listener: (context, user) {
-        _user = user;
-        if (user != null && user.isBindJw) {
-          Api.instance.getPersonalTimetable().then((timetable) {
-            _updateTimetable(timetable);
-            _saveTimetable(timetable);
-          });
-        } else {
-          setState(() {});
-        }
-      },
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: _buildAppbar(() {
-            if (!init) {
-              return Text('加载中', style: titleStyle);
-            } else if (_user == null) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/login');
-                },
-                child: Text('点击登录', style: titleStyle),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (background != null)
+          FutureBuilder(
+            future: background.exists(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const SizedBox();
+              }
+              return Positioned.fill(
+                child: Image.file(
+                  background,
+                  fit: BoxFit.cover,
+                ),
               );
-            } else if (!_user!.isBindJw) {
-              return GestureDetector(
-                onTap: _goToBindJwPage,
-                child: Text('点击绑定', style: titleStyle),
-              );
-            } else if (_timetable == null) {
-              return Text('加载失败', style: titleStyle);
+            },
+          ),
+        BlocListener<UserProvider, User?>(
+          bloc: BlocProvider.of<UserProvider>(context),
+          listener: (context, user) {
+            _user = user;
+            if (user != null && user.isBindJw) {
+              Api.instance.getPersonalTimetable().then((timetable) {
+                _updateTimetable(timetable);
+                _saveTimetable(timetable);
+              });
             } else {
-              return null;
+              setState(() {});
             }
-          }),
-        ),
-        body: Builder(
-          builder: (context) {
-            if (_user == null) {
-              return Center(
-                child: _buildEmptyView(
-                  '请先登录',
-                  text: '点击登录',
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/login');
-                  },
-                ),
-              );
-            }
-            if (!_user!.isBindJw) {
-              return Center(
-                child: _buildEmptyView(
-                  '绑定教务系统，即可查看课表',
-                  text: '点击绑定',
-                  onPressed: _goToBindJwPage,
-                ),
-              );
-            }
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                if (background != null)
-                  FutureBuilder(
-                    future: background.exists(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const SizedBox();
-                      }
-                      return Positioned.fill(
-                        child: Image.file(
-                          background,
-                          fit: BoxFit.cover,
-                        ),
-                      );
+          },
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(48),
+              child: _buildAppbar(() {
+                if (!init) {
+                  return Text('加载中', style: titleStyle);
+                } else if (_user == null) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/login');
                     },
-                  ),
-                _timetable == null
+                    child: Text('点击登录', style: titleStyle),
+                  );
+                } else if (!_user!.isBindJw) {
+                  return GestureDetector(
+                    onTap: _goToBindJwPage,
+                    child: Text('点击绑定', style: titleStyle),
+                  );
+                } else if (_timetable == null) {
+                  return Text('加载失败', style: titleStyle);
+                } else {
+                  return null;
+                }
+              }),
+            ),
+            body: Builder(
+              builder: (context) {
+                if (_user == null) {
+                  return Center(
+                    child: _buildEmptyView(
+                      '请先登录',
+                      text: '点击登录',
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/login');
+                      },
+                    ),
+                  );
+                }
+                if (!_user!.isBindJw) {
+                  return Center(
+                    child: _buildEmptyView(
+                      '绑定教务系统，即可查看课表',
+                      text: '点击绑定',
+                      onPressed: _goToBindJwPage,
+                    ),
+                  );
+                }
+                return _timetable == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Positioned.fill(
+                    : SizedBox.expand(
                         child: SmartRefresher(
                           controller: _refreshController,
                           onRefresh: refresh,
                           enablePullUp: false,
                           child: _buildTimetableBody(_user!, setting),
                         ),
-                      ),
-              ],
-            );
-          },
+                      );
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -210,13 +213,14 @@ class TimetableTabState extends State<TimetableTab> {
       var weekDate = <String>[];
       weekDate.add('${date.month}');
       for (int j = 0; j < 7; j++) {
-        weekDate.add('${date.month}/${date.day}');
+        weekDate.add('${date.day}');
         date = date.add(const Duration(days: 1));
       }
       weekDateList.add(weekDate);
     }
     this.weekDateList = weekDateList;
-    todayDate = '${current.month}/${current.day}';
+
+    todayDateIndex = [currentWeek, current.weekday];
 
     if (_set != null && _set!.timeIndex == null) {
       var isQS = _timetable!.courses.any((e) {
@@ -288,93 +292,94 @@ class TimetableTabState extends State<TimetableTab> {
 
   /// [currentWeek] 本周的周数
   Widget _buildAppbar(Widget? Function() centerBuilder) {
-    return ColoredBox(
-      color: Colors.white,
-      child: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
+    return SafeArea(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          if (widget.leading != null)
             Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () => _gotoSetting(),
-                    icon: const Icon(Icons.settings),
-                  ),
-                ],
-              ),
+              alignment: Alignment.centerLeft,
+              child: widget.leading!,
             ),
-            Align(
-              alignment: Alignment.center,
-              child: centerBuilder() ??
-                  ValueListenableBuilder(
-                    valueListenable: _showWeek,
-                    builder: (context, data, _) {
-                      final int showWeek = data;
-                      final WeekState? weekState;
-                      final String weekStateStr;
-                      if (_currentWeek == -1) {
-                        weekState = WeekState.vacation;
-                        weekStateStr = '放假中';
-                      } else if (_currentWeek == showWeek) {
-                        weekState = WeekState.currentWeek;
-                        weekStateStr = '';
-                      } else {
-                        weekState = WeekState.notCurrentWeek;
-                        weekStateStr = '长按回到本周';
-                      }
-                      return GestureDetector(
-                        onLongPress: () async {
-                          int? toPage;
-                          if (weekState == WeekState.vacation) {
-                            toPage = 0;
-                          } else if (weekState != null) {
-                            toPage = _currentWeek - 1;
-                          }
-                          if (toPage != null) {
-                            _pageController.animateToPage(
-                              toPage,
-                              duration: const Duration(seconds: 2),
-                              curve: Curves.fastEaseInToSlowEaseOut,
-                            );
-                          }
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '第$showWeek周',
+          Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () => _gotoSetting(),
+                  icon: const Icon(Icons.settings),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: centerBuilder() ??
+                ValueListenableBuilder(
+                  valueListenable: _showWeek,
+                  builder: (context, data, _) {
+                    final int showWeek = data;
+                    final WeekState? weekState;
+                    final String weekStateStr;
+                    if (_currentWeek == -1) {
+                      weekState = WeekState.vacation;
+                      weekStateStr = '放假中';
+                    } else if (_currentWeek == showWeek) {
+                      weekState = WeekState.currentWeek;
+                      weekStateStr = '';
+                    } else {
+                      weekState = WeekState.notCurrentWeek;
+                      weekStateStr = '长按回到本周';
+                    }
+                    return GestureDetector(
+                      onLongPress: () async {
+                        int? toPage;
+                        if (weekState == WeekState.vacation) {
+                          toPage = 0;
+                        } else if (weekState != null) {
+                          toPage = _currentWeek - 1;
+                        }
+                        if (toPage != null) {
+                          _pageController.animateToPage(
+                            toPage,
+                            duration: const Duration(seconds: 2),
+                            curve: Curves.fastEaseInToSlowEaseOut,
+                          );
+                        }
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '第$showWeek周',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              height: 1.0,
+                              fontFamily: 'DingTalk',
+                            ),
+                          ),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            height: weekState == WeekState.currentWeek ? 0 : 16,
+                            transformAlignment: Alignment.center,
+                            child: Text(
+                              weekStateStr,
                               style: const TextStyle(
-                                fontSize: 20,
-                                height: 1.0,
-                                fontFamily: 'DingTalk',
+                                fontSize: 12,
+                                color: Colors.grey,
                               ),
                             ),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 100),
-                              height:
-                                  weekState == WeekState.currentWeek ? 0 : 16,
-                              transformAlignment: Alignment.center,
-                              child: Text(
-                                weekStateStr,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-            ),
-          ],
-        ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+          ),
+        ],
       ),
     );
   }
@@ -400,7 +405,7 @@ class TimetableTabState extends State<TimetableTab> {
           times: set.showTime && _times != null ? _times! : null,
           weekdayBuilder: (context, weekday) {
             String date = weekDates[weekday % 7 + 1];
-            bool today = date == todayDate;
+            bool today = false;
             Widget child;
             if (weekday == 0) {
               child = Text(
@@ -408,23 +413,25 @@ class TimetableTabState extends State<TimetableTab> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 12,
-                  height: 1.2,
+                  fontWeight: FontWeight.bold,
                 ),
               );
             } else {
+              today = todayDateIndex![0] == index + 1 && todayDateIndex![1] == weekday;
               child = Column(
                 children: [
                   Text(
                     Chinese.getWeekdayCN(weekday),
                     style: TextStyle(
                       fontSize: 13,
+                      fontWeight: FontWeight.bold,
                       color: today ? Colors.blueAccent : null,
                     ),
                   ),
                   Text(
                     date,
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 11,
                       color: today ? Colors.blueAccent : Colors.grey,
                     ),
                   ),
@@ -487,23 +494,6 @@ class TimetableTabState extends State<TimetableTab> {
         ),
       ),
     );
-    // var size = tableKey.currentContext?.size ?? MediaQuery.of(context).size;
-    // await Navigator.push(
-    //   context,
-    //   SlidePageRoute(
-    //     child: TimetableSettingPage(
-    //       backgroundRatio: CropAspectRatio(
-    //         ratioX: size.width,
-    //         ratioY: size.height,
-    //       ),
-    //       onBackgroundUpdated: () async {
-    //         final background = await FileUtils.get('timetable_background');
-    //         _background.add(background);
-    //       },
-    //     ),
-    //   ),
-    // );
-    // setState(() {});
   }
 
   void refresh() {

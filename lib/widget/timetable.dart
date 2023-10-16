@@ -22,6 +22,7 @@ class Timetable extends StatelessWidget {
   );
   final _weekdayTextStyle = const TextStyle(
     fontSize: 13,
+    fontWeight: FontWeight.bold,
     color: Colors.black87,
   );
 
@@ -130,8 +131,9 @@ class Timetable extends StatelessWidget {
         ...List.generate(7, (index) {
           if (weekdayBuilder != null) {
             return Expanded(
-                flex: 2,
-                child: weekdayBuilder!(context, index == 0 ? 7 : index));
+              flex: 2,
+              child: weekdayBuilder!(context, index == 0 ? 7 : index),
+            );
           }
           return Expanded(
             flex: 2,
