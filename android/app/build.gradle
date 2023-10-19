@@ -53,7 +53,7 @@ android {
         compileSdkVersion 34
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName + (System.getenv("VERSION_SUFFIX") != null ? System.getenv("VERSION_SUFFIX") : "")
+        versionName flutterVersionName
         multiDexEnabled true
     }
 
@@ -71,13 +71,32 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
+
+            manifestPlaceholders = [
+                app_name      : "iFAFU.debug",
+                app_icon      : "@mipmap/ic_launcher_debug",
+                app_icon_round: "@mipmap/ic_launcher_debug_round",
+            ]
         }
 
         profile {
             applicationIdSuffix ".profile"
+
+            manifestPlaceholders = [
+                app_name      : "iFAFU.profile",
+                app_icon      : "@mipmap/ic_launcher",
+                app_icon_round: "@mipmap/ic_launcher_round",
+            ]
         }
 
         release {
+
+            manifestPlaceholders = [
+                app_name      : "iFAFU",
+                app_icon      : "@mipmap/ic_launcher",
+                app_icon_round: "@mipmap/ic_launcher_round",
+            ]
+
             if (!keystorePropertiesFile.exists()) {
                 println 'Keystore properties not found, use debug key'
                 signingConfig signingConfigs.debug
