@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches:
-      - master
       - dev
   pull_request:
     paths-ignore:
@@ -55,7 +54,9 @@ jobs:
           cache: true
         
       - name: Build and package APKs
-        run: flutter build apk --release --split-per-abi
+        run: |
+          echo "VERSION_SUFFIX=-dev.$(git rev-parse --short=6 HEAD)" >> $GITHUB_ENV
+          flutter build apk --release --split-per-abi
       
       - name: Upload APKs
         uses: actions/upload-artifact@v3

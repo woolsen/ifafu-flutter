@@ -53,7 +53,7 @@ android {
         compileSdkVersion 34
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionName flutterVersionName + (System.getenv("VERSION_SUFFIX") != null ? System.getenv("VERSION_SUFFIX") : "")
         multiDexEnabled true
     }
 
