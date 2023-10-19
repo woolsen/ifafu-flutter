@@ -226,7 +226,6 @@ typedef MajorTimetableOptions = Map<String, Map<String, Map<String, int>>>;
 
 @freezed
 class MajorTimetable with _$MajorTimetable {
-
   factory MajorTimetable({
     required String major,
     required String grade,
@@ -237,4 +236,22 @@ class MajorTimetable with _$MajorTimetable {
 
   factory MajorTimetable.fromJson(Map<String, dynamic> json) =>
       _$MajorTimetableFromJson(json);
+}
+
+@freezed
+class AppUpdate with _$AppUpdate {
+  factory AppUpdate({
+    required int id,
+    required String version,
+    required int code,
+    required String platform,
+    required String url,
+    required String description,
+    required bool force,
+    // 应用更新的最大通知次数
+    required int noticeTime,
+  }) = _AppUpdate;
+
+  factory AppUpdate.fromJson(Map<String, dynamic> json) =>
+      _$AppUpdateFromJson(json);
 }

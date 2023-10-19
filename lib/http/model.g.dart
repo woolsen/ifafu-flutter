@@ -250,3 +250,27 @@ Map<String, dynamic> _$$MajorTimetableImplToJson(
       'updateTime': const DateTimeConverter().toJson(instance.updateTime),
       'courses': instance.courses,
     };
+
+_$AppUpdateImpl _$$AppUpdateImplFromJson(Map<String, dynamic> json) =>
+    _$AppUpdateImpl(
+      id: json['id'] as int,
+      version: json['version'] as String,
+      code: json['code'] as int,
+      platform: json['platform'] as String,
+      url: json['url'] as String,
+      description: json['description'] as String,
+      force: json['force'] as bool,
+      noticeTime: json['noticeTime'] as int,
+    );
+
+Map<String, dynamic> _$$AppUpdateImplToJson(_$AppUpdateImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'version': instance.version,
+      'code': instance.code,
+      'platform': instance.platform,
+      'url': instance.url,
+      'description': instance.description,
+      'force': instance.force,
+      'noticeTime': instance.noticeTime,
+    };

@@ -2905,3 +2905,287 @@ abstract class _MajorTimetable implements MajorTimetable {
   _$$MajorTimetableImplCopyWith<_$MajorTimetableImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+AppUpdate _$AppUpdateFromJson(Map<String, dynamic> json) {
+  return _AppUpdate.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AppUpdate {
+  int get id => throw _privateConstructorUsedError;
+  String get version => throw _privateConstructorUsedError;
+  int get code => throw _privateConstructorUsedError;
+  String get platform => throw _privateConstructorUsedError;
+  String get url => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  bool get force => throw _privateConstructorUsedError; // 应用更新的最大通知次数
+  int get noticeTime => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AppUpdateCopyWith<AppUpdate> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AppUpdateCopyWith<$Res> {
+  factory $AppUpdateCopyWith(AppUpdate value, $Res Function(AppUpdate) then) =
+      _$AppUpdateCopyWithImpl<$Res, AppUpdate>;
+  @useResult
+  $Res call(
+      {int id,
+      String version,
+      int code,
+      String platform,
+      String url,
+      String description,
+      bool force,
+      int noticeTime});
+}
+
+/// @nodoc
+class _$AppUpdateCopyWithImpl<$Res, $Val extends AppUpdate>
+    implements $AppUpdateCopyWith<$Res> {
+  _$AppUpdateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? version = null,
+    Object? code = null,
+    Object? platform = null,
+    Object? url = null,
+    Object? description = null,
+    Object? force = null,
+    Object? noticeTime = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as int,
+      platform: null == platform
+          ? _value.platform
+          : platform // ignore: cast_nullable_to_non_nullable
+              as String,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+      noticeTime: null == noticeTime
+          ? _value.noticeTime
+          : noticeTime // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AppUpdateImplCopyWith<$Res>
+    implements $AppUpdateCopyWith<$Res> {
+  factory _$$AppUpdateImplCopyWith(
+          _$AppUpdateImpl value, $Res Function(_$AppUpdateImpl) then) =
+      __$$AppUpdateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int id,
+      String version,
+      int code,
+      String platform,
+      String url,
+      String description,
+      bool force,
+      int noticeTime});
+}
+
+/// @nodoc
+class __$$AppUpdateImplCopyWithImpl<$Res>
+    extends _$AppUpdateCopyWithImpl<$Res, _$AppUpdateImpl>
+    implements _$$AppUpdateImplCopyWith<$Res> {
+  __$$AppUpdateImplCopyWithImpl(
+      _$AppUpdateImpl _value, $Res Function(_$AppUpdateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? version = null,
+    Object? code = null,
+    Object? platform = null,
+    Object? url = null,
+    Object? description = null,
+    Object? force = null,
+    Object? noticeTime = null,
+  }) {
+    return _then(_$AppUpdateImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as int,
+      platform: null == platform
+          ? _value.platform
+          : platform // ignore: cast_nullable_to_non_nullable
+              as String,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+      noticeTime: null == noticeTime
+          ? _value.noticeTime
+          : noticeTime // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AppUpdateImpl implements _AppUpdate {
+  _$AppUpdateImpl(
+      {required this.id,
+      required this.version,
+      required this.code,
+      required this.platform,
+      required this.url,
+      required this.description,
+      required this.force,
+      required this.noticeTime});
+
+  factory _$AppUpdateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppUpdateImplFromJson(json);
+
+  @override
+  final int id;
+  @override
+  final String version;
+  @override
+  final int code;
+  @override
+  final String platform;
+  @override
+  final String url;
+  @override
+  final String description;
+  @override
+  final bool force;
+// 应用更新的最大通知次数
+  @override
+  final int noticeTime;
+
+  @override
+  String toString() {
+    return 'AppUpdate(id: $id, version: $version, code: $code, platform: $platform, url: $url, description: $description, force: $force, noticeTime: $noticeTime)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppUpdateImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.version, version) || other.version == version) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.platform, platform) ||
+                other.platform == platform) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.force, force) || other.force == force) &&
+            (identical(other.noticeTime, noticeTime) ||
+                other.noticeTime == noticeTime));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, version, code, platform, url,
+      description, force, noticeTime);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AppUpdateImplCopyWith<_$AppUpdateImpl> get copyWith =>
+      __$$AppUpdateImplCopyWithImpl<_$AppUpdateImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AppUpdateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AppUpdate implements AppUpdate {
+  factory _AppUpdate(
+      {required final int id,
+      required final String version,
+      required final int code,
+      required final String platform,
+      required final String url,
+      required final String description,
+      required final bool force,
+      required final int noticeTime}) = _$AppUpdateImpl;
+
+  factory _AppUpdate.fromJson(Map<String, dynamic> json) =
+      _$AppUpdateImpl.fromJson;
+
+  @override
+  int get id;
+  @override
+  String get version;
+  @override
+  int get code;
+  @override
+  String get platform;
+  @override
+  String get url;
+  @override
+  String get description;
+  @override
+  bool get force;
+  @override // 应用更新的最大通知次数
+  int get noticeTime;
+  @override
+  @JsonKey(ignore: true)
+  _$$AppUpdateImplCopyWith<_$AppUpdateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ifafu/http/api.dart';
 import 'package:ifafu/http/model.dart' as model;
 import 'package:ifafu/page/bind_jw_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
@@ -34,12 +34,29 @@ class _UserTabState extends State<UserTab> {
           );
         }
         return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/setting');
+                },
+                icon: const Icon(Icons.settings_rounded),
+              )
+            ],
+          ),
           body: SafeArea(
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 64,
+                    top: 20,
                     bottom: 24,
                     left: 16,
                     right: 16,
@@ -104,26 +121,6 @@ class _UserTabState extends State<UserTab> {
                   title: const Text('反馈与建议'),
                   onTap: _goToFeedback,
                 ),
-                if (user.isBindJw) ...[
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Icons.school),
-                    title: const Text('解绑教务系统'),
-                    onTap: _showUnbindJwDialog,
-                  ),
-                ],
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text('关于iFAFU'),
-                  onTap: () => Navigator.of(context).pushNamed('/about'),
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('退出登录'),
-                  onTap: _showLogoutDialog,
-                ),
               ],
             ),
           ),
@@ -134,36 +131,6 @@ class _UserTabState extends State<UserTab> {
 
   void _goToFeedback() {
     Util.joinQQGroup(groupId: 964416588);
-  }
-
-  void _showUnbindJwDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('解绑教务系统'),
-          content: const Text('确定要解绑教务系统吗？'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('取消'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await Api.instance.unbindJw();
-                final userProvider = context.read<UserProvider>();
-                final user = userProvider.state?.copyWith(isBindJw: false);
-                userProvider.update(user);
-                Navigator.of(context).pop();
-              },
-              child: const Text('确定'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _goToBindJwPage() async {
@@ -179,31 +146,4 @@ class _UserTabState extends State<UserTab> {
     }
   }
 
-  _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('退出登录'),
-          content: const Text('确定要退出登录吗？'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('取消'),
-            ),
-            TextButton(
-              onPressed: () {
-                widget.logouted();
-                context.read<UserProvider>().logout();
-                Navigator.of(context).pop();
-              },
-              child: const Text('确定'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

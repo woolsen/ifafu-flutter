@@ -8,6 +8,7 @@ import 'package:ifafu/page/tab_timetable.dart';
 import 'package:ifafu/page/tab_user.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/sp.dart';
+import 'package:ifafu/util/util.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage>
   void initState() {
     super.initState();
     _fetchUserInfo();
+    Util.checkUpdate(context, silent: true);
     // 注册WidgetsBindingObserver以监听应用程序生命周期状态
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setSystemUIOverlayStyle(

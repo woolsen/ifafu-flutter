@@ -11,6 +11,7 @@ import 'package:ifafu/page/post_create_page.dart';
 import 'package:ifafu/page/post_detail_page.dart';
 import 'package:ifafu/page/post_my_page.dart';
 import 'package:ifafu/page/qa_page.dart';
+import 'package:ifafu/page/setting_page.dart';
 import 'package:ifafu/page/timetable_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/sp.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
             '/profile/edit': (context) => const EditProfilePage(),
             '/feedback': (context) => const FeedbackPage(),
             '/qa': (context) => const QaPage(),
+            '/setting': (context) => const SettingPage(),
             '/timetable': (context) => const TimetablePage(),
             '/timetable/major/select': (context) =>
                 const MajorTimetableSelectPage(),
@@ -68,18 +70,26 @@ class MyApp extends StatelessWidget {
               space: 0.8,
               color: Color(0xFFE5E5E5),
             ),
-            colorSchemeSeed: const Color(0xff6750a4),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1A80FE),
+              background: Colors.white,
+            ),
             useMaterial3: true,
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFFF5F5F5),
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.transparent,
               titleTextStyle: TextStyle(
                 color: Colors.black,
                 fontSize: 20.0,
                 fontFamily: 'DingTalk',
               ),
+            ),
+            listTileTheme: const ListTileThemeData(
+              tileColor: Colors.white,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16),
             ),
           ),
         ),

@@ -220,4 +220,24 @@ class Api {
     );
     return MajorTimetable.fromJson(response.data);
   }
+
+  Future<AppUpdate> checkUpdate({
+    required String platform,
+    required String channel,
+  }) async {
+    var response = await dio.get(
+      '/api/app/update/latest',
+      queryParameters: {
+        'platform': platform,
+        'channel': channel,
+      },
+    );
+    return AppUpdate.fromJson(response.data);
+  }
+
+  Future<void> downloadOnce() async {
+    await dio.get(
+      '/api/app/download/once',
+    );
+  }
 }
