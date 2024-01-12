@@ -18,7 +18,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('设置'),
       ),
@@ -53,7 +53,7 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.business),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    launchUrlString('mqqwpa://im/chat?chat_type=wpa&uin=2928093936');
+                    launchUrlString('mqqwpa://im/chat?chat_type=wpa&uin=27907670');
                   },
                 ),
                 ListTile(
