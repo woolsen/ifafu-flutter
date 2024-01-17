@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage>
 
   var lastFetchUserInfoTime = 0;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final mainTabKey = GlobalKey<MainTabState>();
   final timetableTabKey = GlobalKey<TimetableTabState>();
 
@@ -76,18 +77,29 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          MainTab(key: mainTabKey),
+          MainTab(key: mainTabKey, openDrawer: () {
+            _scaffoldKey.currentState?.openDrawer();
+          }),
           TimetableTab(key: timetableTabKey),
-          UserTab(
-            logouted: () {
-              _selectedIndex = 0;
-              setState(() {});
-            },
-          ),
+          // UserTab(
+          //   logouted: () {
+          //     _selectedIndex = 0;
+          //     setState(() {});
+          //   },
+          // ),
         ],
+      ),
+      drawer: Drawer(
+        child: UserTab(
+          logouted: () {
+            _selectedIndex = 0;
+            setState(() {});
+          },
+        ),
       ),
       bottomNavigationBar: BlocBuilder<UserProvider, User?>(
         bloc: BlocProvider.of<UserProvider>(context),
@@ -191,10 +203,10 @@ const List<NavigationDestination> appBarDestinations = [
     label: '课表',
     selectedIcon: Icon(Icons.calendar_month),
   ),
-  NavigationDestination(
-    tooltip: '',
-    icon: Icon(Icons.person_outline_sharp),
-    label: '我的',
-    selectedIcon: Icon(Icons.person_sharp),
-  ),
+  // NavigationDestination(
+  //   tooltip: '',
+  //   icon: Icon(Icons.person_outline_sharp),
+  //   label: '我的',
+  //   selectedIcon: Icon(Icons.person_sharp),
+  // ),
 ];

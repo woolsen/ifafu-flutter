@@ -12,7 +12,7 @@ import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/chinese.dart';
 import 'package:ifafu/util/sp.dart';
 import 'package:ifafu/util/toast.dart';
-import 'package:ifafu/widget/timetable.dart';
+import 'package:ifafu/widget/timetable2.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -43,7 +43,7 @@ class TimetableTabState extends State<TimetableTab> {
   int _currentWeek = 1;
 
   PersonalTimetable? _timetable;
-  List<int>? _times;
+  List<int>? _autoSelectedClassTimes;
   TimetableSet? _set;
 
   User? _user;
@@ -136,35 +136,36 @@ class TimetableTabState extends State<TimetableTab> {
             ),
             body: Builder(
               builder: (context) {
-                if (_user == null) {
-                  return Center(
-                    child: _buildEmptyView(
-                      '请先登录',
-                      text: '点击登录',
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/login');
-                      },
-                    ),
-                  );
-                }
-                if (!_user!.isBindJw) {
-                  return Center(
-                    child: _buildEmptyView(
-                      '绑定教务系统，即可查看课表',
-                      text: '点击绑定',
-                      onPressed: _goToBindJwPage,
-                    ),
-                  );
-                }
+                // if (_user == null) {
+                //   return Center(
+                //     child: _buildEmptyView(
+                //       '请先登录',
+                //       text: '点击登录',
+                //       onPressed: () {
+                //         Navigator.of(context).pushNamed('/login');
+                //       },
+                //     ),
+                //   );
+                // }
+                // if (!_user!.isBindJw) {
+                //   return Center(
+                //     child: _buildEmptyView(
+                //       '绑定教务系统，即可查看课表',
+                //       text: '点击绑定',
+                //       onPressed: _goToBindJwPage,
+                //     ),
+                //   );
+                // }
                 return _timetable == null
                     ? const Center(child: CircularProgressIndicator())
                     : SizedBox.expand(
-                        child: SmartRefresher(
-                          controller: _refreshController,
-                          onRefresh: refresh,
-                          enablePullUp: false,
-                          child: _buildTimetableBody(_user!, setting),
-                        ),
+                        // child: SmartRefresher(
+                        //   controller: _refreshController,
+                        //   onRefresh: refresh,
+                        //   enablePullUp: false,
+                        //   child: _buildTimetableBody(setting),
+                        // ),
+                        child: _buildTimetableBody(setting),
                       );
               },
             ),
@@ -222,14 +223,10 @@ class TimetableTabState extends State<TimetableTab> {
 
     todayDateIndex = [currentWeek, current.weekday];
 
-    if (_set != null && _set!.timeIndex == null) {
-      var isQS = _timetable!.courses.any((e) {
-        return e.location.contains('旗山') || e.location.contains('旗教');
-      });
-      _times = TimetableSet.times[isQS ? 1 : 0];
-    } else if (_set != null && _set!.timeIndex != null) {
-      _times = TimetableSet.times[_set!.timeIndex!];
-    }
+    var isQS = _timetable!.courses.any((e) {
+      return e.location.contains('旗山') || e.location.contains('旗教');
+    });
+    _autoSelectedClassTimes = TimetableSet.times[isQS ? 1 : 0];
 
     if (_currentWeek != currentWeek) {
       _currentWeek = currentWeek;
@@ -384,9 +381,10 @@ class TimetableTabState extends State<TimetableTab> {
     );
   }
 
-  Widget _buildTimetableBody(User user, TimetableSet set) {
+  Widget _buildTimetableBody(TimetableSet set) {
     final highlightColor =
         Theme.of(context).colorScheme.primaryContainer.withOpacity(0.8);
+    print(set);
     return PageView.builder(
       onPageChanged: (page) {
         _showWeek.value = page + 1;
@@ -396,13 +394,20 @@ class TimetableTabState extends State<TimetableTab> {
       controller: _pageController,
       itemCount: coursesList.length - 1,
       itemBuilder: (context, index) {
-        final showWeekCourses =
-            !user.isBindJw ? <Course>[] : coursesList[index + 1];
+        final showWeekCourses = coursesList[index + 1];
         final weekDates = weekDateList![index];
-        return Timetable(
+        List<int>? times;
+        if (set.showTime) {
+          if (set.timeIndex != null) {
+            times = TimetableSet.times[set.timeIndex!];
+          } else {
+            times = _autoSelectedClassTimes;
+          }
+        }
+        return Timetable2(
           key: ValueKey(showWeekCourses),
           courses: showWeekCourses,
-          times: set.showTime && _times != null ? _times! : null,
+          times: times,
           weekdayBuilder: (context, weekday) {
             String date = weekDates[weekday % 7 + 1];
             bool today = false;
@@ -412,7 +417,7 @@ class TimetableTabState extends State<TimetableTab> {
                 '${weekDates[0]}\n月',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               );
@@ -423,7 +428,7 @@ class TimetableTabState extends State<TimetableTab> {
                   Text(
                     Chinese.getWeekdayCN(weekday),
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: today ? Colors.blueAccent : null,
                     ),
@@ -431,7 +436,7 @@ class TimetableTabState extends State<TimetableTab> {
                   Text(
                     date,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 14,
                       color: today ? Colors.blueAccent : Colors.grey,
                     ),
                   ),

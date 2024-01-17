@@ -188,7 +188,7 @@ class _TimeSettingState extends State<TimeSetting> {
                 const SizedBox(height: 8),
                 _buildSelectItem(
                   onTap: () => updateSetting(-1),
-                  selected: _index == -1,
+                  selected: _index == null,
                   title: '自动设置',
                   subtitle: '根据课表自动选择',
                   width: double.infinity,

@@ -16,8 +16,14 @@ import 'package:ifafu/widget/post.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+typedef OpenDrawerCallback = void Function();
+
 class MainTab extends StatefulWidget {
-  const MainTab({Key? key}) : super(key: key);
+
+
+  final OpenDrawerCallback openDrawer;
+
+  const MainTab({Key? key, required this.openDrawer}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => MainTabState();
@@ -131,8 +137,30 @@ class MainTabState extends State<MainTab> {
             height: 48,
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
+                Positioned(
+                  left: 0,
+                  child: IconButton(
+                    onPressed: () {
+                      widget.openDrawer();
+                    },
+                    icon: const Icon(Icons.menu),
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'iFAFU',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'DingTalk',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 8,
+                  top: 0,
+                  bottom: 0,
                   child: GestureDetector(
                     onTap: () {
                       _showListSelectionDialog(context);
@@ -146,17 +174,6 @@ class MainTabState extends State<MainTab> {
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],
-                    ),
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'iFAFU',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'DingTalk',
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
