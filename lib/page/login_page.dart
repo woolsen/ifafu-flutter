@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/provider/user_provider.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/widget/input_field.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,15 +21,20 @@ class _LoginPageState extends State<LoginPage> {
 
   final _codeController = TextEditingController();
 
-  final grey = const Color.fromRGBO(0x99, 0x99, 0x99, 1);
-
   // 验证码提示
   String _codeHint = '获取验证码';
   bool _isCodeClickable = true;
+  Timer? _getSmsCodeTimer;
 
   final _phoneRegex = RegExp(r'^1\d{10}$');
 
   bool _loging = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _getSmsCodeTimer?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,10 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        title: const Text(
+          '登录',
+          style: TextStyle(color: Colors.black),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -52,73 +63,56 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const SizedBox(height: 48),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 50),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 24),
-                    child: const Text(
-                      'iFAFU',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'DingTalk',
-                      ),
+                  Lottie.asset('assets/lottie/login.json', width: 140),
+                  InputField(
+                    controller: _phoneController,
+                    hintText: '手机号',
+                    prefix: const Icon(
+                      Icons.phone_android,
+                      color: Colors.blue,
                     ),
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(11),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: TextField(
-                      controller: _phoneController,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(11),
-                      ],
-                      decoration: const InputDecoration(
-                        hintText: '手机',
-                        prefixIcon: Icon(
-                          Icons.phone_android, // 这里使用了手机图标
-                          color: Colors.blue, // 可以设置图标的颜色
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: 18),
                   //验证码输入框
-                  TextField(
+                  InputField(
                     controller: _codeController,
-                    decoration: InputDecoration(
-                      hintText: '验证码',
-                      prefixIcon: const Icon(
-                        Icons.lock,
-                        color: Colors.blue,
-                      ),
-                      suffixIcon: Container(
-                        width: 100,
-                        margin: const EdgeInsets.only(right: 10),
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: _getSmsCode,
-                          child: Text(
-                            _codeHint,
-                            style: _isCodeClickable
-                                ? const TextStyle(color: Colors.blue)
-                                : const TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                      border: const OutlineInputBorder(),
+                    hintText: '验证码',
+                    prefix: const Icon(
+                      Icons.lock,
+                      color: Colors.blue,
                     ),
+                    suffix: Container(
+                      width: 100,
+                      margin: const EdgeInsets.only(right: 10),
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        _codeHint,
+                        style: _isCodeClickable
+                            ? const TextStyle(color: Colors.blue)
+                            : const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    onSuffixTap: _getSmsCode,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(6),
+                    ],
                   ),
                 ],
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 50, left: 50, right: 50),
+              margin: const EdgeInsets.only(top: 24, left: 50, right: 50),
               child: SizedBox(
                 width: double.infinity,
-                height: 48,
+                height: 44,
                 child: ElevatedButton(
                   onPressed: _login,
                   child: _loging
@@ -160,12 +154,13 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {});
       return;
     }
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    _getSmsCodeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _codeHint = '${60 - timer.tick}s后重新获取';
       if (timer.tick == 60) {
         _codeHint = '重发验证码';
         _isCodeClickable = true;
         timer.cancel();
+        _getSmsCodeTimer = null;
       }
       setState(() {});
     });

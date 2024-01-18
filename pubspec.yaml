@@ -37,6 +37,7 @@ dependencies:
   webview_flutter_wkwebview: ^3.9.1
   package_info: ^2.0.2
   path_provider: ^2.1.1
+  lottie: ^3.0.0
 
 dependency_overrides:
   photo_manager: ^3.0.0-dev.2
@@ -64,6 +65,7 @@ flutter:
     - assets/image/timetable.png
     - assets/image/bot.jpg
     - assets/image/feedback.png
+    - assets/lottie/login.json
 
   fonts:
     - family: DingTalk

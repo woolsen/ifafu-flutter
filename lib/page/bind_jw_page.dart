@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ifafu/http/api.dart';
 import 'package:ifafu/util/snackbar.dart';
 import 'package:ifafu/util/toast.dart';
+import 'package:ifafu/widget/input_field.dart';
 
 class BindJwPage extends StatefulWidget {
   const BindJwPage({Key? key}) : super(key: key);
@@ -19,8 +21,6 @@ class _BindJwPageState extends State<BindJwPage> {
 
   final _passwordController = TextEditingController();
 
-  bool _isObscure = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class _BindJwPageState extends State<BindJwPage> {
         title: const Text('绑定教务系统'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 50),
         child: Form(
           key: _formKey,
           child: Column(
@@ -49,14 +49,10 @@ class _BindJwPageState extends State<BindJwPage> {
                 ],
               ),
               const SizedBox(height: 8),
-              TextFormField(
+              InputField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  labelText: '学号',
-                  hintText: '请输入学号',
-                  border: OutlineInputBorder(),
-                ),
+                hintText: '学号',
+                prefix: const Icon(Icons.person),
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
@@ -64,28 +60,16 @@ class _BindJwPageState extends State<BindJwPage> {
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              InputField(
                 controller: _passwordController,
-                obscureText: _isObscure,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock),
-                  labelText: '密码',
-                  hintText: '请输入密码',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isObscure ? Icons.visibility_off : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
-                    },
-                  ),
-                ),
+                isPassword: true,
+                hintText: '密码',
+                prefix: const Icon(Icons.lock),
               ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
+                height: 44,
                 child: ElevatedButton(
                   onPressed: bindJw,
                   child: const Text('绑定'),
@@ -93,13 +77,22 @@ class _BindJwPageState extends State<BindJwPage> {
               ),
               const SizedBox(height: 16),
               RichText(
-                text: const TextSpan(
-                  text: '提示：密码即为教务系统密码\n教务系统网址: ',
-                  style: TextStyle(color: Colors.grey),
+                text: TextSpan(
+                  text: '提示：密码即为正方教务系统密码\n教务系统网址: ',
+                  style: const TextStyle(color: Colors.grey),
                   children: [
                     TextSpan(
-                      text: 'https://jwgl.fafu.edu.cn/',
-                      style: TextStyle(color: Colors.blue),
+                      text: 'http://jwgl.fafu.edu.cn/',
+                      style: const TextStyle(color: Colors.blue),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Clipboard.setData(
+                            const ClipboardData(
+                              text: 'http://jwgl.fafu.edu.cn/',
+                            ),
+                          );
+                          ToastUtil.show('网址已复制到剪贴板');
+                        },
                     ),
                   ],
                 ),
