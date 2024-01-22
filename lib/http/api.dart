@@ -153,6 +153,16 @@ class Api {
     return PersonalTimetable.fromJson(response.data);
   }
 
+  Future<ScoreTable> getScores() async {
+    var response = await dio.get('/api/jw/score');
+    return ScoreTable.fromJson(response.data);
+  }
+
+  Future<ScoreTable> refreshScores() async {
+    var response = await dio.get('/api/jw/score/refresh');
+    return ScoreTable.fromJson(response.data);
+  }
+
   Future<PersonalTimetable> refreshPersonalTimetable() async {
     var response = await dio.get('/api/jw/timetable/personal/refresh');
     return PersonalTimetable.fromJson(response.data);

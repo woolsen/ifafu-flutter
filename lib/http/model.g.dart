@@ -192,6 +192,85 @@ Map<String, dynamic> _$$CourseImplToJson(_$CourseImpl instance) =>
       'nodeCount': instance.nodeCount,
     };
 
+_$ScoreImpl _$$ScoreImplFromJson(Map<String, dynamic> json) => _$ScoreImpl(
+      id: json['id'] as int,
+      year: json['year'] as String,
+      term: json['term'] as int,
+      name: json['name'] as String,
+      nature: json['nature'] as String,
+      iesIgnore: json['iesIgnore'] as bool,
+      iesIgnoreReason: json['iesIgnoreReason'] as String?,
+      score: (json['score'] as num).toDouble(),
+      makeupScore: (json['makeupScore'] as num).toDouble(),
+      isFree: json['isFree'] as bool,
+      gpa: (json['gpa'] as num).toDouble(),
+      institute: json['institute'] as String,
+      attr: json['attr'] as String,
+      credit: (json['credit'] as num).toDouble(),
+      restudy: json['restudy'] as bool,
+      remarks: json['remarks'] as String?,
+      makeupRemarks: json['makeupRemarks'] as String?,
+      userId: json['userId'] as int,
+      createTime:
+          const DateTimeConverter().fromJson(json['createTime'] as String),
+    );
+
+Map<String, dynamic> _$$ScoreImplToJson(_$ScoreImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'year': instance.year,
+      'term': instance.term,
+      'name': instance.name,
+      'nature': instance.nature,
+      'iesIgnore': instance.iesIgnore,
+      'iesIgnoreReason': instance.iesIgnoreReason,
+      'score': instance.score,
+      'makeupScore': instance.makeupScore,
+      'isFree': instance.isFree,
+      'gpa': instance.gpa,
+      'institute': instance.institute,
+      'attr': instance.attr,
+      'credit': instance.credit,
+      'restudy': instance.restudy,
+      'remarks': instance.remarks,
+      'makeupRemarks': instance.makeupRemarks,
+      'userId': instance.userId,
+      'createTime': const DateTimeConverter().toJson(instance.createTime),
+    };
+
+_$ScoreTableImpl _$$ScoreTableImplFromJson(Map<String, dynamic> json) =>
+    _$ScoreTableImpl(
+      options:
+          SemesterOptions.fromJson(json['options'] as Map<String, dynamic>),
+      data: (json['data'] as List<dynamic>)
+          .map((e) => Score.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$ScoreTableImplToJson(_$ScoreTableImpl instance) =>
+    <String, dynamic>{
+      'options': instance.options,
+      'data': instance.data,
+    };
+
+_$SemesterOptionsImpl _$$SemesterOptionsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SemesterOptionsImpl(
+      years: (json['years'] as List<dynamic>).map((e) => e as String).toList(),
+      terms: (json['terms'] as List<dynamic>).map((e) => e as int).toList(),
+      defaultYearIndex: json['defaultYearIndex'] as int,
+      defaultTermIndex: json['defaultTermIndex'] as int,
+    );
+
+Map<String, dynamic> _$$SemesterOptionsImplToJson(
+        _$SemesterOptionsImpl instance) =>
+    <String, dynamic>{
+      'years': instance.years,
+      'terms': instance.terms,
+      'defaultYearIndex': instance.defaultYearIndex,
+      'defaultTermIndex': instance.defaultTermIndex,
+    };
+
 _$TermImpl _$$TermImplFromJson(Map<String, dynamic> json) => _$TermImpl(
       year: json['year'] as String,
       term: json['term'] as String,

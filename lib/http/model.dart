@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ifafu/util/converter.dart';
 
 part 'model.freezed.dart';
-
 part 'model.g.dart';
 
 @freezed
@@ -141,6 +140,78 @@ extension CourseExtentsion on Course {
   int get endNode {
     return startNode + nodeCount - 1;
   }
+}
+
+@unfreezed
+class Score with _$Score {
+  factory Score({
+    required int id,
+    required String year,
+    required int term,
+    required String name,
+    required String nature,
+    required bool iesIgnore,
+    required String? iesIgnoreReason,
+    required double score,
+    required double makeupScore,
+    required bool isFree,
+    required double gpa,
+    required String institute,
+    required String attr,
+    required double credit,
+    required bool restudy,
+    String? remarks,
+    String? makeupRemarks,
+    required int userId,
+    @DateTimeConverter() required DateTime createTime,
+  }) = _Score;
+
+  factory Score.fromJson(Map<String, dynamic> json) => _$ScoreFromJson(json);
+}
+
+extension ScoreExtension on Score {
+  /// 用于计算智育分的分数
+  /// 返回-1时，则不计入智育分计算
+  double get iesScore {
+    final makeupScore = this.makeupScore;
+    if (iesIgnore) {
+      //不计入智育分计算
+      return -1;
+    } else if (makeupScore >= 60) {
+      //补考成绩及格，以60分计算
+      return 60;
+    } else if (makeupScore != -1) {
+      //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
+      return makeupScore;
+    } else {
+      //成绩及格 或者 补考成绩未出
+      return score;
+    }
+  }
+}
+
+@unfreezed
+class ScoreTable with _$ScoreTable {
+  factory ScoreTable({
+    required SemesterOptions options,
+    required List<Score> data,
+  }) = _ScoreTable;
+
+  factory ScoreTable.fromJson(Map<String, dynamic> json) =>
+      _$ScoreTableFromJson(json);
+}
+
+@freezed
+class SemesterOptions with _$SemesterOptions {
+  factory SemesterOptions({
+    required List<String> years,
+    required List<int> terms,
+    required int defaultYearIndex,
+    required int defaultTermIndex,
+  }) = _SemesterOptions;
+
+  factory SemesterOptions.fromJson(Map<String, dynamic> json) =>
+      _$SemesterOptionsFromJson(json);
 }
 
 @freezed

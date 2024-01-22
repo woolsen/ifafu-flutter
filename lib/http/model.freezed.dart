@@ -121,7 +121,7 @@ class _$BannerImpl implements _Banner {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BannerImpl &&
@@ -452,7 +452,7 @@ class _$UserImpl implements _User {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
@@ -694,7 +694,7 @@ class _$UserUpdateImpl implements _UserUpdate {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserUpdateImpl &&
@@ -1241,7 +1241,7 @@ class _$CommentImpl implements _Comment {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentImpl &&
@@ -1435,7 +1435,7 @@ class _$UserSmallImpl implements _UserSmall {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserSmallImpl &&
@@ -1660,7 +1660,7 @@ class _$PostCreateImpl implements _PostCreate {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PostCreateImpl &&
@@ -1874,7 +1874,7 @@ class _$PersonalTimetableImpl implements _PersonalTimetable {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PersonalTimetableImpl &&
@@ -2203,6 +2203,895 @@ abstract class _Course implements Course {
       throw _privateConstructorUsedError;
 }
 
+Score _$ScoreFromJson(Map<String, dynamic> json) {
+  return _Score.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Score {
+  int get id => throw _privateConstructorUsedError;
+  set id(int value) => throw _privateConstructorUsedError;
+  String get year => throw _privateConstructorUsedError;
+  set year(String value) => throw _privateConstructorUsedError;
+  int get term => throw _privateConstructorUsedError;
+  set term(int value) => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  set name(String value) => throw _privateConstructorUsedError;
+  String get nature => throw _privateConstructorUsedError;
+  set nature(String value) => throw _privateConstructorUsedError;
+  bool get iesIgnore => throw _privateConstructorUsedError;
+  set iesIgnore(bool value) => throw _privateConstructorUsedError;
+  String? get iesIgnoreReason => throw _privateConstructorUsedError;
+  set iesIgnoreReason(String? value) => throw _privateConstructorUsedError;
+  double get score => throw _privateConstructorUsedError;
+  set score(double value) => throw _privateConstructorUsedError;
+  double get makeupScore => throw _privateConstructorUsedError;
+  set makeupScore(double value) => throw _privateConstructorUsedError;
+  bool get isFree => throw _privateConstructorUsedError;
+  set isFree(bool value) => throw _privateConstructorUsedError;
+  double get gpa => throw _privateConstructorUsedError;
+  set gpa(double value) => throw _privateConstructorUsedError;
+  String get institute => throw _privateConstructorUsedError;
+  set institute(String value) => throw _privateConstructorUsedError;
+  String get attr => throw _privateConstructorUsedError;
+  set attr(String value) => throw _privateConstructorUsedError;
+  double get credit => throw _privateConstructorUsedError;
+  set credit(double value) => throw _privateConstructorUsedError;
+  bool get restudy => throw _privateConstructorUsedError;
+  set restudy(bool value) => throw _privateConstructorUsedError;
+  String? get remarks => throw _privateConstructorUsedError;
+  set remarks(String? value) => throw _privateConstructorUsedError;
+  String? get makeupRemarks => throw _privateConstructorUsedError;
+  set makeupRemarks(String? value) => throw _privateConstructorUsedError;
+  int get userId => throw _privateConstructorUsedError;
+  set userId(int value) => throw _privateConstructorUsedError;
+  @DateTimeConverter()
+  DateTime get createTime => throw _privateConstructorUsedError;
+  @DateTimeConverter()
+  set createTime(DateTime value) => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ScoreCopyWith<Score> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ScoreCopyWith<$Res> {
+  factory $ScoreCopyWith(Score value, $Res Function(Score) then) =
+      _$ScoreCopyWithImpl<$Res, Score>;
+  @useResult
+  $Res call(
+      {int id,
+      String year,
+      int term,
+      String name,
+      String nature,
+      bool iesIgnore,
+      String? iesIgnoreReason,
+      double score,
+      double makeupScore,
+      bool isFree,
+      double gpa,
+      String institute,
+      String attr,
+      double credit,
+      bool restudy,
+      String? remarks,
+      String? makeupRemarks,
+      int userId,
+      @DateTimeConverter() DateTime createTime});
+}
+
+/// @nodoc
+class _$ScoreCopyWithImpl<$Res, $Val extends Score>
+    implements $ScoreCopyWith<$Res> {
+  _$ScoreCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? year = null,
+    Object? term = null,
+    Object? name = null,
+    Object? nature = null,
+    Object? iesIgnore = null,
+    Object? iesIgnoreReason = freezed,
+    Object? score = null,
+    Object? makeupScore = null,
+    Object? isFree = null,
+    Object? gpa = null,
+    Object? institute = null,
+    Object? attr = null,
+    Object? credit = null,
+    Object? restudy = null,
+    Object? remarks = freezed,
+    Object? makeupRemarks = freezed,
+    Object? userId = null,
+    Object? createTime = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      term: null == term
+          ? _value.term
+          : term // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      nature: null == nature
+          ? _value.nature
+          : nature // ignore: cast_nullable_to_non_nullable
+              as String,
+      iesIgnore: null == iesIgnore
+          ? _value.iesIgnore
+          : iesIgnore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      iesIgnoreReason: freezed == iesIgnoreReason
+          ? _value.iesIgnoreReason
+          : iesIgnoreReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      score: null == score
+          ? _value.score
+          : score // ignore: cast_nullable_to_non_nullable
+              as double,
+      makeupScore: null == makeupScore
+          ? _value.makeupScore
+          : makeupScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      isFree: null == isFree
+          ? _value.isFree
+          : isFree // ignore: cast_nullable_to_non_nullable
+              as bool,
+      gpa: null == gpa
+          ? _value.gpa
+          : gpa // ignore: cast_nullable_to_non_nullable
+              as double,
+      institute: null == institute
+          ? _value.institute
+          : institute // ignore: cast_nullable_to_non_nullable
+              as String,
+      attr: null == attr
+          ? _value.attr
+          : attr // ignore: cast_nullable_to_non_nullable
+              as String,
+      credit: null == credit
+          ? _value.credit
+          : credit // ignore: cast_nullable_to_non_nullable
+              as double,
+      restudy: null == restudy
+          ? _value.restudy
+          : restudy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      remarks: freezed == remarks
+          ? _value.remarks
+          : remarks // ignore: cast_nullable_to_non_nullable
+              as String?,
+      makeupRemarks: freezed == makeupRemarks
+          ? _value.makeupRemarks
+          : makeupRemarks // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      createTime: null == createTime
+          ? _value.createTime
+          : createTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ScoreImplCopyWith<$Res> implements $ScoreCopyWith<$Res> {
+  factory _$$ScoreImplCopyWith(
+          _$ScoreImpl value, $Res Function(_$ScoreImpl) then) =
+      __$$ScoreImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int id,
+      String year,
+      int term,
+      String name,
+      String nature,
+      bool iesIgnore,
+      String? iesIgnoreReason,
+      double score,
+      double makeupScore,
+      bool isFree,
+      double gpa,
+      String institute,
+      String attr,
+      double credit,
+      bool restudy,
+      String? remarks,
+      String? makeupRemarks,
+      int userId,
+      @DateTimeConverter() DateTime createTime});
+}
+
+/// @nodoc
+class __$$ScoreImplCopyWithImpl<$Res>
+    extends _$ScoreCopyWithImpl<$Res, _$ScoreImpl>
+    implements _$$ScoreImplCopyWith<$Res> {
+  __$$ScoreImplCopyWithImpl(
+      _$ScoreImpl _value, $Res Function(_$ScoreImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? year = null,
+    Object? term = null,
+    Object? name = null,
+    Object? nature = null,
+    Object? iesIgnore = null,
+    Object? iesIgnoreReason = freezed,
+    Object? score = null,
+    Object? makeupScore = null,
+    Object? isFree = null,
+    Object? gpa = null,
+    Object? institute = null,
+    Object? attr = null,
+    Object? credit = null,
+    Object? restudy = null,
+    Object? remarks = freezed,
+    Object? makeupRemarks = freezed,
+    Object? userId = null,
+    Object? createTime = null,
+  }) {
+    return _then(_$ScoreImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
+      term: null == term
+          ? _value.term
+          : term // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      nature: null == nature
+          ? _value.nature
+          : nature // ignore: cast_nullable_to_non_nullable
+              as String,
+      iesIgnore: null == iesIgnore
+          ? _value.iesIgnore
+          : iesIgnore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      iesIgnoreReason: freezed == iesIgnoreReason
+          ? _value.iesIgnoreReason
+          : iesIgnoreReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      score: null == score
+          ? _value.score
+          : score // ignore: cast_nullable_to_non_nullable
+              as double,
+      makeupScore: null == makeupScore
+          ? _value.makeupScore
+          : makeupScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      isFree: null == isFree
+          ? _value.isFree
+          : isFree // ignore: cast_nullable_to_non_nullable
+              as bool,
+      gpa: null == gpa
+          ? _value.gpa
+          : gpa // ignore: cast_nullable_to_non_nullable
+              as double,
+      institute: null == institute
+          ? _value.institute
+          : institute // ignore: cast_nullable_to_non_nullable
+              as String,
+      attr: null == attr
+          ? _value.attr
+          : attr // ignore: cast_nullable_to_non_nullable
+              as String,
+      credit: null == credit
+          ? _value.credit
+          : credit // ignore: cast_nullable_to_non_nullable
+              as double,
+      restudy: null == restudy
+          ? _value.restudy
+          : restudy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      remarks: freezed == remarks
+          ? _value.remarks
+          : remarks // ignore: cast_nullable_to_non_nullable
+              as String?,
+      makeupRemarks: freezed == makeupRemarks
+          ? _value.makeupRemarks
+          : makeupRemarks // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      createTime: null == createTime
+          ? _value.createTime
+          : createTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ScoreImpl implements _Score {
+  _$ScoreImpl(
+      {required this.id,
+      required this.year,
+      required this.term,
+      required this.name,
+      required this.nature,
+      required this.iesIgnore,
+      required this.iesIgnoreReason,
+      required this.score,
+      required this.makeupScore,
+      required this.isFree,
+      required this.gpa,
+      required this.institute,
+      required this.attr,
+      required this.credit,
+      required this.restudy,
+      this.remarks,
+      this.makeupRemarks,
+      required this.userId,
+      @DateTimeConverter() required this.createTime});
+
+  factory _$ScoreImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ScoreImplFromJson(json);
+
+  @override
+  int id;
+  @override
+  String year;
+  @override
+  int term;
+  @override
+  String name;
+  @override
+  String nature;
+  @override
+  bool iesIgnore;
+  @override
+  String? iesIgnoreReason;
+  @override
+  double score;
+  @override
+  double makeupScore;
+  @override
+  bool isFree;
+  @override
+  double gpa;
+  @override
+  String institute;
+  @override
+  String attr;
+  @override
+  double credit;
+  @override
+  bool restudy;
+  @override
+  String? remarks;
+  @override
+  String? makeupRemarks;
+  @override
+  int userId;
+  @override
+  @DateTimeConverter()
+  DateTime createTime;
+
+  @override
+  String toString() {
+    return 'Score(id: $id, year: $year, term: $term, name: $name, nature: $nature, iesIgnore: $iesIgnore, iesIgnoreReason: $iesIgnoreReason, score: $score, makeupScore: $makeupScore, isFree: $isFree, gpa: $gpa, institute: $institute, attr: $attr, credit: $credit, restudy: $restudy, remarks: $remarks, makeupRemarks: $makeupRemarks, userId: $userId, createTime: $createTime)';
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ScoreImplCopyWith<_$ScoreImpl> get copyWith =>
+      __$$ScoreImplCopyWithImpl<_$ScoreImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ScoreImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Score implements Score {
+  factory _Score(
+      {required int id,
+      required String year,
+      required int term,
+      required String name,
+      required String nature,
+      required bool iesIgnore,
+      required String? iesIgnoreReason,
+      required double score,
+      required double makeupScore,
+      required bool isFree,
+      required double gpa,
+      required String institute,
+      required String attr,
+      required double credit,
+      required bool restudy,
+      String? remarks,
+      String? makeupRemarks,
+      required int userId,
+      @DateTimeConverter() required DateTime createTime}) = _$ScoreImpl;
+
+  factory _Score.fromJson(Map<String, dynamic> json) = _$ScoreImpl.fromJson;
+
+  @override
+  int get id;
+  set id(int value);
+  @override
+  String get year;
+  set year(String value);
+  @override
+  int get term;
+  set term(int value);
+  @override
+  String get name;
+  set name(String value);
+  @override
+  String get nature;
+  set nature(String value);
+  @override
+  bool get iesIgnore;
+  set iesIgnore(bool value);
+  @override
+  String? get iesIgnoreReason;
+  set iesIgnoreReason(String? value);
+  @override
+  double get score;
+  set score(double value);
+  @override
+  double get makeupScore;
+  set makeupScore(double value);
+  @override
+  bool get isFree;
+  set isFree(bool value);
+  @override
+  double get gpa;
+  set gpa(double value);
+  @override
+  String get institute;
+  set institute(String value);
+  @override
+  String get attr;
+  set attr(String value);
+  @override
+  double get credit;
+  set credit(double value);
+  @override
+  bool get restudy;
+  set restudy(bool value);
+  @override
+  String? get remarks;
+  set remarks(String? value);
+  @override
+  String? get makeupRemarks;
+  set makeupRemarks(String? value);
+  @override
+  int get userId;
+  set userId(int value);
+  @override
+  @DateTimeConverter()
+  DateTime get createTime;
+  @DateTimeConverter()
+  set createTime(DateTime value);
+  @override
+  @JsonKey(ignore: true)
+  _$$ScoreImplCopyWith<_$ScoreImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ScoreTable _$ScoreTableFromJson(Map<String, dynamic> json) {
+  return _ScoreTable.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ScoreTable {
+  SemesterOptions get options => throw _privateConstructorUsedError;
+  set options(SemesterOptions value) => throw _privateConstructorUsedError;
+  List<Score> get data => throw _privateConstructorUsedError;
+  set data(List<Score> value) => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ScoreTableCopyWith<ScoreTable> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ScoreTableCopyWith<$Res> {
+  factory $ScoreTableCopyWith(
+          ScoreTable value, $Res Function(ScoreTable) then) =
+      _$ScoreTableCopyWithImpl<$Res, ScoreTable>;
+  @useResult
+  $Res call({SemesterOptions options, List<Score> data});
+
+  $SemesterOptionsCopyWith<$Res> get options;
+}
+
+/// @nodoc
+class _$ScoreTableCopyWithImpl<$Res, $Val extends ScoreTable>
+    implements $ScoreTableCopyWith<$Res> {
+  _$ScoreTableCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? options = null,
+    Object? data = null,
+  }) {
+    return _then(_value.copyWith(
+      options: null == options
+          ? _value.options
+          : options // ignore: cast_nullable_to_non_nullable
+              as SemesterOptions,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Score>,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SemesterOptionsCopyWith<$Res> get options {
+    return $SemesterOptionsCopyWith<$Res>(_value.options, (value) {
+      return _then(_value.copyWith(options: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$ScoreTableImplCopyWith<$Res>
+    implements $ScoreTableCopyWith<$Res> {
+  factory _$$ScoreTableImplCopyWith(
+          _$ScoreTableImpl value, $Res Function(_$ScoreTableImpl) then) =
+      __$$ScoreTableImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({SemesterOptions options, List<Score> data});
+
+  @override
+  $SemesterOptionsCopyWith<$Res> get options;
+}
+
+/// @nodoc
+class __$$ScoreTableImplCopyWithImpl<$Res>
+    extends _$ScoreTableCopyWithImpl<$Res, _$ScoreTableImpl>
+    implements _$$ScoreTableImplCopyWith<$Res> {
+  __$$ScoreTableImplCopyWithImpl(
+      _$ScoreTableImpl _value, $Res Function(_$ScoreTableImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? options = null,
+    Object? data = null,
+  }) {
+    return _then(_$ScoreTableImpl(
+      options: null == options
+          ? _value.options
+          : options // ignore: cast_nullable_to_non_nullable
+              as SemesterOptions,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Score>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ScoreTableImpl implements _ScoreTable {
+  _$ScoreTableImpl({required this.options, required this.data});
+
+  factory _$ScoreTableImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ScoreTableImplFromJson(json);
+
+  @override
+  SemesterOptions options;
+  @override
+  List<Score> data;
+
+  @override
+  String toString() {
+    return 'ScoreTable(options: $options, data: $data)';
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ScoreTableImplCopyWith<_$ScoreTableImpl> get copyWith =>
+      __$$ScoreTableImplCopyWithImpl<_$ScoreTableImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ScoreTableImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ScoreTable implements ScoreTable {
+  factory _ScoreTable(
+      {required SemesterOptions options,
+      required List<Score> data}) = _$ScoreTableImpl;
+
+  factory _ScoreTable.fromJson(Map<String, dynamic> json) =
+      _$ScoreTableImpl.fromJson;
+
+  @override
+  SemesterOptions get options;
+  set options(SemesterOptions value);
+  @override
+  List<Score> get data;
+  set data(List<Score> value);
+  @override
+  @JsonKey(ignore: true)
+  _$$ScoreTableImplCopyWith<_$ScoreTableImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SemesterOptions _$SemesterOptionsFromJson(Map<String, dynamic> json) {
+  return _SemesterOptions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SemesterOptions {
+  List<String> get years => throw _privateConstructorUsedError;
+  List<int> get terms => throw _privateConstructorUsedError;
+  int get defaultYearIndex => throw _privateConstructorUsedError;
+  int get defaultTermIndex => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SemesterOptionsCopyWith<SemesterOptions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SemesterOptionsCopyWith<$Res> {
+  factory $SemesterOptionsCopyWith(
+          SemesterOptions value, $Res Function(SemesterOptions) then) =
+      _$SemesterOptionsCopyWithImpl<$Res, SemesterOptions>;
+  @useResult
+  $Res call(
+      {List<String> years,
+      List<int> terms,
+      int defaultYearIndex,
+      int defaultTermIndex});
+}
+
+/// @nodoc
+class _$SemesterOptionsCopyWithImpl<$Res, $Val extends SemesterOptions>
+    implements $SemesterOptionsCopyWith<$Res> {
+  _$SemesterOptionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? years = null,
+    Object? terms = null,
+    Object? defaultYearIndex = null,
+    Object? defaultTermIndex = null,
+  }) {
+    return _then(_value.copyWith(
+      years: null == years
+          ? _value.years
+          : years // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      terms: null == terms
+          ? _value.terms
+          : terms // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      defaultYearIndex: null == defaultYearIndex
+          ? _value.defaultYearIndex
+          : defaultYearIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      defaultTermIndex: null == defaultTermIndex
+          ? _value.defaultTermIndex
+          : defaultTermIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SemesterOptionsImplCopyWith<$Res>
+    implements $SemesterOptionsCopyWith<$Res> {
+  factory _$$SemesterOptionsImplCopyWith(_$SemesterOptionsImpl value,
+          $Res Function(_$SemesterOptionsImpl) then) =
+      __$$SemesterOptionsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {List<String> years,
+      List<int> terms,
+      int defaultYearIndex,
+      int defaultTermIndex});
+}
+
+/// @nodoc
+class __$$SemesterOptionsImplCopyWithImpl<$Res>
+    extends _$SemesterOptionsCopyWithImpl<$Res, _$SemesterOptionsImpl>
+    implements _$$SemesterOptionsImplCopyWith<$Res> {
+  __$$SemesterOptionsImplCopyWithImpl(
+      _$SemesterOptionsImpl _value, $Res Function(_$SemesterOptionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? years = null,
+    Object? terms = null,
+    Object? defaultYearIndex = null,
+    Object? defaultTermIndex = null,
+  }) {
+    return _then(_$SemesterOptionsImpl(
+      years: null == years
+          ? _value._years
+          : years // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      terms: null == terms
+          ? _value._terms
+          : terms // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      defaultYearIndex: null == defaultYearIndex
+          ? _value.defaultYearIndex
+          : defaultYearIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      defaultTermIndex: null == defaultTermIndex
+          ? _value.defaultTermIndex
+          : defaultTermIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SemesterOptionsImpl implements _SemesterOptions {
+  _$SemesterOptionsImpl(
+      {required final List<String> years,
+      required final List<int> terms,
+      required this.defaultYearIndex,
+      required this.defaultTermIndex})
+      : _years = years,
+        _terms = terms;
+
+  factory _$SemesterOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SemesterOptionsImplFromJson(json);
+
+  final List<String> _years;
+  @override
+  List<String> get years {
+    if (_years is EqualUnmodifiableListView) return _years;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_years);
+  }
+
+  final List<int> _terms;
+  @override
+  List<int> get terms {
+    if (_terms is EqualUnmodifiableListView) return _terms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_terms);
+  }
+
+  @override
+  final int defaultYearIndex;
+  @override
+  final int defaultTermIndex;
+
+  @override
+  String toString() {
+    return 'SemesterOptions(years: $years, terms: $terms, defaultYearIndex: $defaultYearIndex, defaultTermIndex: $defaultTermIndex)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SemesterOptionsImpl &&
+            const DeepCollectionEquality().equals(other._years, _years) &&
+            const DeepCollectionEquality().equals(other._terms, _terms) &&
+            (identical(other.defaultYearIndex, defaultYearIndex) ||
+                other.defaultYearIndex == defaultYearIndex) &&
+            (identical(other.defaultTermIndex, defaultTermIndex) ||
+                other.defaultTermIndex == defaultTermIndex));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_years),
+      const DeepCollectionEquality().hash(_terms),
+      defaultYearIndex,
+      defaultTermIndex);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SemesterOptionsImplCopyWith<_$SemesterOptionsImpl> get copyWith =>
+      __$$SemesterOptionsImplCopyWithImpl<_$SemesterOptionsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SemesterOptionsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SemesterOptions implements SemesterOptions {
+  factory _SemesterOptions(
+      {required final List<String> years,
+      required final List<int> terms,
+      required final int defaultYearIndex,
+      required final int defaultTermIndex}) = _$SemesterOptionsImpl;
+
+  factory _SemesterOptions.fromJson(Map<String, dynamic> json) =
+      _$SemesterOptionsImpl.fromJson;
+
+  @override
+  List<String> get years;
+  @override
+  List<int> get terms;
+  @override
+  int get defaultYearIndex;
+  @override
+  int get defaultTermIndex;
+  @override
+  @JsonKey(ignore: true)
+  _$$SemesterOptionsImplCopyWith<_$SemesterOptionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 Term _$TermFromJson(Map<String, dynamic> json) {
   return _Term.fromJson(json);
 }
@@ -2309,7 +3198,7 @@ class _$TermImpl implements _Term {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TermImpl &&
@@ -2630,7 +3519,7 @@ class _$MessageImpl implements _Message {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MessageImpl &&
@@ -2846,7 +3735,7 @@ class _$MajorTimetableImpl implements _MajorTimetable {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MajorTimetableImpl &&
@@ -3118,7 +4007,7 @@ class _$AppUpdateImpl implements _AppUpdate {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AppUpdateImpl &&

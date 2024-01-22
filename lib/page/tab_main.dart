@@ -19,8 +19,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 typedef OpenDrawerCallback = void Function();
 
 class MainTab extends StatefulWidget {
-
-
   final OpenDrawerCallback openDrawer;
 
   const MainTab({Key? key, required this.openDrawer}) : super(key: key);
@@ -222,37 +220,52 @@ class MainTabState extends State<MainTab> {
   Widget _buildToolButtonLayout() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      color: Colors.white,
       // shape: const RoundedRectangleBorder(
       //   borderRadius: BorderRadius.all(Radius.circular(8)),
       // ),
       // clipBehavior: Clip.hardEdge,
-      child: ColoredBox(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(children: [
-            _buildToolButton(
-              '个人课表',
-              'assets/image/timetable.png',
-                  () => Navigator.of(context).pushNamed('/timetable'),
-            ),
-            _buildToolButton(
-              '词条问答',
-              'assets/image/qa.png',
-              () => Navigator.of(context).pushNamed('/qa'),
-            ),
-            _buildToolButton(
-              '专业课表',
-              'assets/image/timetable.png',
-              () => Navigator.of(context).pushNamed('/timetable/major/select'),
-            ),
-            _buildToolButton(
-              '反馈建议',
-              'assets/image/feedback.png',
-              () => Util.joinQQGroup(groupId: 964416588),
-            ),
-          ]),
-        ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _buildToolButton(
+                '个人课表',
+                'assets/image/timetable.png',
+                () => Navigator.of(context).pushNamed('/timetable'),
+              ),
+              _buildToolButton(
+                '成绩查询',
+                'assets/image/score.png',
+                () => Navigator.of(context).pushNamed('/score'),
+              ),
+              _buildToolButton(
+                '词条问答',
+                'assets/image/qa.png',
+                () => Navigator.of(context).pushNamed('/qa'),
+              ),
+              _buildToolButton(
+                '专业课表',
+                'assets/image/timetable.png',
+                () =>
+                    Navigator.of(context).pushNamed('/timetable/major/select'),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              _buildToolButton(
+                '反馈建议',
+                'assets/image/feedback.png',
+                () => Util.joinQQGroup(groupId: 964416588),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
+          )
+        ],
       ),
     );
   }

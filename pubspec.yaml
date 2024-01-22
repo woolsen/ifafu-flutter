@@ -2,7 +2,7 @@ name: ifafu
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: '>=3.1.1 <4.0.0'
@@ -38,6 +38,8 @@ dependencies:
   package_info: ^2.0.2
   path_provider: ^2.1.1
   lottie: ^3.0.0
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
 
 dependency_overrides:
   photo_manager: ^3.0.0-dev.2
@@ -46,9 +48,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  build_runner: ^2.4.6
+  build_runner: ^2.4.8
   freezed: ^2.4.3
   json_serializable: ^6.7.1
+  riverpod_generator: ^2.3.9
+  custom_lint: ^0.5.8
+  riverpod_lint: ^2.3.7
 
 flutter:
 
@@ -65,6 +70,7 @@ flutter:
     - assets/image/timetable.png
     - assets/image/bot.jpg
     - assets/image/feedback.png
+    - assets/image/score.png
     - assets/lottie/login.json
 
   fonts:

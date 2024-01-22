@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ifafu/page/about_page.dart';
 import 'package:ifafu/page/edit_profile_page.dart';
 import 'package:ifafu/page/feedback_page.dart';
@@ -11,6 +12,7 @@ import 'package:ifafu/page/post_create_page.dart';
 import 'package:ifafu/page/post_detail_page.dart';
 import 'package:ifafu/page/post_my_page.dart';
 import 'package:ifafu/page/qa_page.dart';
+import 'package:ifafu/page/score.dart';
 import 'package:ifafu/page/setting_page.dart';
 import 'package:ifafu/page/timetable_page.dart';
 import 'package:ifafu/provider/user_provider.dart';
@@ -20,7 +22,11 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SPUtil.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -60,6 +66,7 @@ class MyApp extends StatelessWidget {
             '/timetable': (context) => const TimetablePage(),
             '/timetable/major/select': (context) =>
                 const MajorTimetableSelectPage(),
+            '/score': (context) => const ScorePage(),
           },
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             physics: const BouncingScrollPhysics(),
